@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<title>Home Page</title>
+<script src="https://kit.fontawesome.com/98373f9c91.js" crossorigin="anonymous"></script>
+<link href="style.css" rel="stylesheet">
+
+</head>
+
+
+
+<body>
+    <header> <div class="Logo"><img src="\\wsl.localhost\Ubuntu\home\remas\Atelier\public\8.png" alt="Logo">
+             </div>
+             
+<div  class="icons">
+     <div class="icon1">
+         <a href="wishlist.html" id="addWishlist" class="fa-regular fa-heart"></a>
+</div>
+
+
+<div  class="icon2">
+    <a href="addproduct.html"id="addProduct" class="fa-solid fa-plus"></a>
+</div>
+
+
+<div  class="icon3">
+    <a href="cartShop.html"id="showCart" class="fa-solid fa-cart-shopping"></a>
+</div>
+</div>
+             
+</header>
+
+
+
+  
+  <script>
+    const nav = document.getElementById('nav');
+    const container = document.getElementById('collections-container');
+
+    nav.addEventListener('click', (e) => {
+      const link = e.target.closest('a[data-cat]');
+      if (!link) return;
+      e.preventDefault();
+
+     
+      nav.querySelectorAll('a[data-cat]').forEach(a => a.classList.remove('active'));
+      link.classList.add('active');
+
+      const category = link.dataset.cat;
+
+     
+      document.dispatchEvent(new CustomEvent('category:change', { detail: { category } }));
+
+      if (typeof window.fetchAndRenderCollections === 'function') {
+        
+        window.fetchAndRenderCollections(category, container);
+      } else {
+        
+        container.innerHTML = `<h2>${category} Collections</h2>
+                               <p>سيتم عرض الكوليكشن هنا.</p>`;
+      }
+    });
+
+
+  </script>
+
+ <!-- Navigation -->
+  <nav class="catogries">
+    <ul class="navigation" id="nav">
+      <li><a href="#" data-cat="Home" class="active">Home</a></li>
+      <li><a href="#" data-cat="Painting">Painting</a></li>
+      <li><a href="#" data-cat="Pottery">Pottery</a></li>
+      <li><a href="#" data-cat="Jewelry">Jewelry</a></li>
+      <li><a href="#" data-cat="Woodwork">Woodwork</a></li>
+    </ul>
+  </nav>
+
+ 
+  <main id="collections-container">
+    <p>Collection images</p>
+  </main>
+
+
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
