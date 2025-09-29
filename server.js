@@ -20,16 +20,44 @@ const app = express()
 
 app.use(express.json())
 
-app.get("/products", (req, res) =>{
-    res.send("this will fetch all products")
+app.get("/products", async (req, res) =>{
+
+  try{
+    const products = await product.find()
+    console.log("Fething products completed!" )
+    res.json(products)
+    return
+  }catch (error) {
+    console.log("error while fetching products ")
+    return res.send("error")
+  }
+
+    
 })
 
-app.get("/products/:category", (req, res) =>{
-    let category = req.params.category
-    res.send(`this will fetch products from the ${category} category`)
+app.get("/products/category/:category", async (req, res) =>{
+
+  try{
+    const  catagory  = req.params.category
+
+    const productsByCategory = await product.find({ category: catagory})
+    if(!productsByCategory){
+      return res.send("No product was found for this category")
+    }
+
+    res.json(productsByCategory)
+    console.log("Fething products by category is completed!" )
+    return
+
+  }catch (error) {
+    console.log("error while fetching products by category")
+    return res.send("error")
+  }
+
+
 })
 
-app.get("/product/id", (req, res) =>{
+app.get("/product/id/:id", (req, res) =>{
     res.send("this will fetch a single product")
 })
 
