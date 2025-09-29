@@ -67,6 +67,10 @@ header{
    
 
 }
+.navigation a.active{
+    border-bottom: 2px solid bisque;
+    font-weight: bold;
+}
 .navigation #Home{
     /*The active line in category option*/
     border-bottom: 2px solid bisque;
