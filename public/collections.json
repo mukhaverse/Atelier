@@ -1,0 +1,68 @@
+{
+    "collections": 
+    [
+        {
+            "collectionImage": "https://i.pinimg.com/1200x/76/c4/7c/76c47c50d36ddea3d5f6b485ccf64e06.jpg",
+            "collectionName" : "Water Lilies",
+            "profilePic" : "https://picsum.photos/50/50",
+            "username" : "@monet"
+        },
+        {
+            "collectionImage": "https://i.pinimg.com/736x/a1/3f/47/a13f473458cb3edc4b694970d2181183.jpg",
+            "collectionName" : "Water Lilies",
+            "profilePic" : "https://picsum.photos/50/50",
+            "username" : "@monet"
+        },
+        {
+            "collectionImage": "https://i.pinimg.com/736x/f6/9c/8d/f69c8d59caa1474a59ddef2f294fece8.jpg",
+            "collectionName" : "Water Lilies",
+            "profilePic" : "https://picsum.photos/50/50",
+            "username" : "@monet"
+        },
+        {
+            "collectionImage": "https://i.pinimg.com/736x/2f/27/8d/2f278dc94a44e5b15db2ee290e92c2a0.jpg",
+            "collectionName" : "Water Lilies",
+            "profilePic" : "https://picsum.photos/50/50",
+            "username" : "@monet"
+        },
+        {
+            "collectionImage": "https://i.pinimg.com/736x/73/b9/06/73b90625798e4a14e6e201f0fae5a236.jpg",
+            "collectionName" : "Water Lilies",
+            "profilePic" : "https://picsum.photos/50/50",
+            "username" : "@monet"
+        },
+        {
+            "collectionImage": "https://i.pinimg.com/736x/d1/98/a0/d198a0d55c954acc250ebeaa798d9210.jpg",
+            "collectionName" : "Water Lilies",
+            "profilePic" : "https://picsum.photos/50/50",
+            "username" : "@monet"
+        },
+        {
+            "collectionImage": "https://i.pinimg.com/736x/0e/48/5f/0e485f540b5627d9583065750f0f378a.jpg",
+            "collectionName" : "Water Lilies",
+            "profilePic" : "https://picsum.photos/50/50",
+            "username" : "@monet"
+        }
+        
+    ],
+
+    
+    "suggested": [
+  {"suggestedImage": "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d"},
+  {"suggestedImage": "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e"},
+  {"suggestedImage": "https://images.unsplash.com/photo-1502378735452-bc7d86632805"},
+  {"suggestedImage": "https://images.unsplash.com/photo-1494790108377-be9c29b29330"},
+  {"suggestedImage": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d"},
+  {"suggestedImage": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1"},
+  {"suggestedImage": "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df"},
+  {"suggestedImage": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"},
+  {"suggestedImage": "https://images.unsplash.com/photo-1517841905240-472988babdf9"},
+  {"suggestedImage": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e"},
+  {"suggestedImage": "https://images.unsplash.com/photo-1517467139951-f5a925c9f9de"},
+  {"suggestedImage": "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e"},
+  {"suggestedImage": "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7"},
+  {"suggestedImage": "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d"},
+  {"suggestedImage": "https://images.unsplash.com/photo-1494790108377-be9c29b29330"}
+]
+
+}
