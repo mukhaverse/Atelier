@@ -1,38 +1,37 @@
 
+//Picture display
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Page loaded - starting data display");
+    displayCollections('Home');
+    displaySuggested('Home');
+});
+
 //Choosing category
     const nav = document.getElementById('nav');
     const container = document.getElementById('collections-container');
 
     nav.addEventListener('click', (e) => {
-      const link = e.target.closest('a[data-cat]');
-      if (!link) return;
-      e.preventDefault();
+    const link = e.target.closest('a[data-cat]');
+    if (!link) return;
+    e.preventDefault();
 
-     
-      nav.querySelectorAll('a[data-cat]').forEach(a => a.classList.remove('active'));
-      link.classList.add('active');
+    const category = link.dataset.cat;
 
-      const category = link.dataset.cat;
+    nav.querySelectorAll('a[data-cat]').forEach(a => a.classList.remove('active'));
+    link.classList.add('active');
 
-     
-      document.dispatchEvent(new CustomEvent('category:change', { detail: { category } }));
-
-      if (typeof window.fetchAndRenderCollections === 'function') {
-        
-        window.fetchAndRenderCollections(category, container);
-      } else {
-        
-        container.innerHTML = `<h2>${category} Collections</h2>
-                               <p>سيتم عرض الكوليكشن هنا.</p>`;
-      }
-    });
-
-//Picture display
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("Page loaded - starting data display");
-    displayCollections();
-    displaySuggested();
+    displayCollections(category);
+    displaySuggested(category);
 });
+
+//to randomize the photos
+function shuffleArray(array) {
+    return array
+        .map(value => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value);
+}
+
 
 async function loadCollection() {
     try {
@@ -56,11 +55,20 @@ async function loadSuggested() {
     }
 }
 
-async function displayCollections() {
-    const collections = await loadCollection();
+async function displayCollections(category = null) {
+    let collections = await loadCollection();
+
+    if (category && category !== 'Home') {
+        collections = collections.filter(c => c.category === category);
+    }
+
+    // randomize collections
+    collections = shuffleArray(collections);
+
     const container = document.getElementById('collections-container');
     container.innerHTML = '';
-    //for a gap before the collections 
+
+    // Gap before first card
     const gapCard = createGapCard();
     container.appendChild(gapCard);
 
@@ -69,16 +77,26 @@ async function displayCollections() {
         container.appendChild(card);
     });
 }
-async function displaySuggested() {
-    const suggested = await loadSuggested();
+
+async function displaySuggested(category = null) {
+    let suggested = await loadSuggested();
+
+    if (category && category !== 'Home') {
+        suggested = suggested.filter(s => s.category === category);
+    }
+
+    // randomize suggested
+    suggested = shuffleArray(suggested);
+
     const container = document.getElementById('suggested-container');
     container.innerHTML = '';
-    
-    suggested.forEach(suggested => {
-        const card = createSuggestedCard(suggested);
+
+    suggested.forEach(item => {
+        const card = createSuggestedCard(item);
         container.appendChild(card);
     });
 }
+
 
 function createCollectionCard(collection) {
     const card = document.createElement('div');
