@@ -1,3 +1,13 @@
 node_modules/
 .env
 
+
+*:Zone.Identifier
+*:com.dropbox.attributes
+
+
+Thumbs.db
+.DS_Store
+*.lnk
+Desktop.ini
+ehthumbs.db
