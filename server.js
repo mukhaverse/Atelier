@@ -90,7 +90,24 @@ app.get("/products/id/:productId", async (req, res) =>{
 })
 
 app.get("/products/collection/:collection", async (req, res) =>{
+  
+  try{
+    const collection = req.params.collection
 
+    const collectionProducts= await product.find({ collections: collection})
+    if(!collectionProducts){
+      return res.send("No product was found in this collection")
+    }
+
+    res.json(collectionProducts)
+    console.log("Fething products in the collection is completed!" )
+    return
+
+  }catch (error) {
+    console.log("error while fetching the collection")
+    return res.send("error")
+  }
+ 
 })
 
 
