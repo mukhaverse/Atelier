@@ -53,13 +53,47 @@ app.get("/products/category/:category", async (req, res) =>{
     console.log("error while fetching products by category")
     return res.send("error")
   }
+ 
+
+})
+
+app.get("/products/id/:productId", async (req, res) =>{
+    const id = req.params.productId
+
+  try{
+
+    const productById = await product.findById(id)
+    if(!productById){
+      return res.send("No product was found with this id")
+    }
+
+    // res.json(productById)
+
+    const artistById = await artist.findOne({ artistId: productById.artistId  })
+    if(!artistById){
+      return res.send("No artist was found with this id")
+    }
+
+    res.json({
+      product: productById,
+      artist: artistById
+    })
+    console.log("Fething products by ID is completed!" )
+    return
+
+  }catch (error) {
+    console.log("error while fetching products by ID")
+    return res.send("error")
+  }
 
 
 })
 
-app.get("/product/id/:id", (req, res) =>{
-    res.send("this will fetch a single product")
+app.get("/products/collection/:collection", async (req, res) =>{
+
 })
+
+
 
 
 app.listen(3000, () =>{
