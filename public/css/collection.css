@@ -8,6 +8,16 @@ body {
   justify-content: center;
 }
 
+.back_icon {
+  position: fixed;
+  top: 28px;
+  left: 20px;
+}
+
+.back_icon img:hover {
+  transform: scale(1.1);
+}
+
 main.collection_page {
   width: 80%;
   min-height: 100vh;
