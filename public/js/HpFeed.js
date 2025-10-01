@@ -146,3 +146,30 @@ function createGapCard() {
     gapDiv.className = 'gap-space';
     return gapDiv;
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const nav = document.getElementById('nav');
+  const wrap = document.querySelector('.navScroll') || nav.parentElement;
+  const ind = document.getElementById('indicator');
+
+  function move(a) {
+    const li = a.closest('li');
+    const base = li.offsetLeft - (wrap.scrollLeft || 0);
+    // يوسّط المؤشر تحت التبويب بناءً على عرض المؤشر في CSS
+    const left = base + (li.offsetWidth - ind.offsetWidth) / 2;
+    ind.style.transform =`translateX(${left}px)`;
+  }
+
+  // بدايةً
+  move(nav.querySelector('a.active') || nav.querySelector('a'));
+
+  // عند الضغط
+  nav.addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-cat]');
+    if (!a) return;
+    e.preventDefault();
+    nav.querySelectorAll('a[data-cat]').forEach(x => x.classList.remove('active'));
+    a.classList.add('active');
+    move(a);
+  });
+});
