@@ -1,0 +1,75 @@
+{
+    "collections": 
+    [
+        {
+            "collectionImage": "https://i.pinimg.com/1200x/76/c4/7c/76c47c50d36ddea3d5f6b485ccf64e06.jpg",
+            "collectionName" : "Water Lilies",
+            "profilePic" : "https://picsum.photos/50/50",
+            "username" : "@monet",
+            "category" : "Painting"
+        },
+        {
+            "collectionImage": "https://i.pinimg.com/736x/a1/3f/47/a13f473458cb3edc4b694970d2181183.jpg",
+            "collectionName" : "Water Lilies",
+            "profilePic" : "https://picsum.photos/50/50",
+            "username" : "@monet",
+            "category" : "Painting"
+        },
+        {
+            "collectionImage": "https://i.pinimg.com/736x/f6/9c/8d/f69c8d59caa1474a59ddef2f294fece8.jpg",
+            "collectionName" : "Water Lilies",
+            "profilePic" : "https://picsum.photos/50/50",
+            "username" : "@monet",
+            "category" : "Pottery"
+        },
+        {
+            "collectionImage": "https://i.pinimg.com/736x/2f/27/8d/2f278dc94a44e5b15db2ee290e92c2a0.jpg",
+            "collectionName" : "Water Lilies",
+            "profilePic" : "https://picsum.photos/50/50",
+            "username" : "@monet",
+            "category" : "Pottery"
+        },
+        {
+            "collectionImage": "https://i.pinimg.com/736x/73/b9/06/73b90625798e4a14e6e201f0fae5a236.jpg",
+            "collectionName" : "Water Lilies",
+            "profilePic" : "https://picsum.photos/50/50",
+            "username" : "@monet",
+            "category" : "Woodwork;"
+        },
+        {
+            "collectionImage": "https://i.pinimg.com/736x/d1/98/a0/d198a0d55c954acc250ebeaa798d9210.jpg",
+            "collectionName" : "Water Lilies",
+            "profilePic" : "https://picsum.photos/50/50",
+            "username" : "@monet",
+            "category" : "Woodwork"
+        },
+        {
+            "collectionImage": "https://i.pinimg.com/736x/0e/48/5f/0e485f540b5627d9583065750f0f378a.jpg",
+            "collectionName" : "Water Lilies",
+            "profilePic" : "https://picsum.photos/50/50",
+            "username" : "@monet",
+            "category" : "Jewelry"
+        }
+        
+    ],
+
+    
+    "suggested": [
+  {"suggestedImage": "https://i.pinimg.com/736x/09/9b/82/099b827f3235fc0ee3e46ed32e85e2f7.jpg","category" : "Painting"},
+  {"suggestedImage": "https://i.pinimg.com/1200x/b6/f2/0e/b6f20eb9dbfba146cf9e749d95c44646.jpg","category" : "Painting"},
+  {"suggestedImage": "https://i.pinimg.com/1200x/bb/e3/c5/bbe3c5b0f876b9837d3e61b36d2ab8d9.jpg","category" : "Painting"},
+  {"suggestedImage": "https://i.pinimg.com/1200x/d8/9d/f1/d89df1b2f2b70e4d0492e79e2722189b.jpg","category" : "Pottery"},
+  {"suggestedImage": "https://i.pinimg.com/1200x/30/1f/bf/301fbf50f9f9af8451eb641ccd23cf95.jpg","category" : "Pottery"},
+  {"suggestedImage": "https://i.pinimg.com/1200x/56/36/af/5636afabe0d567d67b5a8f8c7f13f108.jpg","category" : "Pottery"},
+  {"suggestedImage": "https://i.pinimg.com/736x/34/75/c6/3475c697412f0b2602b2b95d7ab0f2fe.jpg", "category" : "Woodwork"},
+  {"suggestedImage": "https://i.pinimg.com/736x/b6/44/89/b6448975df29453148cc29c7699df2cf.jpg", "category" : "Woodwork"},
+  {"suggestedImage": "https://i.pinimg.com/736x/80/06/90/800690bff1c2845707f1a698c5687513.jpg", "category" : "Woodwork"},
+  {"suggestedImage": "https://i.pinimg.com/736x/ae/fb/97/aefb979d27d7b077ed1d7b08b26fa522.jpg", "category" : "Woodwork"},
+  {"suggestedImage": "https://i.pinimg.com/736x/7a/a9/fd/7aa9fd29378ed9f241f38814433a18b3.jpg","category" : "Jewelry"},
+  {"suggestedImage": "https://i.pinimg.com/736x/4f/d9/da/4fd9dad934b2c5964ef650f5899935fa.jpg","category" : "Jewelry"},
+  {"suggestedImage": "https://i.pinimg.com/1200x/b5/4f/da/b54fda6dd1fcfa066adef4705698938f.jpg","category" : "Jewelry"},
+  {"suggestedImage": "https://i.pinimg.com/736x/00/c2/7f/00c27f01f290e98c7f4dfb2c455ec3ea.jpg","category" : "Jewelry"},
+  {"suggestedImage": "https://i.pinimg.com/736x/08/f0/6a/08f06a57704b8f9d9fec27f9dbb98bed.jpg","category" : "Jewelry"}
+]
+
+}

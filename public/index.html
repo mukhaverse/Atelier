@@ -1,1 +1,92 @@
-this will be home page html
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<title>Home Page</title>
+<script src="https://kit.fontawesome.com/98373f9c91.js" crossorigin="anonymous"></script>
+<link href="css/homepage.css" rel="stylesheet"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+  rel="stylesheet" />
+</head>
+
+
+
+<body>
+  
+ <header> 
+  <div class="Title">
+  <div class="Logo"><img src="9.svg" alt="Logo"><h2>Atelier</h2></div>
+  
+  </div>           
+  <div  class="icons">
+    <div class="icon1">
+      <a href="wishlist.html" id="addWishlist" class="fa-regular fa-heart"></a>
+    </div>
+
+    <div  class="icon3">
+      <a href="cartShop.html"id="showCart" class="fa-solid fa-cart-shopping"></a>
+    </div>
+
+    <div  class="icon3">
+     
+      <a href= "account.html"id="showAccount">
+          <img src="9.svg" alt="Profile">
+      </a>
+
+    </div>
+    
+  </div>         
+ </header>
+
+
+ <!-- Navigation -->
+  <nav class="catogries">
+    <div class="navScroll">
+    <ul class="navigation" id="nav">
+
+      <li><a href="#" data-cat="Home" class="active">Home</a></li>
+      <li><a href="#" data-cat="Painting">Painting</a></li>
+      <li><a href="#" data-cat="Pottery">Pottery</a></li>
+      <li><a href="#" data-cat="Jewelry">Jewelry</a></li>
+      <li><a href="#" data-cat="Woodwork">Woodwork</a></li>
+    </ul>
+    <div class="line"></div>
+    <span class="indicator" id="indicator"></span>
+    </div>
+  </nav>
+
+ 
+<section>
+        
+         <h1>Collections</h1>
+                      
+        <div id="collections-container" class="collections-grid">           
+        </div>
+    </section>
+
+    <section>
+     
+        <h1>Suggested</h1>
+      
+      <div id="suggested-container" class="suggested-grid">
+      </div>
+    </section>
+
+    <!--The part of JavaScript of Category-->
+  
+ <script src="js/HpFeed.js" defer> </script>
+ 
+ 
+</body>
+
+
+
+</html>
+
