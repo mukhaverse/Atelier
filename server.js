@@ -103,7 +103,17 @@ app.get("/products/collection/:collection", async (req, res) =>{
       return res.send("No product was found in this collection")
     }
 
-    res.json(collectionProducts)
+    // res.json(collectionProducts)
+    const artistById = await artist.findOne({ artistId: collectionProducts[0].artistId });
+    if (!artistById) {
+      return res.send("No artist was found for this collection");
+    }
+
+    res.json({
+      products: collectionProducts,
+      artist: artistById
+    });
+
     console.log("Fething products in the collection is completed!" )
     return
 
