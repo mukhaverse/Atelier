@@ -20,6 +20,10 @@ const app = express()
 
 app.use(express.json())
 
+app.get("/", (req,res)=>{
+  res.send("Welcom to the Atelier server root!!!")
+})
+
 app.get("/products", async (req, res) =>{
 
   try{
