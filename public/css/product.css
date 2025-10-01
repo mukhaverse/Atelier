@@ -1,0 +1,215 @@
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: 'Playfair Display', serif;
+  background-color: #111;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.back_icon {
+  position: fixed;
+  top: 20px;
+  left: 10px;
+}
+
+.back_icon img {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.back_icon img:hover {
+  transform: scale(1.1);
+}
+
+main.product_page {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+  width: 90%;
+  max-width: 1200px;
+  align-items: center;
+}
+
+.product_image img {
+  max-height: 80vh;  
+  width: auto;   
+  border-radius: 20px;
+  display: block;
+  margin: 0 auto;   
+  object-fit: contain;
+}
+
+.product_card {
+  align-items: center;
+  background-color: #1e1e1e;
+  color: white;
+  padding: 30px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  height: auto;       
+  width: 100%;      
+  box-sizing: border-box;
+}
+
+.artisan.account {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.artisan.account img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  margin-top: 4px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.artisan.account img:hover {
+  transform: scale(1.05);
+}
+
+
+.artisan.account h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.artisan.account .username {
+  margin-top: 3px;
+  font-size: 14px;
+  color: #aaa;
+}
+
+.product_details {
+  flex: 1;
+  margin-bottom: 20px;
+}
+
+.product_details .title {
+  margin: 10px 0 5px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.price, .size, .medium {
+  margin: 5px 0;
+  font-size: 15px;
+}
+
+.description {
+  font-size: 13px;
+  color: #bbb;
+  margin: 15px 0;
+  line-height: 1.5;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+}
+
+.add_to_wishlist,
+.share {
+  background-color: #111;
+  border-radius: 50%;
+  padding: 8px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add_to_cart {
+  flex-grow: 1;         
+  margin: 0 15px;
+  background: white;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 0;        
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;       
+  height: 45px;         
+}
+
+.add_to_cart:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.03);
+  transition: all 0.2s ease;
+}
+
+.add_to_wishlist:hover,
+.share:hover {
+  background-color: #333;
+  transform: scale(1.1);
+}
+
+
+main.product_page {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+  width: 90%;
+  max-width: 1200px;
+  align-items: center;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  main.product_page {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .product_image img {
+    width: 100%;    
+    height: auto;
+    max-height: 50vh; 
+    object-fit: cover;
+    border-radius: 15px;
+  }
+
+  .product_card {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .artisan.account {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .artisan.account img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-top: 4px;
+  }
+
+  .product_details {
+    margin-bottom: 15px;
+  }
+
+  .icons {
+    justify-content: center;
+    display: flex;
+    gap: 15px;
+  }
+}
