@@ -169,15 +169,15 @@ document.addEventListener('DOMContentLoaded', () => {
   function move(a) {
     const li = a.closest('li');
     const base = li.offsetLeft - (wrap.scrollLeft || 0);
-    // يوسّط المؤشر تحت التبويب بناءً على عرض المؤشر في CSS
+    
     const left = base + (li.offsetWidth - ind.offsetWidth) / 2;
     ind.style.transform =`translateX(${left}px)`;
   }
 
-  // بدايةً
+ 
   move(nav.querySelector('a.active') || nav.querySelector('a'));
 
-  // عند الضغط
+ 
   nav.addEventListener('click', (e) => {
     const a = e.target.closest('a[data-cat]');
     if (!a) return;
