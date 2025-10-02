@@ -213,7 +213,7 @@ h2{
 }
 
 
-
+/*Mayson Grid format*/
 .suggested-grid {
   column-count: 4;          
   column-gap: 60px;         
@@ -234,7 +234,7 @@ h2{
   overflow: hidden;
 }
 
-/* Make images responsive */
+/* Make images responsive depending on the height */
 .suggested-image {
   width: 100%;
   height: auto;
