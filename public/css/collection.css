@@ -94,6 +94,36 @@ main.collection_page {
 
 
 .grid_gallery {
+  column-count: 5;          /* عدد الأعمدة */
+  column-gap: 15px;         /* المسافة بين الأعمدة */
+  width: 95%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-top: 2px solid #333;
+  padding-top: 20px;
+}
+
+.grid_gallery a {
+  break-inside: avoid;      /* يمنع الصور من التقطيع داخل العمود */
+  display: block;
+  margin-bottom: 15px;
+}
+
+.grid_gallery img {
+  width: 100%;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  display: block;
+}
+
+.grid_gallery img:hover {
+  transform: scale(1.05);
+}
+
+
+
+/* .grid_gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 15px;
@@ -113,4 +143,4 @@ main.collection_page {
 
 .grid_gallery img:hover {
   transform: scale(1.05);
-}
+} */
