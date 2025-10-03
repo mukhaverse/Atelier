@@ -67,11 +67,11 @@ header{
    
 
 }
-.navigation #Home{
-    /*The active line in category option*/
+.navigation a.active{
     border-bottom: 2px solid bisque;
-    color: bisque;
+    font-weight: bold;
 }
+
 
 .Logo img{
   width: 120px;

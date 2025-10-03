@@ -1,7 +1,6 @@
-//30/9/2025
-//20:22
 
-//Picture display
+
+//Calls the display function and chooses the category Home
 document.addEventListener('DOMContentLoaded', function() {
     console.log("Page loaded - starting data display");
     displayCollections('Home');
@@ -34,10 +33,10 @@ function shuffleArray(array) {
         .map(({ value }) => value);
 }
 
-
+//loads collection from json file
 async function loadCollection() {
     try {
-        const response = await fetch('collections.json'); //call from jason file
+        const response = await fetch('collections.json'); //call from json file
         const data = await response.json();
         return data.collections;
     } catch (error) {
@@ -46,6 +45,7 @@ async function loadCollection() {
     }
 }
 
+//loads suggested posts from json file
 async function loadSuggested() {
     try {
         const response = await fetch('collections.json');
@@ -57,9 +57,12 @@ async function loadSuggested() {
     }
 }
 
-async function displayCollections(category = null) {
-    let collections = await loadCollection();
 
+async function displayCollections(category = null) {
+    //calls the loading function
+    let collections = await loadCollection();
+    //chooses the category so it can filter the posts
+    //if its home dont carry out since no filter is needed
     if (category && category !== 'Home') {
         collections = collections.filter(c => c.category === category);
     }
@@ -67,13 +70,15 @@ async function displayCollections(category = null) {
     // randomize collections
     collections = shuffleArray(collections);
 
+    //calls the div 
     const container = document.getElementById('collections-container');
+    //makes sure that the div is empty
     container.innerHTML = '';
 
     // Gap before first card
     const gapCard = createGapCard();
     container.appendChild(gapCard);
-
+    //calls the function to create each card disregarding the number of collections 
     collections.forEach(collection => {
         const card = createCollectionCard(collection);
         container.appendChild(card);
@@ -82,7 +87,8 @@ async function displayCollections(category = null) {
 
 async function displaySuggested(category = null) {
     let suggested = await loadSuggested();
-
+    //chooses the category so it can filter the posts
+    //if its home dont carry out since no filter is needed
     if (category && category !== 'Home') {
         suggested = suggested.filter(s => s.category === category);
     }
@@ -90,9 +96,12 @@ async function displaySuggested(category = null) {
     // randomize suggested
     suggested = shuffleArray(suggested);
 
+    //calls the div
     const container = document.getElementById('suggested-container');
+    //make sure its empty
     container.innerHTML = '';
 
+    //calls the function to create each card disregarding the number of suggested posts 
     suggested.forEach(item => {
         const card = createSuggestedCard(item);
         container.appendChild(card);
@@ -101,9 +110,11 @@ async function displaySuggested(category = null) {
 
 
 function createCollectionCard(collection) {
+    //calls the div inorder to write html inside it
     const card = document.createElement('div');
     card.className = 'collection-card'; 
-    
+    //write in html the code for a single card that will display
+    //a new card will form by calling this function
     card.innerHTML = `
         <div class="collection-image-container">
             <img src="${collection.collectionImage}" 
@@ -125,9 +136,12 @@ function createCollectionCard(collection) {
 }
 
 function createSuggestedCard(suggested) {
+    //calls the div inorder to write html inside it
     const card = document.createElement('div');
     card.className = 'suggested-card'; 
     
+    //write in html the code for a single card that will display
+    //a new card will form by calling this function
     card.innerHTML = `
         <div class="column" >
             <div class="photo">
@@ -155,15 +169,15 @@ document.addEventListener('DOMContentLoaded', () => {
   function move(a) {
     const li = a.closest('li');
     const base = li.offsetLeft - (wrap.scrollLeft || 0);
-    // يوسّط المؤشر تحت التبويب بناءً على عرض المؤشر في CSS
+    
     const left = base + (li.offsetWidth - ind.offsetWidth) / 2;
     ind.style.transform =`translateX(${left}px)`;
   }
 
-  // بدايةً
+ 
   move(nav.querySelector('a.active') || nav.querySelector('a'));
 
-  // عند الضغط
+ 
   nav.addEventListener('click', (e) => {
     const a = e.target.closest('a[data-cat]');
     if (!a) return;
