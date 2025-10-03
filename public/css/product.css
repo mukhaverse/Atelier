@@ -11,6 +11,10 @@ body {
   box-sizing: border-box;
 }
 
+.profile_info h1 {
+  font-size: 40px;
+}
+
 .back_icon {
   position: fixed;
   top: 20px;
@@ -171,6 +175,11 @@ main.product_page {
 }
 
 @media (max-width: 768px) {
+
+  .profile_info h1 {
+    font-size: 20px;
+  }
+
   main.product_page {
     grid-template-columns: 1fr;
     gap: 20px;

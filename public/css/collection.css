@@ -121,26 +121,8 @@ main.collection_page {
   transform: scale(1.05);
 }
 
-
-
-/* .grid_gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 15px;
-  width: 95%;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  border-top: 2px solid #333;
-  padding-top: 20px;
+@media (max-width: 768px) {
+  .grid_gallery {
+    column-count: 2;
+  }
 }
-
-.grid_gallery img {
-  width: 100%;
-  border-radius: 10px;
-  transition: transform 0.3s ease;
-  cursor: pointer;
-}
-
-.grid_gallery img:hover {
-  transform: scale(1.05);
-} */
