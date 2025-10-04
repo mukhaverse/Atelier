@@ -1,5 +1,6 @@
 
 
+
 //Calls the display function and chooses the category Home
 document.addEventListener('DOMContentLoaded', function() {
     console.log("Page loaded - starting data display");
