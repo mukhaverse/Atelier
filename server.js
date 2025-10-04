@@ -2,6 +2,7 @@
  const mongoose = require("mongoose");
  const product = require("./models/product");
  const artist = require("./models/artist");
+ const cors = require('cors');
  
  //اتصال قاعدة الييانات 
  mongoose
@@ -19,6 +20,7 @@ const express = require("express")
 const app = express()
 
 app.use(express.json())
+app.use(cors())
 
 app.get("/", (req,res)=>{
   res.send("Welcom to the Atelier server root!!!")
