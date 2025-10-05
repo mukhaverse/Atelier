@@ -107,6 +107,8 @@ main.collection_page {
   break-inside: avoid;      /* يمنع الصور من التقطيع داخل العمود */
   display: block;
   margin-bottom: 15px;
+  text-decoration: none;
+  color: inherit; 
 }
 
 .grid_gallery img {

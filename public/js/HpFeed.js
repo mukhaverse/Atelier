@@ -1,5 +1,10 @@
 
+fetch("https://atelier-0adu.onrender.com/products")
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .then(error => console.error(error));
 
+ 
 
 //Calls the display function and chooses the category Home
 document.addEventListener('DOMContentLoaded', function() {
@@ -37,9 +42,9 @@ function shuffleArray(array) {
 //loads collection from json file
 async function loadCollection() {
     try {
-        const response = await fetch('collections.json'); //call from json file
+        const response = await fetch('https://atelier-0adu.onrender.com/products'); 
         const data = await response.json();
-        return data.collections;
+        return data;
     } catch (error) {
         console.error('Error loading Feed:', error);
         return []; 
@@ -47,26 +52,25 @@ async function loadCollection() {
 }
 
 //loads suggested posts from json file
-async function loadSuggested() {
+/*async function loadSuggested() {
     try {
-        const response = await fetch('collections.json');
+        const response = await fetch('https://atelier-0adu.onrender.com/products');
         const data = await response.json();
-        return data.suggested;  
+        return data;  
     } catch (error) {
         console.error('Error loading suggested:', error);
         return []; 
     }
-}
+}*/
 
 
-async function displayCollections(category = null) {
+async function displayCollections() {
     //calls the loading function
     let collections = await loadCollection();
     //chooses the category so it can filter the posts
     //if its home dont carry out since no filter is needed
-    if (category && category !== 'Home') {
-        collections = collections.filter(c => c.category === category);
-    }
+
+
 
     // randomize collections
     collections = shuffleArray(collections);
@@ -87,19 +91,27 @@ async function displayCollections(category = null) {
 }
 
 async function displaySuggested(category = null) {
-    let suggested = await loadSuggested();
+    //let suggested = await loadSuggested();
     //chooses the category so it can filter the posts
     //if its home dont carry out since no filter is needed
-    if (category && category !== 'Home') {
-        suggested = suggested.filter(s => s.category === category);
+    if ( category && category == 'Home') {
+       suggested=  await fetch(`https://atelier-0adu.onrender.com/products`)
+  .then(response => response.json());
+    }else{
+    suggested = await fetch(`https://atelier-0adu.onrender.com/products/category/${category}`)
+  .then(response => response.json());
+  
+    fetch(`https://atelier-0adu.onrender.com/products/category/${category}`)
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .then(error => console.error(error));
     }
-
     // randomize suggested
     suggested = shuffleArray(suggested);
-
-    //calls the div
+    //console.log("Shuffled suggested array:", suggested);
+        //calls the div
     const container = document.getElementById('suggested-container');
-    //make sure its empty
+        //make sure its empty
     container.innerHTML = '';
 
     //calls the function to create each card disregarding the number of suggested posts 
@@ -111,14 +123,24 @@ async function displaySuggested(category = null) {
 
 
 function createCollectionCard(collection) {
+
+     //  Skip products with only one image
+    if (!collection.images || collection.images.length < 2) {
+    return null; 
+  }
+
     //calls the div inorder to write html inside it
     const card = document.createElement('div');
     card.className = 'collection-card'; 
+    
+    // take the first image of the collection
+    const imageToShow = images[0];
+
     //write in html the code for a single card that will display
     //a new card will form by calling this function
     card.innerHTML = `
         <div class="collection-image-container">
-            <img src="${collection.collectionImage}" 
+            <img src="${collection.images[0]}" 
                  alt="Collection Image"
                  class="collection-image">
         </div>
@@ -127,7 +149,7 @@ function createCollectionCard(collection) {
                  alt="Profile picture"
                  class="profile-picture">
             <div>
-                <p class="collection-name">${collection.collectionName}</p>
+                <p class="collection-name">${collection.name}</p>
                 <p class="username">${collection.username}</p>
             </div>          
         </div>
@@ -146,12 +168,13 @@ function createSuggestedCard(suggested) {
     card.innerHTML = `
         <div class="column" >
             <div class="photo">
-            <img src="${suggested.suggestedImage}" 
+            <img src="${suggested.images[0]}" 
                  alt="Suggested Image"
                  class="suggested-image">
             </div>
         </div>
     `;
+  
     
     return card; 
 }
