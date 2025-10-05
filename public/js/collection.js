@@ -1,109 +1,88 @@
+// ===== API =====
+const API_COLLECTION = "https://atelier-0adu.onrender.com/products/collection";
 
-// 1) إعدادات عامة
-const API_BASE = "https://atelier-0adu.onrender.com";
+// ===== DOM (نفس IDs في HTML) =====
+const $title  = document.getElementById("collectionTitle");
+const $meta   = document.getElementById("collectionMeta");    // اسم الفنان
+const $handle = document.getElementById("collectionHandle");  // اليوزرنيم (بدون @)
+const $avatar = document.getElementById("collectionAvatar");
+const $grid   = document.getElementById("grid");
+const $status = document.getElementById("status");
 
-// 2) قراءة اسم الكوليكشن من الرابط (collection.html?name=...)
-const params = new URLSearchParams(window.location.search);
-const collectionName = (params.get("name") || "saudi-collection").trim().toLowerCase();
+// رسالة مختصرة في الصفحة
+function setStatus(msg) { if ($status) $status.textContent = msg || ""; }
 
-// يحوّل "saudi-collection" -> "Saudi Collection"
-function toTitle(slug = "") {
-  return slug.replace(/[-_]+/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
-}
+// إضافة كارت صورة (متوافق مع CSS columns المستخدم عندك)
+function addCard(item) {
+  const src =
+    (Array.isArray(item.images) && (item.images[0]?.url || item.images[0])) ||
+    item.image || item.imageUrl || item.url || item.photo;
+  if (!src) return;
 
-// 3) تطبيع روابط Google Drive إلى رابط مباشر
-function normalizeImageUrl(url) {
-  if (!url) return "assets/placeholder.jpg";
-
-  // أنماط مدعومة: .../file/d/<ID>/view  أو  ...?id=<ID>  أو  uc?export=view&id=<ID>
-  const idMatch =
-    url.match(/(?:\/d\/)([-\w]{10,})/) ||  // /d/<ID>/
-    url.match(/[?&]id=([-\w]{10,})/);      // ?id=<ID>
-
-  if (idMatch && idMatch[1]) {
-    return `https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
-  }
-  return url;
-}
-
-// 4) تعبئة الهيدر بمعلومات الفنان
-function fillHeaderFromArtist(artist) {
-  const titleEl  = document.getElementById("collectionTitle");
-  const metaEl   = document.getElementById("collectionMeta");
-  const handleEl = document.getElementById("collectionHandle");
-  const avatarEl = document.getElementById("collectionAvatar");
-
-  if (titleEl) titleEl.textContent = toTitle(collectionName);
-
-  if (artist) {
-    if (metaEl)   metaEl.textContent   = artist.username || (artist.artistId ? `Artist ${artist.artistId}` : "Artist");
-    if (handleEl) handleEl.textContent = artist.username ? `@${artist.username}` :
-                                          (artist.artistId ? `@artist-${artist.artistId}` : "@artist");
-    if (avatarEl && artist.profilePic) avatarEl.src = normalizeImageUrl(artist.profilePic);
-  } else {
-    if (handleEl) handleEl.textContent = `@${collectionName}`;
-  }
-}
-
-// 5) إنشاء عنصر (a + img) لعنصر المنتج
-function createProductCard(product) {
-  const link = document.createElement("a");
-  link.href = `product.html?id=${encodeURIComponent(product._id)}`;
-  link.setAttribute("aria-label", product.name || "Artwork");
+  const a = document.createElement("a");
+  a.className = "grid_item_link";
+  a.href = "#";
 
   const img = document.createElement("img");
-  const raw = Array.isArray(product.images) ? product.images[0] : null;
-  const imgUrl = normalizeImageUrl(raw);
-
-  img.src = imgUrl;
-  img.alt = product.name || "Artwork";
+  img.src = src;
+  img.alt = item.name || item.title || "item";
   img.loading = "lazy";
-  img.decoding = "async";
-  img.referrerPolicy = "no-referrer";
 
-  // Fallback لصورة بديلة إن فشل التحميل
-  img.onerror = () => {
-    img.onerror = null;
-    img.src = "assets/placeholder.jpg";
-  };
-
-  link.appendChild(img);
-  return link;
+  a.appendChild(img);
+  $grid.appendChild(a);
 }
 
-// 6) تحميل وعرض المنتجات
-async function loadCollection() {
-  const url = `${API_BASE}/products/collection/${encodeURIComponent(collectionName)}`;
-  const status = document.getElementById("status");
-  const grid = document.querySelector(".grid_gallery");
+// الدالة الأساسية — تستقبل الباراميتر (slug)
+async function loadCollection(collectionParam) {
+  const fromQuery = new URLSearchParams(location.search).get("name");
+  const slug = (collectionParam || fromQuery || "").trim();
+  if (!slug) { setStatus("No collection provided."); return; }
 
-  if (status) status.textContent = "Loading...";
-  if (grid) grid.innerHTML = "";
+  // تهيئة
+  $title.textContent  = slug;
+  $meta.textContent   = "";
+  $handle.textContent = "";
+  $grid.innerHTML = "";
+  setStatus("Loading...");
 
   try {
-    const res = await fetch(url, { headers: { Accept: "application/json" } });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const res = await fetch(`${API_COLLECTION}/${encodeURIComponent(slug)}`, {
+      headers: { "Accept": "application/json" }
+    });
+    if (!res.ok) { setStatus(`Collection not found (HTTP ${res.status}).`); return; }
 
-    const payload = await res.json();
-    const products = Array.isArray(payload) ? payload : (payload.products || []);
-    const artist   = Array.isArray(payload) ? null    : (payload.artist  || null);
+    // حاول قراءة JSON فقط؛ لو فشل اعتبرها مشكلة سيرفر
+    let payload;
+    try { payload = await res.json(); }
+    catch { setStatus("Server returned invalid data."); return; }
 
-    fillHeaderFromArtist(artist);
+    const products = Array.isArray(payload?.products) ? payload.products : [];
+    const artist   = payload?.artist || {};
 
-    if (!Array.isArray(products) || products.length === 0) {
-      if (status) status.textContent = "No items found.";
+    // الهيدر
+    $meta.textContent   = artist.name || "";
+    $handle.textContent = artist.username || "";
+    const avatarSrc = artist.profilePic || artist.avatar || artist.avatarUrl;
+    if (avatarSrc) $avatar.src = avatarSrc;
+
+    // المنتجات
+    if (!products.length) {
+      setStatus("No products in this collection.");
       return;
     }
+    for (const p of products) addCard(p);
 
-    if (status) status.textContent = "";
-    for (const p of products) {
-      grid.appendChild(createProductCard(p));
-    }
-  } catch (err) {
-    console.error("loadCollection error:", err);
-    if (status) status.textContent = "Error loading collection.";
+    setStatus(""); // نجاح
+  } catch {
+    setStatus("Network error. Please try again.");
   }
 }
 
-// 7) بدء التنفيذ
-document.addEventListener("DOMContentLoaded", loadCollection);
+// اجعل الدالة متاحة للنافيجيشن (إرسال الباراميتر)
+window.loadCollection = loadCollection;
+
+// تشغيل تلقائي إذا كان فيه ?name= في الرابط
+(function () {
+  const q = new URLSearchParams(location.search).get("name");
+  if (q) loadCollection(q);
+})();
