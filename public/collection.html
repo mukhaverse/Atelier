@@ -11,7 +11,7 @@
 <body>
 
     <header class="page_header">
-        <a href="#" class="back_icon" onclick="history.back()">
+        <a href="javascript:history.back()" class="back_icon" onclick="history.back()">
             <img src="assets/back_icon.svg" alt="back" width="22" height="22">
         </a>
     </header>
@@ -19,55 +19,30 @@
     <main class="collection_page">
 
         <section class="profile_info">
-            <h1>Collection Name</h1>
-            <h4>Artisan Name</h4>
-            <h6>@username</h6>
+            <h1 id="collectionTitle">Collection Name</h1>
+            <h4 id="collectionMeta">Artisan Name</h4>
+            <h6 id="collectionHandle">@username</h6>
         </section>
 
-        <section class="profile_pictures">
-            <img src="assets/post4.jpg" alt="profile1">
+         <section class="profile_pictures">
+            <img id="collectionAvatar" src="assets/post4.jpg" alt="profile1">
         </section>
+      
 
-        <section class="icons">
+       <section class="icons">
             <img src="assets/heart_icon.svg" alt="wishlist icon" width="25" height="25">
-            <img src="assets/share_icon.svg" alt="share icon" width="25" height="25">
+            <img src="assets/share_icon.svg" alt="share icon" width="25" height="25" id="shareBtn">
         </section>
 
-        <section class="grid_gallery">
-            <a href="product.html">
-                <img src="assets/post7.jpg" alt="post1">
-            </a>
-            <a href="product.html">
-                <img src="assets/post2.jpg" alt="post2">
-            </a>
-            <a href="product.html">
-                <img src="assets/post3.jpg" alt="post3">
-            </a>
-            <a href="product.html">
-                <img src="assets/post5.jpg" alt="post14">
-            </a>
-            <a href="product.html">
-                <img src="assets/post6.jpg" alt="post5">
-            </a>
-            <a href="product.html">
-                <img src="assets/post2.jpg" alt="post16">
-            </a>
-            <a href="product.html">
-                <img src="assets/post5.jpg" alt="post17">
-            </a>
-            <a href="product.html">
-                <img src="assets/post6.jpg" alt="post18">
-            </a>
-            <a href="product.html">
-                <img src="assets/post7.jpg" alt="post19">
-            </a>
-            <a href="product.html">
-                <img src="assets/post3.jpg" alt="post110">
-            </a>
+          <div id="status" class="status"></div>
+
+        <section id="grid" class="grid_gallery">
+          
         </section>
 
     </main>
 
+    <script src="js/collection.js"></script>
 </body>
 
 </html>
