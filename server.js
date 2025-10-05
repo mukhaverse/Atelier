@@ -125,6 +125,21 @@ app.get("/products/collection/:collection", async (req, res) =>{
   }
  
 })
+app.get("/collections", async (req, res) => {
+  try {
+    const collections = await product.distinct("collections");
+    if (!collections || collections.length === 0) {
+      return res.send("No collections found");
+    }
+
+    res.json(collections);
+    console.log("Fetching all unique collections completed!");
+  } catch (error) {
+    console.log("Error while fetching collections:", error);
+    res.send("error");
+  }
+});
+
 
 
 
