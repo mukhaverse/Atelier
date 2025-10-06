@@ -223,6 +223,10 @@ h2{
   display: inline-block;    
   margin-bottom: 60px;
   width: 100%;
+  cursor: pointer;
+  transition: transform 0.4s ease-in-out; 
+  border-radius: 10px; 
+  overflow: hidden; 
 }
 
 
@@ -237,6 +241,8 @@ h2{
   height: auto;
   display: block;
   object-fit: cover;
+  transition: transform 0.4s ease-in-out; 
+  border-radius: 10px; 
 }
 
 /* Responsive tweaks */
@@ -346,4 +352,22 @@ h2{
 .indicator{
   
   width: 80px;}
+}
+
+/* Hovers */
+.collection-image {
+    transition: transform 0.4s ease-in-out;
+}
+
+.collection-card:hover .collection-image {
+    transform: scale(.97);
+    cursor: pointer;
+}
+
+.suggested-card {
+    cursor: pointer;
+}
+
+.suggested-card:hover  {
+    transform: scale(1.03);
 }
