@@ -56,7 +56,6 @@ app.get("/products/category/:category", async (req, res) =>{
     // res.json(productsByCategory)
     
     res.json({
-      category: category,
       collections: collections,
       products: productsByCategory
     });
@@ -64,7 +63,7 @@ app.get("/products/category/:category", async (req, res) =>{
     return
 
   }catch (error) {
-    console.log("error while fetching products by category")
+    console.log("error while fetching products by category", error)
     return res.send("error")
   }
  
