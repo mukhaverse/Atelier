@@ -53,7 +53,13 @@ app.get("/products/category/:category", async (req, res) =>{
     }
 
     // const collections = await product.distinct("collections", { catagory });
-    const collections = [...new Set(productsByCategory.map(p => p.collections || p.collections?.[0]))];
+    // const collections = [...new Set(productsByCategory.map(p => p.collections || p.collections?.[0]))];
+    const collections = [
+  ...new Set(
+    productsByCategory.map(p => Array.isArray(p.collections) ? p.collections[0] : p.collections)
+  )
+];
+
 
     // res.json(productsByCategory)
     
