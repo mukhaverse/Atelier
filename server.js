@@ -46,13 +46,14 @@ app.get("/products/category/:category", async (req, res) =>{
   try{
     const  catagory  = req.params.category
 
-    const productsByCategory = await product.find({ category: catagory})
+    const productsByCategory = await product.find({ category: catagory }).lean();
+
     if(!productsByCategory){
       return res.send("No product was found for this category")
     }
 
     // const collections = await product.distinct("collections", { catagory });
-    const collections = productsByCategory.map(p => p.collection);
+    const collections = productsByCategory.map(p => p.collections || p.collections?.[0]);
 
     // res.json(productsByCategory)
     
