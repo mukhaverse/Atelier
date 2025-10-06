@@ -51,8 +51,16 @@ app.get("/products/category/:category", async (req, res) =>{
       return res.send("No product was found for this category")
     }
 
-    res.json(productsByCategory)
-    console.log("Fething products by category is completed!" )
+    const collections = await product.distinct("collections", { category });
+
+    // res.json(productsByCategory)
+    
+    res.json({
+      category: category,
+      collections: collections,
+      products: productsByCategory
+    });
+    console.log("Fething products and collections by category is completed!" )
     return
 
   }catch (error) {
