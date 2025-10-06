@@ -46,17 +46,32 @@ app.get("/products/category/:category", async (req, res) =>{
   try{
     const  catagory  = req.params.category
 
-    const productsByCategory = await product.find({ category: catagory})
+    const productsByCategory = await product.find({ category: catagory }).lean();
+
     if(!productsByCategory){
       return res.send("No product was found for this category")
     }
 
-    res.json(productsByCategory)
-    console.log("Fething products by category is completed!" )
+    // const collections = await product.distinct("collections", { catagory })
+    // const collections = [...new Set(productsByCategory.map(p => p.collections || p.collections?.[0]))]
+    const collections = [
+  ...new Set(
+    productsByCategory.map(p => Array.isArray(p.collections) ? p.collections[0] : p.collections)
+  )
+];
+
+
+    // res.json(productsByCategory)
+    
+    res.json({
+      collections: collections,
+      products: productsByCategory
+    });
+    console.log("Fething products and collections by category is completed!" )
     return
 
   }catch (error) {
-    console.log("error while fetching products by category")
+    console.log("error while fetching products by category", error)
     return res.send("error")
   }
  
