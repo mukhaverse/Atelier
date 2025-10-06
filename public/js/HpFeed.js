@@ -239,6 +239,19 @@ function createCollectionCard(collection) {
         </div>
     `;
     
+    // Navigation
+    card.addEventListener('click', (e) => {
+        e.preventDefault();
+        let collectionName = collection.collections;
+        if (Array.isArray(collectionName) && collectionName.length > 0) {
+            collectionName = collectionName[0];
+        }
+        
+        if (collectionName) {
+
+            window.location.href = `collection.html?name=${encodeURIComponent(collectionName)}`;
+        }
+    });
     return card; 
 }
 
@@ -258,6 +271,19 @@ function createSuggestedCard(suggested) {
             </div>
         </div>
     `;
+
+    // Navigation
+    card.addEventListener('click', (e) => {
+        e.preventDefault();      
+        const productId = suggested._id || suggested.id;
+        
+        if (productId) {
+
+            window.location.href = `product.html?id=${encodeURIComponent(productId)}`;
+        } else {
+            console.error('No product ID found for suggested item:', suggested);
+        }
+    });
   
     
     return card; 
