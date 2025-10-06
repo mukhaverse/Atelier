@@ -32,9 +32,10 @@ body {
   transform: scale(1.1);
 }
 
+/* Use CSS Grid to separate product image and product details card */
 main.product_page {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 2fr 1fr; /* 2:1 ratio between image and info card */
   gap: 40px;
   width: 90%;
   max-width: 1200px;
@@ -47,7 +48,7 @@ main.product_page {
   border-radius: 20px;
   display: block;
   margin: 0 auto;   
-  object-fit: contain;
+  object-fit: contain; /* Keep image aspect ratio within box */
 }
 
 .product_card {
@@ -80,7 +81,6 @@ main.product_page {
 .artisan.account img:hover {
   transform: scale(1.05);
 }
-
 
 .artisan.account h3 {
   margin: 0;
@@ -135,6 +135,7 @@ main.product_page {
   transition: all 0.2s ease;
 }
 
+/* Centered button between icons with flexible width */
 .add_to_cart {
   flex-grow: 1;         
   margin: 0 15px;
@@ -163,7 +164,7 @@ main.product_page {
   transform: scale(1.1);
 }
 
-
+/* Grid container centering and responsive spacing */
 main.product_page {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -174,22 +175,25 @@ main.product_page {
   margin: 0 auto;
 }
 
+/* Responsive design for smaller screens */
 @media (max-width: 768px) {
 
   .profile_info h1 {
     font-size: 20px;
   }
 
+  /* Switch from 2 columns to 1 column layout */
   main.product_page {
     grid-template-columns: 1fr;
     gap: 20px;
   }
 
+  /* Adjust product image size and fit for mobile */
   .product_image img {
     width: 100%;    
     height: auto;
     max-height: 50vh; 
-    object-fit: cover;
+    object-fit: cover; /* Crop image to fit the screen */
     border-radius: 15px;
   }
 
@@ -198,6 +202,7 @@ main.product_page {
     padding: 20px;
   }
 
+  /* Re-align artisan info to center vertically */
   .artisan.account {
     text-align: center;
     display: flex;
@@ -216,6 +221,7 @@ main.product_page {
     margin-bottom: 15px;
   }
 
+  /* Center icons horizontally */
   .icons {
     justify-content: center;
     display: flex;

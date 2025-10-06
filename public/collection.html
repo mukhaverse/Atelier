@@ -10,39 +10,45 @@
 
 <body>
 
+    <!-- Page header with back button -->
     <header class="page_header">
         <a href="javascript:history.back()" class="back_icon" onclick="history.back()">
             <img src="assets/back_icon.svg" alt="back" width="22" height="22">
         </a>
     </header>
 
+    <!-- Main content area for the collection page -->
     <main class="collection_page">
 
+        <!-- Collection title and artisan info -->
         <section class="profile_info">
             <h1 id="collectionTitle">Collection Name</h1>
             <h4 id="collectionMeta">Artisan Name</h4>
             <h6 id="collectionHandle">@username</h6>
         </section>
 
-         <section class="profile_pictures">
+        <!-- Profile picture of the artisan -->
+        <section class="profile_pictures">
             <img id="collectionAvatar" src="assets/post4.jpg" alt="profile1">
         </section>
-      
 
-       <section class="icons">
+        <!-- Icons for wishlist and share -->
+        <section class="icons">
             <img src="assets/heart_icon.svg" alt="wishlist icon" width="25" height="25">
             <img src="assets/share_icon.svg" alt="share icon" width="25" height="25" id="shareBtn">
         </section>
 
-          <div id="status" class="status"></div>
+        <!-- Status -->
+        <div id="status" class="status"></div>
 
+        <!-- Grid gallery: product images will load dynamically here -->
         <section id="grid" class="grid_gallery">
-          
         </section>
 
     </main>
 
+    <!-- JavaScript file that loads collection data -->
     <script src="js/collection.js"></script>
+    
 </body>
-
 </html>

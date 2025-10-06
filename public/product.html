@@ -1,63 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width">
-        <title>Product Page</title>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="css/product.css">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Product Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/product.css">
+</head>
 
-    <body>
+<body>
 
-        <header class="page_header">
-            <a href="#" class="back_icon" onclick="history.back()">
-                <img src="assets/back_icon.svg" alt="back" width="22" height="22">
-            </a>
-        </header>
+    <!-- Header with back button -->
+    <header class="page_header">
+        <a href="#" class="back_icon" onclick="history.back()">
+            <img src="assets/back_icon.svg" alt="back" width="22" height="22">
+        </a>
+    </header>
 
-        <main class="product_page">
+    <main class="product_page">
 
-            <section class="product_image">
-                
-                <img src="assets/post5.jpg" alt="Artwork">
-            
+        <!-- Product image section -->
+        <section class="product_image">
+            <img src="assets/post5.jpg" alt="Artwork">
+        </section>
+
+        <!-- Product details card -->
+        <section class="product_card">
+
+            <!-- Artisan info -->
+            <section class="artisan account">
+                <h3>Artisan Name</h3>
+                <p class="username">@username</p>
+                <img src="assets/post4.jpg" alt="profile1">
             </section>
 
-            <section class="product_card">
-                
-                <section class="artisan account">
-                    <h3>Artisan Name</h3>
-                    <p class="username">@username</p>
-                    <img src="assets/post4.jpg" alt="profile1">
-                </section>
-
-                <section class="product_details">
-                    <h2 class="title">Water Lilies</h2>
-                    <p class="price">$200</p>
-                    <p class="size">90x80 cm</p>
-                    <p class="medium">Oil on Canvas</p>
-                    <p class="description">
-                        This is the description for the painting which will be expressive 
-                        and contain details about the journey of the artwork or any story about it.
-                    </p>
-                </section>
-
-                <section class="icons">
-                    <img class="add_to_wishlist" src="assets/heart_icon.svg" alt="wishlist icon" width="25" height="25">
-                    
-                    <button class="add_to_cart">
-                        <img src="assets/cart_icon.svg" alt="cart" width="22">
-                    </button>
-
-                    <img class="share" src="assets/share_icon.svg" width="25" height="25">
-                </section>
-
+            <!-- Product information -->
+            <section class="product_details">
+                <h2 class="title">Water Lilies</h2>
+                <p class="price">$200</p>
+                <p class="size">90x80 cm</p>
+                <p class="medium">Oil on Canvas</p>
+                <p class="description">
+                    This is the description for the painting which will be expressive 
+                    and contain details about the journey of the artwork or any story about it.
+                </p>
             </section>
-            
-        </main>
 
-    </body>
+            <!-- Action icons (wishlist, cart, share) -->
+            <section class="icons">
+                <img class="add_to_wishlist" src="assets/heart_icon.svg" alt="wishlist icon" width="25" height="25">
+                
+                <button class="add_to_cart">
+                    <img src="assets/cart_icon.svg" alt="cart" width="22">
+                </button>
+
+                <img class="share" src="assets/share_icon.svg" width="25" height="25">
+            </section>
+
+        </section>
+        
+    </main>
+
+    <!-- JavaScript file that loads product data -->
+    <script src="product.js"></script>
+
+</body>
 
 </html>

@@ -79,8 +79,61 @@ async function loadCollection(collectionParam) {
 // Send Parameter
 window.loadCollection = loadCollection;
 
-
 (function () {
   const q = new URLSearchParams(location.search).get("name");
   if (q) loadCollection(q);
 })();
+
+// Local JSON (simple & unified)
+async function loadLocalCollections() {
+  try {
+    const res = await fetch("collections.json", { headers: { Accept: "application/json" } });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const data = await res.json();
+    const grid = document.getElementById("grid");
+    if (!grid) return;
+
+    grid.innerHTML = "";
+
+    const list = Array.isArray(data?.collections) ? data.collections : [];
+    list.forEach((item) => {
+      // <a><img></a> to match .grid_gallery a {...} styles
+      const a = document.createElement("a");
+      a.className = "grid_item_link";
+      a.href = "#";
+
+      const img = document.createElement("img");
+      img.className = "grid_item";
+      img.src = item.collectionImage;
+      img.alt = item.collectionName || "item";
+      img.loading = "lazy";
+
+      a.appendChild(img);
+
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.setItem("selectedProduct", JSON.stringify(item));
+        window.location.href = "product.html";
+      });
+
+      grid.appendChild(a);
+    });
+  } catch (error) {
+    console.error("Error loading collections from local file:", error);
+  }
+}
+
+// Load from API if ?name= exists; otherwise load local JSON
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const collectionName = params.get("name");
+
+  if (collectionName) {
+    // load from API
+    loadCollection(collectionName);
+  } else {
+    // load from local JSON
+    loadLocalCollections();
+  }
+});
