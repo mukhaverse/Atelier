@@ -51,7 +51,8 @@ app.get("/products/category/:category", async (req, res) =>{
       return res.send("No product was found for this category")
     }
 
-    const collections = await product.distinct("collections", { catagory });
+    // const collections = await product.distinct("collections", { catagory });
+    const collections = productsByCategory.map(p => p.collection);
 
     // res.json(productsByCategory)
     
