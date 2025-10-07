@@ -375,6 +375,7 @@ h2{
   height: 200px; 
   border-radius: 10%;
   overflow: hidden; 
+  cursor: pointer;
 }
 
 
