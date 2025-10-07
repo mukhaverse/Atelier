@@ -136,6 +136,20 @@ async function displayCollections(category =null) {
     const gapCard = createGapCard();
     container.appendChild(gapCard);
 
+    // --- ADDED: find next product in the same collection for hover image ---
+for (let i = 0; i < collections.length; i++) {
+    const next = collections[i + 1];
+    // if the next product is in the same collection, use its image for hover
+    if (next && Array.isArray(collections[i].collections) && next.collections.includes(collections[i].collections[0])) {
+        collections[i].hoverImage = next.images[0];
+    } else {
+        // fallback to same image if no next product in same collection
+        collections[i].hoverImage = collections[i].images[0];
+    }
+}
+// --- END ADDED ---
+
+
 
     //calls the function to create each card disregarding the number of collections 
     collections.forEach(collection => {
@@ -218,7 +232,7 @@ function createCollectionCard(collection) {
     //a new card will form by calling this function
     card.innerHTML = `
         <div class="collection-image-container">
-            <img src="${collection.images[0]}" 
+            <img src="${collection.images && collection.images[0] ? collection.images[0] : ''}" 
                  alt="Collection Image"
                  class="collection-image">
         </div>
@@ -233,6 +247,56 @@ function createCollectionCard(collection) {
         </div>
     `;
     
+    // hover image logices I had to add
+    try {
+        const imgContainer = card.querySelector('.collection-image-container');
+        const mainImg = imgContainer.querySelector('.collection-image');
+
+        
+        if (mainImg && !mainImg.classList.contains('main-image')) {
+            mainImg.classList.add('main-image');
+        }
+
+        const hoverImg = document.createElement('img');
+        hoverImg.src = (collection.images && collection.images[1])
+                        ? collection.images[1]
+                        : (collection.images && collection.images[0]) ? collection.images[0] : '';
+        hoverImg.alt = 'Hover Image';
+        hoverImg.className = 'collection-image hover-image';
+
+        
+        imgContainer.appendChild(hoverImg);
+
+        const collectionKeys = Array.isArray(collection.collections)
+            ? collection.collections
+            : (collection.collections ? [collection.collections] : []);
+
+        // fetching another product
+        fetch('https://atelier-0adu.onrender.com/products')
+          .then(res => res.json())
+          .then(data => {
+              const products = Array.isArray(data) ? data : (data.products || []);
+              
+              // find the first product that isn't the current one & shares the same collections
+              const related = products.find(p =>
+                  p._id !== collection._id &&
+                  Array.isArray(p.collections) &&
+                  p.collections.some(c => collectionKeys.includes(c)) 
+              );
+
+              if (related) {
+                  hoverImg.src = related.images[0];
+              }
+          })
+          .catch(err => {
+              console.error('Could not fetch related product image:', err);
+          });
+
+    } catch (err) {
+        console.error('Error while setting up hover image:', err);
+    }
+    // end of hover logic
+
     // Navigation
     card.addEventListener('click', (e) => {
         e.preventDefault();
@@ -248,6 +312,7 @@ function createCollectionCard(collection) {
     });
     return card; 
 }
+
 
 function createSuggestedCard(suggested) {
     //calls the div inorder to write html inside it

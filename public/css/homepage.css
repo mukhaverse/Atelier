@@ -359,14 +359,6 @@ h2{
 }
 
 /* Hovers */
-.collection-image {
-    transition: transform 0.4s ease-in-out;
-}
-
-.collection-card:hover .collection-image {
-    transform: scale(.97);
-    cursor: pointer;
-}
 
 .suggested-card {
     cursor: pointer;
@@ -374,4 +366,48 @@ h2{
 
 .suggested-card:hover  {
     transform: scale(1.03);
+}
+
+
+.collection-image-container {
+  position: relative;
+  width: 270px; 
+  height: 200px; 
+  border-radius: 10%;
+  overflow: hidden; 
+}
+
+
+.collection-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10%;
+  transition: opacity 0.5s ease-in-out;
+  display: block;
+}
+
+
+.collection-image-container .hover-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
+.collection-card:hover .hover-image {
+  opacity: 1;
+  /* border: 2px solid green ; */
+}
+
+.collection-card:hover .main-image {
+  opacity: 0;
+}
+
+/* Disable scaling just in case */
+.collection-card:hover .collection-image {
+  transform: none !important;
 }
