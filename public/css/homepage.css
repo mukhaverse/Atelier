@@ -15,6 +15,11 @@ h1{
 
 }
 
+h2{
+  font-family:'playfair display';
+  font-size: 28px;
+}
+
 .icons{
    display: flex; 
    gap: 16px;
@@ -139,10 +144,9 @@ h2{
     
 }
 .Logo img{
-  width: 120px;
-  height: 120px;
-  margin:0;
- 
+  width: 50px;
+  /* height: 120px; */
+  margin-right: 7px;
   
 }
 
