@@ -56,28 +56,17 @@ async function loadCollection(category = null) {
         products = data.products;
         collections = data.collections;
   
-    fetch(`https://atelier-0adu.onrender.com/products/category/${category}`)
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .then(error => console.error(error));
+    
     }
-        console.log("🧱 Products sample:", products);
-console.log("📚 Collections sample:", collections);
+       
 
       
          perCollections = getOneProductPerCollection(products, collections);
-        console.log('📦 Collections loaded:', perCollections);
     return perCollections;
-    /*try {
-        const response = await fetch('https://atelier-0adu.onrender.com/products'); 
-        const data = await response.json();
-        const {products,collection} = data
-        return data;
-    } catch (error) {
-        console.error('Error loading Feed:', error);
-        return []; 
-    }*/
+
+    
 }
+
 
 function getOneProductPerCollection(products, collectionNames) {
     const collectionMap = new Map();
@@ -123,10 +112,7 @@ async function loadSuggested(category = null) {
   .then(response => response.json());
    suggested = data.products;
   
-    fetch(`https://atelier-0adu.onrender.com/products/category/${category}`)
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .then(error => console.error(error));
+    
     }
     return suggested;
 }
@@ -136,6 +122,7 @@ async function displayCollections(category =null) {
     //calls the loading function
     let collections = await loadCollection(category);
     
+    collections = await mergeProductsWithArtists(collections);
 
     // randomize collections
     collections = shuffleArray(collections);
@@ -149,43 +136,50 @@ async function displayCollections(category =null) {
     const gapCard = createGapCard();
     container.appendChild(gapCard);
 
-     // --- Use for...of to allow 'await' inside the loop ---
-    /*for (const product of collections) {
-        
-        // A. Fetch the artist data using the ID from the product
-        const artist = await getArtistById(product.artistId);
-
-        // B. Merge the artist data into the product object for rendering
-        const cardData = {
-            ...product, 
-            // The artist object you get back might have 'username' and 'profilePic'
-            username: artist ? artist.username : 'Unknown',
-            profilePic: artist ? artist.profilePic : 'default/pic.jpg'
-        }*/
 
     //calls the function to create each card disregarding the number of collections 
     collections.forEach(collection => {
         const card = createCollectionCard(collection);
         container.appendChild(card);
     });
-    //const card = createCollectionCard(cardData);
-     //   container.appendChild(card);}
+    
 }
 
+async function mergeProductsWithArtists(products) {
+    const combinedProducts = [];
 
-// Make a function to fetch the artist details based on the ID
-/*async function getArtistById(artistId) {
-    // Correct API call: You should be fetching artist data, not product data
-    // Assuming you have an endpoint like '/artists/:id'
-    const data = await fetch(`https://atelier-0adu.onrender.com/products/id/${artistsId}`)
-    .then(response => response.json());
-    const artist = data.artist;
-    if (!response.ok) {
-        console.error(`Failed to fetch artist ${artistId}`);
-        return null; 
+    for (const product of products) {
+        let response;
+        let fullResponseData; // Renaming to reflect it might be the top-level wrapper
+        let productDetails; // This will hold the inner 'product' object
+        let artist;
+        
+        
+
+        
+            response = await fetch(`https://atelier-0adu.onrender.com/products/id/${product._id}`);
+            fullResponseData = await response.json(); 
+            productDetails= fullResponseData.product;
+           
+            // 3. Extract and merge artist data
+            artist = fullResponseData.artist;
+
+            const finalProduct = {
+                // ⭐️ CRITICAL FIX: Spread the extracted productDetails, not the full response
+                ...productDetails, 
+                
+                username: artist?.username || 'Unknown',
+                profilePic: artist?.profilePic || 'https://upload.wikimedia.org/wikipedia/commons/0/03/Twitter_default_profile_400x400.png',
+            };
+
+            combinedProducts.push(finalProduct);
+
+        
     }
-    return artist;
-}*/
+
+    return combinedProducts;
+}
+
 
 async function displaySuggested(category = null) {
     let suggested = await loadSuggested(category);
