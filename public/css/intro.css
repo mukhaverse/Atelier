@@ -10,6 +10,7 @@ transition: 1s;
 font-family: 'Playfair Display', serif;
 align-items: center;
 pointer-events: none;
+z-index: 100;
 }
 
 .intro-img{

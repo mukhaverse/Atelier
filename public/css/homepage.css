@@ -2,13 +2,14 @@ body{
     background-color: #0d0d0d;
     color:white;
     font-family: 'Inter',sans-serif;
+    padding-top: 120px;
    
 }
 
 h1{
     font-size: 28px;
     font-family:'playfair display';
-    font-weight: 100;
+    font-weight: 400;
     padding-left: 60px;
     padding-top: 36px;
     padding-bottom: 4px;
@@ -36,10 +37,10 @@ border-radius: 50%;
 object-fit: cover;
 display:inline-block;
 vertical-align: middle;
-margin-top: -6px;
+margin-top: -5px;
 }
 
-.icons a{
+.icons a, .add_to_wishlist{
     color: white;
      float:right;
      height: 30px;
@@ -53,6 +54,9 @@ margin-top: -6px;
       margin-right:20px;
       
   
+}
+.add_to_wishlist{
+  margin-bottom: 12px;
 }
 header{
     display: flex;
@@ -217,7 +221,7 @@ h2{
 /*Mayson Grid format*/
 .suggested-grid {
   column-count: 4;          
-  column-gap: 60px;         
+  column-gap: 30px;         
   padding-left: 60px;
   padding-right: 60px;
 }
@@ -225,7 +229,7 @@ h2{
 
 .suggested-card {
   display: inline-block;    
-  margin-bottom: 60px;
+  margin-bottom: 30px;
   width: 100%;
   cursor: pointer;
   transition: transform 0.4s ease-in-out; 
@@ -249,21 +253,40 @@ h2{
   border-radius: 10px; 
 }
 
+.collection-image-container {
+  position: relative;
+  width: 270px; 
+  height: 200px; 
+  border-radius: 10%;
+  overflow: hidden; 
+  cursor: pointer;
+}
+
+
+.collection-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10%;
+  transition: opacity 0.5s ease-in-out;
+  display: block;
+}
+
 /* Responsive tweaks */
 @media (max-width: 1200px) {
   .suggested-grid {
     column-count: 3;
-    column-gap: 40px;
-    padding-left: 40px;
-    padding-right: 40px;
+    column-gap: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
   }
 
   .suggested-card {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
   }
 
   h1{
-   padding-left: 40px;
+   padding-left: 30px;
   }
 
   .gap-space{
@@ -326,6 +349,10 @@ h2{
     width: 180px;
     height: 180px;
   }
+  .collection-image-container {
+  width: 180px; 
+  height: 180px;
+  }
 
   .gap-space{
     width:0;
@@ -352,7 +379,8 @@ h2{
 .Logoimg{height: 36px;}
 /*.navigation{justify-content: space-between;gap: 16px;flex-wrap: wrap;}*/
 .navigation {gap: 44px;margin-left:0px;}
-.icons{justify-content:flex-end;gap: 14px;}
+.icons a {justify-content:flex-end;gap: 0; margin-right: 7px; }
+.icons img{margin-right: 0;}
 .indicator{
   
   width: 80px;}
@@ -365,28 +393,11 @@ h2{
 }
 
 .suggested-card:hover  {
-    transform: scale(1.03);
+    transform: scale(1.05);
 }
 
 
-.collection-image-container {
-  position: relative;
-  width: 270px; 
-  height: 200px; 
-  border-radius: 10%;
-  overflow: hidden; 
-  cursor: pointer;
-}
 
-
-.collection-image-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10%;
-  transition: opacity 0.5s ease-in-out;
-  display: block;
-}
 
 
 .collection-image-container .hover-image {
@@ -411,4 +422,20 @@ h2{
 /* Disable scaling just in case */
 .collection-card:hover .collection-image {
   transform: none !important;
+}
+.fixed {
+    /* 1. Fixes the element relative to the viewport */
+    position: fixed; 
+    
+    /* 2. Positions it at the very top */
+    top: 0; 
+    
+    /* 3. Makes it span the full width */
+    left: 0;
+    right: 0;
+    width: 100%;
+    
+    /* 4. Ensures it stays above other content when scrolling */
+    z-index: 50; /* Use a high number to be safe */
+    background-color: #0d0d0d;
 }

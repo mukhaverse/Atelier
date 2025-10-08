@@ -1,7 +1,7 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #000000;
+  font-family: 'Inter',sans-serif;
+  background-color: #0d0d0d;
   color: white;
   display: flex;
   justify-content: center;
@@ -18,9 +18,9 @@ body {
 }
 
 main.collection_page {
-  width: 85%;
+  
   min-height: 100vh;
-  padding: 20px;
+  padding: 60px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -30,18 +30,19 @@ main.collection_page {
 }
 
 .profile_info {
+  
   text-align: center;
   margin-bottom: 20px;
+  font-size: 18px;
 }
 
 .profile_info h1 {
+font-family: 'Playfair Display', serif;
   font-size: 40px;
-  font-family: 'Playfair Display', serif;
   margin: 5px 0;
 }
 
 .profile_info h4 {
-  font-family: 'Playfair Display', serif;
   margin: 5px 0;
 }
 
@@ -49,13 +50,14 @@ main.collection_page {
 .profile_info h6 {
   margin: 5px 0;
   color: #aaa;
+  font-weight: 500;
 }
 
 .profile_pictures img {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  margin: 15px 0;
+  margin: 0px 0;
   transition: transform 0.3s ease;
   cursor: pointer;
 }
@@ -93,17 +95,20 @@ main.collection_page {
 /* Masonry-style image layout using CSS columns */
 .grid_gallery {
   column-count: 4;       /* number of image columns */
-  column-gap: 15px;      /* space between columns */
+  column-gap: 30px;      /* space between columns */
   width: 100%;
-  margin-bottom: 20px;
+
+  margin-bottom: 30px;
   border-top: 2px solid #333;
-  padding-top: 15px;
+  padding-top: 30px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .grid_gallery a {
   break-inside: avoid;   /* prevent images from breaking between columns */
   display: block;
-  margin-bottom: 15px;
+  margin-bottom: 30px;
   text-decoration: none;
   color: inherit; 
 }
@@ -122,8 +127,45 @@ main.collection_page {
 }
 
 /* Responsive design: reduce to 2 columns on smaller screens */
+@media (max-width: 1200px) {
+  .grid_gallery {
+    column-count: 3;
+    
+   
+  }}
+
 @media (max-width: 768px) {
   .grid_gallery {
-    column-count: 2;
+  column-count: 2;
+  column-gap: 24px;      /* space between columns */
+  margin-bottom: 24px;
+  padding-top: 24px;
   }
+  .grid_gallery a{
+    margin-bottom: 24px;
+  }
+  main.collection_page {
+  
+  padding: 24px;
+}
+}
+@media (max-width: 480px) {
+  .grid_gallery {
+    column-count: 2;
+    column-gap: 14px;      /* space between columns */
+
+    padding-top: 14px;
+  
+  }
+  .grid_gallery a{
+    margin-bottom: 14px;
+  }
+  main.collection_page {
+  
+  padding: 14px;
+}
+.profile_pictures img {
+  width: 60px;
+  height: 60px;
+}
 }
