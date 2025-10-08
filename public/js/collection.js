@@ -29,11 +29,10 @@ function addCard(item) {
 
   // Click to product page
   a.addEventListener("click", (e) => {
-  e.preventDefault(); 
-  const id = item._id || item.id; //depend on API
-
-  window.location.href = `product.html?id=${encodeURIComponent(id)}`; // Redirect to product page with ID
-  
+  e.preventDefault();
+  const id   = item._id || item.id;
+  const slug = new URLSearchParams(location.search).get("name");
+  window.location.href = `product.html?id=${encodeURIComponent(id)}&collection=${encodeURIComponent(slug)}`;
 });
 
   a.appendChild(img);
