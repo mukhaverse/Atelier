@@ -41,37 +41,42 @@ let slogan = document.querySelector('h2.int-logo-slogan');
 
 window.addEventListener('DOMContentLoaded', () => {
 
+  if (!sessionStorage.getItem('introPlayed')) {
 
-  setTimeout(() => {
-    introImg.style.transition = 'opacity 1s ease-in-out';
-    introImg.style.opacity = '0';
-  }, 2000);
+    
+    setTimeout(() => {
+      introImg.style.transition = 'opacity 1s ease-in-out';
+      introImg.style.opacity = '0';
+    }, 2000);
 
-  setTimeout(() => {
-    logoImage.classList.add('active');
-    logoWord.classList.add('active');
-  }, 2500);
+    setTimeout(() => {
+      logoImage.classList.add('active');
+      logoWord.classList.add('active');
+    }, 2500);
 
+    setTimeout(() => {
+      slogan.classList.add('active');
+    }, 3500);
 
-  setTimeout(() => {
-    slogan.classList.add('active');
-  }, 3500);
+    setTimeout(() => {
+      logoImage.classList.remove('active');
+      logoImage.classList.add('fade');
+      logoWord.classList.remove('active');
+      logoWord.classList.add('fade');
+      slogan.classList.remove('active');
+      slogan.classList.add('fade');
+    }, 5500); 
 
-  
-  setTimeout(() => {
-    logoImage.classList.remove('active');
-    logoImage.classList.add('fade');
+    setTimeout(() => {
+      intro.style.transition = 'opacity 1s ease-in-out';
+      intro.style.opacity = '0';
+    }, 6550); 
 
-    logoWord.classList.remove('active');
-    logoWord.classList.add('fade');
+    
+    sessionStorage.setItem('introPlayed', 'true');
 
-    slogan.classList.remove('active');
-    slogan.classList.add('fade');
-  }, 5500); 
-
-  
-  setTimeout(() => {
-    intro.style.transition = 'opacity 1s ease-in-out';
-    intro.style.opacity = '0';
-  }, 6550); 
+  } else {
+    
+    intro.style.display = 'none';
+  }
 });
