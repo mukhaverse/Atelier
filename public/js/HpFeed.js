@@ -307,7 +307,7 @@ function createCollectionCard(collection) {
         
         if (collectionName) {
 
-            window.location.href = `collection.html?name=${encodeURIComponent(collectionName)}`;
+            window.location.href = `public/collection.html?name=${encodeURIComponent(collectionName)}`;
         }
     });
     return card; 
@@ -338,7 +338,7 @@ function createSuggestedCard(suggested) {
         
         if (productId) {
 
-            window.location.href = `product.html?id=${encodeURIComponent(productId)}`;
+            window.location.href = `public/product.html?id=${encodeURIComponent(productId)}`;
         } else {
             console.error('No product ID found for suggested item:', suggested);
         }
