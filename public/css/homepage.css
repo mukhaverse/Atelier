@@ -448,3 +448,73 @@ h2{
   margin-bottom: 8px;
   margin-right: 2px;
 }
+
+
+
+/* Skeleton loading  */
+
+.skeleton {
+  background: linear-gradient(90deg, #1a1a1a 25%, #242424 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 10%;
+}
+
+.skeleton-square {
+  width: 270px;
+  height: 200px;
+  border-radius: 10%;
+}
+
+.skeleton-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.skeleton-text {
+  height: 16px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.skeleton-text.short {
+  width: 120px;
+}
+
+.skeleton-text.medium {
+  width: 180px;
+}
+
+
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+
+
+@media (max-width: 480px) {
+  .skeleton-square {
+    width: 180px;
+    height: 180px;
+  }
+  
+  .skeleton-circle {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .skeleton-text.short {
+    width: 100px;
+  }
+  
+  .skeleton-text.medium {
+    width: 140px;
+  }
+}

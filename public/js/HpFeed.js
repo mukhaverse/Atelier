@@ -117,37 +117,63 @@ async function loadSuggested(category = null) {
     return suggested;
 }
 
-
-async function displayCollections(category =null) {
-    //calls the loading function
-    let collections = await loadCollection(category);
+function createCollectionSkeletonCard() {
+    const skeletonCard = document.createElement('div');
+    skeletonCard.className = 'collection-card';
     
-    collections = await mergeProductsWithArtists(collections);
-
-    // randomize collections
-    collections = shuffleArray(collections);
-
+    skeletonCard.innerHTML = `
+        <div class="collection-image-container">
+            <div class="collection-image skeleton skeleton-square"></div>
+        </div>
+        <div class="collection-info">            
+            <div class="profile-picture skeleton skeleton-circle"></div>
+            <div>
+                <div class="skeleton skeleton-text medium"></div>
+                <div class="skeleton skeleton-text short"></div>
+            </div>          
+        </div>
+    `;
+    
+    return skeletonCard;
+}
+async function displayCollections(category =null) {
     //calls the div 
     const container = document.getElementById('collections-container');
-    //makes sure that the div is empty
     container.innerHTML = '';
 
     // Gap before first card
     const gapCard = createGapCard();
     container.appendChild(gapCard);
 
-    // --- ADDED: find next product in the same collection for hover image ---
+    //loading skeleton
+
+    for (let i = 0; i < 4; i++) {
+        const skeletonCard = createCollectionSkeletonCard();
+        container.appendChild(skeletonCard);
+    }
+
+    //calls the loading function
+    let collections = await loadCollection(category);
+    collections = await mergeProductsWithArtists(collections);
+
+    // randomize collections
+    collections = shuffleArray(collections);
+
+    container.innerHTML = '';
+    container.appendChild(gapCard);
+
+    // hover logic
 for (let i = 0; i < collections.length; i++) {
     const next = collections[i + 1];
-    // if the next product is in the same collection, use its image for hover
+    
     if (next && Array.isArray(collections[i].collections) && next.collections.includes(collections[i].collections[0])) {
         collections[i].hoverImage = next.images[0];
     } else {
-        // fallback to same image if no next product in same collection
+        // same image if no next product found
         collections[i].hoverImage = collections[i].images[0];
     }
 }
-// --- END ADDED ---
+
 
 
 
