@@ -518,3 +518,37 @@ h2{
     width: 140px;
   }
 }
+
+/* skeleton for suggested */
+.suggested-card .skeleton {
+  background: linear-gradient(90deg, #1a1a1a 25%, #242424 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 10px;
+}
+
+.suggested-skeleton {
+  width: 100%;
+  height: 200px; 
+  border-radius: 10px;
+}
+
+
+
+@media (max-width: 1200px) {
+  .suggested-skeleton {
+    height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .suggested-skeleton {
+    height: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .suggested-skeleton {
+    height: 120px;
+  }
+}

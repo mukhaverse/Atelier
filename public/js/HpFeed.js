@@ -220,20 +220,41 @@ async function mergeProductsWithArtists(products) {
     return combinedProducts;
 }
 
+function createSuggestedSkeletonCard() {
+    const skeletonCard = document.createElement('div');
+    skeletonCard.className = 'suggested-card';
+    
+    skeletonCard.innerHTML = `
+        <div class="column">
+            <div class="photo">
+                <div class="suggested-skeleton skeleton"></div>
+            </div>
+        </div>
+    `;
+    
+    return skeletonCard;
+}
 
 async function displaySuggested(category = null) {
-    let suggested = await loadSuggested(category);
+
+    const container = document.getElementById('suggested-container');
+    
+    // laod skeletons 
+    container.innerHTML = '';
+
+    for (let i = 0; i < 8; i++) {
+        const skeletonCard = createSuggestedSkeletonCard();
+        container.appendChild(skeletonCard);
+    }
+
     //chooses the category so it can filter the posts
     //if its home dont carry out since no filter is needed
-    
 
-  
-    // randomize suggested
+  let suggested = await loadSuggested(category);
     suggested = shuffleArray(suggested);
-    //console.log("Shuffled suggested array:", suggested);
-        //calls the div
-    const container = document.getElementById('suggested-container');
-        //make sure its empty
+    
+    
+    //remove skeletone loader
     container.innerHTML = '';
 
     //calls the function to create each card disregarding the number of suggested posts 
