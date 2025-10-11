@@ -51,7 +51,7 @@ function renderProduct(p) {
 
   // Price
   if ($price) {
-    if (price != null) $price.textContent = (typeof price === "number" ? `$${price}` : String(price));
+    if (price != null) $price.textContent = (typeof price === "number" ? `${price} SR` : String(price));
     else $price.style.display = "none";
   }
 
