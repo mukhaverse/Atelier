@@ -10,7 +10,7 @@ const registerBtn = document.querySelector('.reg-link')
 const loginBtn = document.querySelector('.log-link')
 
 const welc = document.querySelectorAll('.wm')
-const join = document.querySelectorAll('.jm')
+// const join = document.querySelectorAll('.jm')  
 
 const timeline1 = gsap.timeline({ paused: true })
 
@@ -19,40 +19,41 @@ const mid = window.matchMedia("(max-width: 768px)");
 const small = window.matchMedia("(max-width: 480px)");
 
 
-
-if (small.matches) {
-  console.log("Viewport is 480px or smaller.");
-
-
-  timeline1.to(shape, { scale: 4, duration: 1, ease: 'cric'})
-            .to(logLeft, { opacity: 0, duration: 0.1 })
-            .to(signRight, {opacity: 1, duration: 0.1})
-            .to(shape,{  x: '-105%', scale: 1,y: '-170%' , duration: 1, ease: 'cric' })
-  
-
-
-} else if (mid.matches) {
-    console.log("Medium screen (≤768px)");
-
-     timeline1.to(shape, { scale: 4.3, duration: 1, ease: 'cric'})
-            .to(logLeft, { opacity: 0, duration: 0.3 })
-            .to(signRight, {opacity: 1, duration: 0.3})
-            .to(shape,{  x: '-140%', scale: 1,y: '-145%' , duration: 1, ease: 'cric' })
-    
-
-
-
-  } else if (larg.matches) {
+if (larg.matches) {
   console.log("Viewport is 1700px or smaller.");
 
 
   timeline1.to(welc,{opacity: 0, x: 30, duration: .7, stagger:.2 })
-            .to(shape, { scale: 3,  duration: 1, ease: 'cric' })
+            .to(shape, { scale: 3,  duration: 1, ease: 'circ' })
             .to(logLeft, { opacity: 0, duration: 0.1 })
             .to(signRight, {opacity: 1, duration: 0.1})
-            .to(shape,{  x: '-100%',scale: 1, duration: 1,  ease: 'cric' })
-            .to(join,{opacity: 1, duration:.7, stagger:.2})
+            .to(shape,{  x: '-100%',scale: 1, duration: 1,  ease: 'circ' })
+            
+
+  console.log(7)
+
+} 
+else if (mid.matches) {
+    console.log("Medium screen (≤768px)");
+
+     timeline1.to(shape, { scale: 4.3, duration: 1, ease: 'circ'})
+            .to(logLeft, { opacity: 0, duration: 0.3 })
+            .to(signRight, {opacity: 1, duration: 0.3})
+            .to(shape,{  x: '-140%', scale: 1,y: '-145%' , duration: 1, ease: 'circ' })
+    
+
+
+
+  } else if (small.matches) {
+  console.log("Viewport is 480px or smaller.");
+
+
+  timeline1.to(shape, { scale: 4, duration: 1, ease: 'circ'})
+            .to(logLeft, { opacity: 0, duration: 0.1 })
+            .to(signRight, {opacity: 1, duration: 0.1})
+            .to(shape,{  x: '-105%', scale: 1,y: '-170%' , duration: 1, ease: 'circ' })
   
+
 
 } 
 
@@ -188,3 +189,14 @@ loginBtn.addEventListener("click", () => {
         
 // })
 
+const loginForm = document.querySelector('.Login form')
+
+loginForm.addEventListener('submit', (e) =>{
+    e.preventDefault()
+    const username = document.getElementById('login-username').value
+    const password = document.getElementById('login-password').value
+
+    localStorage.setItem('loggedIn', JSON.stringify({username,password}))
+
+    console.log('user logged :', username)
+})
