@@ -189,6 +189,7 @@ body{
         opacity: 0;
         text-align: center;
         padding-left: 30px;
+        pointer-events: none;
     }
 
 @media (max-width: 768px) {
@@ -230,7 +231,8 @@ body{
         left: 60%;
     }
     .welc{
-        opacity: 0;
+        opacity: 1;
+         pointer-events: none;
     }
 
     .join{
