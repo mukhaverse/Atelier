@@ -168,17 +168,27 @@ body{
         transform: translate(-50%, -50%);
         width: 400px;
         color: #fdfdfd;
+        text-align: center;
+        padding-right: 30px;
+    }
+    .welc h2{
+        margin-bottom: 50px;
+    }
+    .join h2{
+        margin-bottom: 50px;
     }
 
  .join{
         position: absolute;
-        z-index: 5;
+        z-index: 10;
         left: 20%;
         top: 50%;
         transform: translate(-50%, -50%);
         width: 400px;
         color: #fdfdfd;
         opacity: 0;
+        text-align: center;
+        padding-left: 30px;
     }
 
 @media (max-width: 768px) {
@@ -219,6 +229,13 @@ body{
         top: 65%;
         left: 60%;
     }
+    .welc{
+        opacity: 0;
+    }
+
+    .join{
+        opacity: 0;
+    }
 }
 
 @media (max-width: 480px) {
@@ -258,6 +275,13 @@ body{
         position: absolute;
         top: 70%;
         left: 50%;
+    }
+    .welc{
+        opacity: 0;
+    }
+
+    .join{
+        opacity: 0;
     }
 }
 

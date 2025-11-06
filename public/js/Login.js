@@ -51,6 +51,7 @@ if (small.matches) {
             .to(logLeft, { opacity: 0, duration: 0.1 })
             .to(signRight, {opacity: 1, duration: 0.1})
             .to(shape,{  x: '-100%',scale: 1, duration: 1,  ease: 'cric' })
+            .to(join,{opacity: 1, duration:.7, stagger:.2})
   
 
 } 
