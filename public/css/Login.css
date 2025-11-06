@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
 }
 
 body{
@@ -160,8 +160,26 @@ body{
         pointer-events: none;
     }
 
+.welc{
+        position: absolute;
+        z-index: 5;
+        left: 80%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 400px;
+        color: #fdfdfd;
+    }
 
-
+ .join{
+        position: absolute;
+        z-index: 5;
+        left: 20%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 400px;
+        color: #fdfdfd;
+        opacity: 0;
+    }
 
 @media (max-width: 768px) {
     body {

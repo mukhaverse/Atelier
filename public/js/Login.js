@@ -9,6 +9,9 @@ const signRight = document.querySelector('.sign-div')
 const registerBtn = document.querySelector('.reg-link') 
 const loginBtn = document.querySelector('.log-link')
 
+const welc = document.querySelectorAll('.wm')
+const join = document.querySelectorAll('.jm')
+
 const timeline1 = gsap.timeline({ paused: true })
 
 const larg = window.matchMedia("(max-width: 1700px)");
@@ -43,7 +46,8 @@ if (small.matches) {
   console.log("Viewport is 1700px or smaller.");
 
 
-  timeline1.to(shape, { scale: 3,  duration: 1, ease: 'cric' })
+  timeline1.to(welc,{opacity: 0, x: 30, duration: .7, stagger:.2 })
+            .to(shape, { scale: 3,  duration: 1, ease: 'cric' })
             .to(logLeft, { opacity: 0, duration: 0.1 })
             .to(signRight, {opacity: 1, duration: 0.1})
             .to(shape,{  x: '-100%',scale: 1, duration: 1,  ease: 'cric' })
