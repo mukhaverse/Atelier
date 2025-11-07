@@ -1,0 +1,162 @@
+/* Base */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #0d0d0d;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+}
+
+/* Back button (fixed) */
+.back_icon { position: fixed; top: 28px; left: 20px; }
+.back_icon img { transition: transform .2s ease; }
+.back_icon img:hover { transform: scale(1.1); }
+
+/* ===== أيقونات الهوم والسلة (يمين فوق الصفحة) ===== */
+.side_icons {
+  position: fixed;
+  top: 28px;
+  right: 30px; /* ← بدّلنا من left إلى right */
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  z-index: 100;
+}
+
+.side_icons img {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1); /* يخليها بيضاء بالكامل */
+  opacity: 0.9;
+  cursor: pointer;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.side_icons img:hover {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+
+/* Main container */
+main.wishlist_page{
+  min-height:100vh;
+  padding:60px;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  margin-top:50px;
+  border-radius:20px;
+}
+
+/* Title only */
+.profile_info{
+  text-align:center;
+  margin-bottom:20px;
+}
+.profile_info h1{
+  font-family:'Playfair Display', serif;
+  font-size:40px;
+  margin:5px 0;
+}
+
+/* Masonry grid using CSS columns */
+.grid_gallery {
+  column-count: 4;       /* number of image columns */
+  column-gap: 30px;      /* space between columns */
+  width: 100%;
+
+  margin-bottom: 30px;
+  border-top: 2px solid #333;
+  padding-top: 30px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+/* ===== تأثير التكبير عند تمرير الماوس على الصور (نفس collection) ===== */
+.grid_gallery img {
+  width: 100%;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.grid_gallery img:hover {
+  transform: scale(1.05);
+}
+
+/* ===== Heart icon (toggle without JS) ===== */
+.fav-toggle{
+  position:absolute; opacity:0; pointer-events:none;
+}
+
+.fav{
+  position:absolute; left:12px; bottom:12px; z-index:5;
+  display:grid; 
+  place-items:center;
+  border-radius:50%;
+
+  background-color: #333;
+  padding: 6px;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.5s ease;
+
+}
+.fav img{
+  width:18px; height:18px;
+}
+
+/* ---- Hover لطيف مطابق لملف collection ---- */
+
+.grid_gallery .card{
+  position: relative;
+  break-inside: avoid;
+  display: block;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 30px;
+  background: #18191b;
+  border: 1px solid #26282c;
+  box-shadow: 0 8px 22px rgba(0,0,0,.35);
+  transform: translateZ(0);
+}
+
+.grid_gallery .card img{
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  transform-origin: center center;
+  transition: transform .22s cubic-bezier(.22,.61,.36,1);
+  will-change: transform;
+}
+
+/* اجعل الضغط على القلب لا يفتح الرابط */
+.card .fav, .card .fav *{ pointer-events:auto; }
+
+/* Responsive */
+@media (max-width:1200px){
+  .grid_gallery{ column-count:3; }
+}
+@media (max-width:768px){
+  .grid_gallery{
+    column-count:2; column-gap:24px;
+    margin-bottom:24px; padding-top:24px;
+  }
+  .grid_gallery .card{ margin-bottom:24px; }
+  main.wishlist_page{ padding:24px; }
+}
+@media (max-width:480px){
+  .grid_gallery{
+    column-count:2; column-gap:14px; padding-top:14px;
+  }
+  .grid_gallery .card{ margin-bottom:14px; }
+  main.wishlist_page{ padding:14px; }
+}

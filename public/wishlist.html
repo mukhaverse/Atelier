@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width">
+  <title>Wishlist</title>
+  <link rel="stylesheet" href="css/wishlist.css">
+</head>
+
+<body>
+ <!-- Page header with back button -->
+<header class="page_header">
+  <!-- سهم الرجوع -->
+  <a href="javascript:history.back()" class="back_icon" onclick="history.back()">
+    <img src="assets/back_icon.svg" alt="back" width="22" height="22">
+  </a>
+
+  <!-- أيقونات الهوم والسلة (يمين فوق) -->
+  <section class="side_icons">
+    <img src="assets/home_icon.svg" alt="home icon" width="22" height="22" onclick="location.href='index.html'">
+    <img src="assets/cart_icon.svg" alt="cart icon" width="22" height="22" onclick="location.href='cart.html'">
+  </section>
+</header>
+
+
+  <!-- Main content area -->
+  <main class="wishlist_page">
+
+    <!-- Title ONLY (تم حذف Saved items) -->
+    <section class="profile_info">
+      <h1 id="wishlistTitle">Wishlist</h1>
+    </section>
+
+    <!-- Masonry gallery -->
+    <section id="grid" class="grid_gallery">
+
+      <!-- Card 1 -->
+      <a class="card" href="#">
+        <img src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?q=80&w=1200&auto=format&fit=crop" alt="item">
+        <input type="checkbox" class="fav-toggle" id="wish-1" />
+        <label class="fav" for="wish-1" aria-label="Add to wishlist">
+          <img src="assets/heart_icon_(added in wishlist).svg" alt="fav">
+        </label>
+      </a>
+
+      <!-- Card 2 -->
+      <a class="card" href="#">
+        <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1200&auto=format&fit=crop" alt="item">
+        <input type="checkbox" class="fav-toggle" id="wish-2" />
+        <label class="fav" for="wish-2" aria-label="Add to wishlist">
+          <img src="assets/heart_icon_(added in wishlist).svg" alt="fav">
+        </label>
+      </a>
+
+      <!-- Card 3 -->
+      <a class="card" href="#">
+        <img src="https://images.unsplash.com/photo-1496317899792-9d7dbcd928a1?q=80&w=1200&auto=format&fit=crop" alt="item">
+        <input type="checkbox" class="fav-toggle" id="wish-3" />
+        <label class="fav" for="wish-3" aria-label="Add to wishlist">
+          <img src="assets/heart_icon_(added in wishlist).svg" alt="fav">
+        </label>
+      </a>
+
+      <!-- Card 4 (tall) -->
+      <a class="card tall" href="#">
+        <img src="https://images.unsplash.com/photo-1582582494700-4447a2a3e4cb?q=80&w=1200&auto=format&fit=crop" alt="item">
+        <input type="checkbox" class="fav-toggle" id="wish-4" />
+        <label class="fav" for="wish-4" aria-label="Add to wishlist">
+          <img src="assets/heart_icon_(added in wishlist).svg" alt="fav">
+        </label>
+      </a>
+
+      <!-- يمكنك تكرار البطاقات بنفس النمط -->
+      <a class="card" href="#">
+        <img src="https://images.unsplash.com/photo-1495567720989-cebdbdd97913?q=80&w=1200&auto=format&fit=crop" alt="item">
+        <input type="checkbox" class="fav-toggle" id="wish-5" />
+        <label class="fav" for="wish-5" aria-label="Add to wishlist">
+          <img src="assets/heart_icon_(added in wishlist).svg" alt="fav">
+        </label>
+      </a>
+
+      <a class="card" href="#">
+        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1200&auto=format&fit=crop" alt="item">
+        <input type="checkbox" class="fav-toggle" id="wish-6" />
+        <label class="fav" for="wish-6" aria-label="Add to wishlist">
+          <img src="assets/heart_icon_(added in wishlist).svg" alt="fav">
+        </label>
+      </a>
+
+      <a class="card" href="#">
+        <img src="https://images.unsplash.com/photo-1526045612212-70caf35c14df?q=80&w=1200&auto=format&fit=crop" alt="item">
+        <input type="checkbox" class="fav-toggle" id="wish-7" />
+        <label class="fav" for="wish-7" aria-label="Add to wishlist">
+          <img src="assets/heart_icon_(added in wishlist).svg" alt="fav">
+        </label>
+      </a>
+
+      <a class="card" href="#">
+        <img src="https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?q=80&w=1200&auto=format&fit=crop" alt="item">
+        <input type="checkbox" class="fav-toggle" id="wish-8" />
+        <label class="fav" for="wish-8" aria-label="Add to wishlist">
+          <img src="assets/heart_icon_(added in wishlist).svg" alt="fav">
+        </label>
+      </a>
+
+    </section>
+
+  </main>
+
+</body>
+</html>
