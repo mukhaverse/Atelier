@@ -8,6 +8,9 @@ const artistSchema = new mongoose.Schema({
     name: { type: String, required: true },
     username: { type: String, required: true },
     profilePic: { type: String, default: "" },
+    email: { type: String, default: "", required: true},
+  links: { type: [String], default: [] },
+  bio: {type: String,default: "" }
 });
 
 const artist = mongoose.model("artist", artistSchema);
