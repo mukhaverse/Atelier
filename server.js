@@ -2,6 +2,7 @@
  const mongoose = require("mongoose");
  const product = require("./models/product");
  const artist = require("./models/artist");
+ const User = require('./models/user');
  const cors = require('cors');
  
  //اتصال قاعدة الييانات 
