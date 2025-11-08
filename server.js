@@ -7,7 +7,7 @@
  
  //اتصال قاعدة الييانات 
  mongoose
-   .connect("mongodb+srv://ghaida:Gs.201424@cluster.cakgapc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster")
+   .connect("mongodb+srv://ghaida:GS.201424@cluster.cakgapc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster")
    .then(() => {
      console.log(" connected successfully");
    })
