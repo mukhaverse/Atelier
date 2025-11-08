@@ -35,7 +35,7 @@ app.get("/products", async (req, res) =>{
     return
   }catch (error) {
     console.log("error while fetching products ")
-    return res.send("error")
+    return res.send("error ", error)
   }
 
     
