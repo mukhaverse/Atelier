@@ -156,12 +156,12 @@ app.get("/collections", async (req, res) => {
   }
 });
 
-app.get("/products/artisanId/:artisanId", async (req, res) =>{
+app.get("/products/artistId/:artistId", async (req, res) =>{
 
   try{
-    const  artisanId  = req.params.artisanId
+    const  artistId  = req.params.artistId
 
-    const productsByArtisan = await product.find({ artisanId: artisanId })
+    const productsByArtisan = await product.find({ artistId: artistId })
 
     if(!productsByArtisan){
       return res.send("No product was found for this category")
