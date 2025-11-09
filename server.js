@@ -2,11 +2,12 @@
  const mongoose = require("mongoose");
  const product = require("./models/product");
  const artist = require("./models/artist");
+ const User = require('./models/user');
  const cors = require('cors');
  
  //اتصال قاعدة الييانات 
  mongoose
-   .connect("mongodb+srv://ghaida:Gs.201424@cluster.cakgapc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster")
+   .connect("mongodb+srv://ghaida:GS.201424@cluster.cakgapc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster")
    .then(() => {
      console.log(" connected successfully");
    })
@@ -34,8 +35,8 @@ app.get("/products", async (req, res) =>{
     res.json(products)
     return
   }catch (error) {
-    console.log("error while fetching products ")
-    return res.send("error")
+    console.log("error while fetching products ", error)
+    return res.send("error ")
   }
 
     
@@ -155,6 +156,44 @@ app.get("/collections", async (req, res) => {
   }
 });
 
+app.get("/products/artistId/:artistId", async (req, res) =>{
+
+  try{
+    const  artistId  = req.params.artistId
+
+    const productsByArtisan = await product.find({ artistId: artistId })
+
+    if(!productsByArtisan){
+      return res.send("No product was found for this category")
+    }
+
+    res.json(productsByArtisan)
+    
+
+  }catch (error) {
+    console.log("error while fetching products by artisan", error)
+    return res.send("error")
+  }
+ 
+
+})
+
+app.get("/products/artistId/available/:artistId", async (req, res) => {
+  try {
+    const artistId = req.params.artistId;
+
+    const inStockProducts = await product.find({
+      artistId: artistId,
+      availability: "In Stock"
+    });
+
+    res.json(inStockProducts);
+
+  } catch (error) {
+    console.log("Error while fetching in-stock products by artist:", error);
+    return res.send("Error fetching in-stock products");
+  }
+});
 
 
 

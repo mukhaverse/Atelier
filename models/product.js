@@ -18,6 +18,7 @@ const productSchema = new mongoose.Schema({
 
     // IDهنا نربط المنتج في الفنان عن طريق 
     artistId: { type: String, required: true },
+    availability: { type: String, default: "In Stock" },
 });
 
 const product = mongoose.model("product", productSchema);
