@@ -159,7 +159,7 @@ app.get("/collections", async (req, res) => {
 app.get("/products/artisanId/:artisanId", async (req, res) =>{
 
   try{
-    const  artisanId  = req.params.category
+    const  artisanId  = req.params.artisanId
 
     const productsByArtisan = await product.find({ artisanId: artisanId })
 
