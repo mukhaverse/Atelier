@@ -178,6 +178,23 @@ app.get("/products/artistId/:artistId", async (req, res) =>{
 
 })
 
+app.get("/products/artistId/available/:artistId", async (req, res) => {
+  try {
+    const artistId = req.params.artistId;
+
+    const inStockProducts = await product.find({
+      artistId: artistId,
+      availability: "In Stock"
+    });
+
+    res.json(inStockProducts);
+
+  } catch (error) {
+    console.log("Error while fetching in-stock products by artist:", error);
+    return res.send("Error fetching in-stock products");
+  }
+});
+
 
 
 
