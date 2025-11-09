@@ -156,6 +156,27 @@ app.get("/collections", async (req, res) => {
   }
 });
 
+app.get("/products/artisanId/:artisanId", async (req, res) =>{
+
+  try{
+    const  artisanId  = req.params.category
+
+    const productsByArtisan = await product.find({ artisanId: artisanId })
+
+    if(!productsByArtisan){
+      return res.send("No product was found for this category")
+    }
+
+    res.json(productsByArtisan)
+    
+
+  }catch (error) {
+    console.log("error while fetching products by artisan", error)
+    return res.send("error")
+  }
+ 
+
+})
 
 
 

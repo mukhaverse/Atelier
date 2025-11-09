@@ -16,8 +16,8 @@ const transporter = nodemailer.createTransport({
 const mailOptions = {
     from:  process.env.GMAIL_USER,
     to: "shomok.a12@gmail.com",
-    subject: "First Mail Test ✔",
-    text: "Hiiii, you just sent your first nodejs email "
+    subject: "Second Mail Test ✔",
+    text: "Hiiii, you just sent your second nodejs email "
 }
 
 transporter.sendMail(mailOptions, (error, info) => {
