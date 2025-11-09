@@ -87,6 +87,8 @@ loginBtn.addEventListener("click", () => {
 
 /////////////////////////////////////////////////////////// Logic
 
+
+
 const loginForm = document.querySelector('.Login form')
 
 loginForm.addEventListener('submit', (e) =>{
@@ -94,7 +96,21 @@ loginForm.addEventListener('submit', (e) =>{
     const username = document.getElementById('login-username').value
     const password = document.getElementById('login-password').value
 
-    localStorage.setItem('loggedIn', JSON.stringify({username,password}))
+    // here add the backend logic to check the account exist or not
 
-    console.log('user logged :', username)
+
+
+
+
+    
+    
+// if true then log them in &  store in localstorage  
+    setLoggedIn(username, password)
+    
 })
+
+
+function setLoggedIn(username, password) {
+  localStorage.setItem('loggedIn', JSON.stringify({ username, password }))
+  console.log('user logged :', username)
+}
