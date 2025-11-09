@@ -57,16 +57,16 @@ main.wishlist_page{
 }
 
 /* Title */
-.profile_info{
+.wishlistTitle{
   text-align:center;
   margin-bottom:20px;
   font-size: 18px;
 }
 
-.profile_info h1{
+.wishlistTitle h1{
   font-family:'Playfair Display', serif;
   font-size:40px;
-  margin:5px 0;
+  margin: 5px 0 50px;
 }
 
 /* Masonry-style image layout using CSS columns */
@@ -105,11 +105,11 @@ main.wishlist_page{
 }
 
 /* ===== Heart icon (toggle without JS) ===== */
-.fav-toggle{
+.fav_icon-toggle{
   position:absolute; opacity:0; pointer-events:none;
 }
 
-.fav{
+.fav_icon{
   position: absolute;
   left: 12px;
   bottom: 12px;
@@ -126,7 +126,7 @@ main.wishlist_page{
   transition: all 0.2s ease;
 }
 
-.fav img{
+.fav_icon img{
   position:absolute; 
   top:50%; 
   left:50%;
@@ -138,11 +138,11 @@ main.wishlist_page{
   pointer-events: none;
 }
 
-.fav:hover { 
+.fav_icon:hover { 
   transform: scale(1.09);
 }
 
-.cart-cta{
+.cart_icon{
   position: absolute;
   left: calc(50% + 25px);
   bottom: 12px;
@@ -162,7 +162,7 @@ main.wishlist_page{
   cursor: pointer;
 }
 
-.cart-cta img{
+.cart_icon img{
   position:absolute; 
   top:50%; 
   left:50%;
@@ -175,12 +175,12 @@ main.wishlist_page{
   filter: brightness(0) invert(1);
 }
 
-.cart-cta:hover { 
+.cart_icon:hover { 
   transform: translate(-50%, 0) scale(1.03);
 }
 
-.card:hover .cart-cta,
-.grid_gallery a:hover .cart-cta{
+.card:hover .cart_icon,
+.grid_gallery a:hover .cart_icon{
   opacity: 1;
   pointer-events: auto;
   transition: opacity .25s ease, transform .25s ease;
@@ -207,7 +207,7 @@ main.wishlist_page{
   main.wishlist_page{ 
     padding:24px; 
   }
-  .profile_info h1{ 
+  .wishlistTitle h1{ 
     margin-top: 80px;
     display: block;
   }
@@ -225,7 +225,7 @@ main.wishlist_page{
   main.wishlist_page{ 
     padding:14px; 
   }
-  .profile_info h1{
+  .wishlistTitle h1{
     margin-top: 80px;
     display: block;
   }
