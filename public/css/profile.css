@@ -1,0 +1,221 @@
+body{
+    background-color: #0d0d0d;
+    color:white;
+    font-family: 'Inter',sans-serif;
+   padding-top: 80px;;
+}
+h1{
+    font-size: 28px;
+    font-family:'playfair display';
+    font-weight: 400;
+    padding-left: 60px;
+    padding-top: 36px;
+    padding-bottom: 4px;
+
+}
+.back_icon {
+  position: fixed;
+  top: 20px;
+  left: 10px;
+}
+
+.back_icon img {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.back_icon img:hover {
+  transform: scale(1.1);
+}
+.name{
+    font-size: 20px;
+    font-weight: 300;
+    margin-bottom: 4px;
+    text-align: center;
+    
+}
+.username{
+    font-size: 14px;
+      color: #aaa;
+      margin:0;
+      padding: 0;
+    text-align: center;
+}
+.profilePic{
+    text-align: center;
+}
+.profilePic img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  margin-top: 12px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+/* --- Base Circular Link (Initial State) --- */
+.link {
+    background-color: #242424;
+    color: white; 
+    margin: 12px auto;
+    
+    /* 1. SET FIXED SQUARE DIMENSIONS */
+    width: 40px; 
+    height: 40px; 
+    
+    /* 2. MAKE IT A CIRCLE */
+    border-radius: 100%; 
+    
+    /* 3. CRITICAL: HIDE THE TEXT */
+    overflow: hidden; 
+    
+    /* 4. SET INITIAL MAX-WIDTH FOR TRANSITION */
+    
+    /* 5. CENTER CONTENT INSIDE */
+    display: flex;
+    justify-content: center; /* Centers the icon in the initial state */
+    align-items: center; 
+    
+    /* 6. ADD TRANSITION FOR ANIMATION */
+    transition: max-width 2s ease-in-out, 
+                border-radius 0.0s ease-in-out,
+                background-color 0.3s;
+}
+
+/* --- Anchor (Link) Styling: Controls internal layout --- */
+.link a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit; 
+    padding: 0 10px; /* Add some internal padding */
+    white-space: nowrap; /* Keep content on a single line */
+}
+
+/* Style the image icon */
+.link img {
+    width: 18px; 
+    height: 18px;
+    flex-shrink: 0; /* Prevents the icon from shrinking */
+}
+
+/* Style the text and space it from the icon */
+.link .link-text {
+    /* 1. CRITICAL: Set initial opacity to 0 (hidden) */
+    opacity: 0;
+    
+    /* 2. Push the text away from the icon to ensure it's clipped */
+    margin-left: -80px; 
+    
+    /* 3. Add transition to animate the opacity and margin change */
+    transition: opacity 0.3s ease-in-out, margin-left 0.3s ease-in-out;
+}
+
+/* --- Hover State (Showing the Text) --- */
+.link:hover .link-text {
+    /* 1. Show the text */
+    opacity: 1;
+    
+    /* 2. Bring the text back to its correct position */
+    margin-left: 8px; /* Use the same margin you had for spacing */
+}
+
+/* --- HOVER STATE: Expands the container and changes shape --- */
+.link:hover {
+    /* EXPANSION: Allows the width to grow up to the specified limit */
+     width: 200px;
+    
+    /* SHAPE CHANGE: Turns the circle into a pill shape */
+    border-radius: 20px; 
+    
+    /* Optional: Change background color on hover */
+    background-color: #333333;
+}
+
+.description{
+    background-color: #242424;
+    text-align: center;
+    color: #9F9F9F;
+    font-size: 14px;
+    padding: 8px;
+    width: 450px;
+    margin: 12px auto;
+    border-radius: 20px;
+}   
+.Commission{
+    font-size: 16px;
+        font-family:'playfair display';
+    font-weight: 550;
+    color: #0d0d0d;
+    background-color: white;
+    width:460px;
+    height: 50px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin: 8px auto;
+    margin-bottom: 28px;
+    text-align: center;
+    display: block;
+}
+
+.navigation{
+
+    display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;       /* keep items in one line */
+  overflow-x: auto;        /* enable horizontal scroll */
+  scrollbar-width: none;   /* hide scrollbar (Firefox) */
+  -ms-overflow-style: none;/* hide scrollbar (IE/Edge) */
+
+    color: white;
+    font-size: 24px;
+    list-style: none
+    padding 0;
+    margin: 0;
+    margin-left:20px;
+    padding-right: 28px;
+    gap: 64px;
+    font-family: 'Inter',sans-serif;
+    font-weight: 300;
+   text-decoration: none;
+   
+}
+.navigation li{
+    /*to remove the points of list*/
+    list-style: none;
+   
+}
+
+
+
+.navigation a{
+    list-style: none;
+   color: white;
+   font-family:'playfair display';
+    font-weight: 400;
+   /*to remove the underline in the link*/
+   text-decoration: none;
+    /*to remove the points of list*/
+   list-style: none
+   
+
+}
+.navScroll{
+  position:relative;
+  padding-bottom: 16px;
+}
+
+.indicator{
+  position: absolute;
+  bottom: -2px; /*To make it at the same level as the line*/
+  height: 3px;
+  width: 160px;
+  background: #9ca3af;
+  border-radius: 999px;
+  transition: transform .26s ease;
+  transform:translate(25px);
+  background:#9ca3af;
+  z-index:2 ;
+}
