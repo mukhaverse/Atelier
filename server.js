@@ -232,3 +232,57 @@ app.post("/artists", async (req, res) => {
 });
 
 
+
+app.post("/commission", async (req, res) => {
+  try {
+    
+    const {
+      type,
+      dimensions,
+      attachment,
+      description,
+      phoneNumber,
+      country,
+      city,
+      isGift,
+      artistEmail,
+      userEmail,
+      username
+    } = req.body;
+
+    const newCommission ={
+      type,
+      dimensions,
+      attachment,
+      description,
+      phoneNumber,
+      country,
+      city,
+      isGift,
+      artistEmail,
+      userEmail,
+      username,
+      dateSubmitted: new Date()
+    }
+
+    console.log('New commission requested: ', newCommission)
+
+    res.status(201).json({
+      message: "Commission request received successfully! ",
+      requestData: newCommission
+    })
+
+    // afte the comission schema is done 
+    // const savedRequest = await CommissionRequest.create(newCommission);
+    // await sendCommissionEmail(newCommission.artistEmail, newCommission);
+    // res.status(201).json({
+    //   message: "Commission request received successfully!",
+    //   requestData: savedRequest
+    // });
+
+    
+  } catch (error) {
+    console.error("Error while submitting commission request: ", error)
+    res.status(500).json({ message: "Error while submitting commission" })
+  }
+})
