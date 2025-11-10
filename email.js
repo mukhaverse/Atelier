@@ -1,9 +1,12 @@
-const nodemailer = require("nodemailer");
+
 require('dotenv').config()
+const nodemailer = require("nodemailer");
+const hbs = require('nodemailer-express-handlebars')
+
 
 // Create a test account or replace with real credentials.
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com   ",
+  host: "smtp.gmail.com",
   port: 587,
   secure: false, // true for 465, false for other ports
   auth: {
@@ -13,11 +16,24 @@ const transporter = nodemailer.createTransport({
 });
 
 
+
+const hbsOptions = {
+  viewEngine: {
+    extname: '.hbs',
+    defaultLayout: false
+  },
+  viewPath: 'views',
+  extName: '.hbs'
+}
+ 
+
+transporter.use('compile', hbs(hbsOptions))
+
 const mailOptions = {
     from:  process.env.GMAIL_USER,
     to: "shomok.a12@gmail.com",
-    subject: "Second Mail Test ✔",
-    text: "Hiiii, you just sent your second nodejs email "
+    subject: "Dynamic email Test ",
+    template: 'artisanView'
 }
 
 transporter.sendMail(mailOptions, (error, info) => {

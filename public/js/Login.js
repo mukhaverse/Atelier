@@ -52,7 +52,7 @@ else if (mid.matches) {
   timeline1.to(shape, { scale: 4, duration: 1, ease: 'circ'})
             .to(logLeft, { opacity: 0, duration: 0.1 })
             .to(signRight, {opacity: 1, duration: 0.1})
-            .to(shape,{  x: '-105%', scale: 1,y: '-170%' , duration: 1, ease: 'circ' })
+            .to(shape,{  x: '-50%', scale: 1,y: '-270%' , duration: 1, ease: 'circ' })
   
 
 
