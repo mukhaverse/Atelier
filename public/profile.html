@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>Product Page</title>
+    <title>Artisan Profile</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/profile.css">
 </head>
@@ -16,21 +16,21 @@
         </a>
     </header>
     <section class ="ArtisanInfo">
-        <p class = "name">Artisan name</p>
-        <p class ="username">@username</p>
-        <div class="profilePic"><img src="assets/placeholder.jpg"></div>
+        <p class = "name"></p>
+        <p class ="username"></p>
+        <div class="profilePic"><img src=""></div>
         <div class="link">
-    <a href="https://fonts.google.com/icons?selected=Material+Symbols+Outlined:link:FILL@0;wght@400;GRAD@0;opsz@24&icon.query=link&icon.size=24&icon.color=%23e3e3e3">
+    <a href="">
         <img src="assets/link.svg" alt="link">
-        <span class="link-text">My website</span> </a>
+        <span class="link-text">My Website</span> </a>
 </div>
-        <div class=" description"><p>I love making art that speaks to people and sparks emotion. I experiment with textures, colors, and forms to bring my ideas to life. Every artwork I create is a story, a feeling, and a part of who I am.</p></div>
+        <div class=" description"><p></p></div>
         <button class="Commission">
             Commission
         </button>
     </section>
 
-    <section class ="Products">
+    <section >
          <nav class="catogries">
     <div class="navScroll">
     <ul class="navigation" id="nav">
@@ -45,32 +45,11 @@
     
     </div>
   </nav>
+    <button id="inStockButton" class="filter-btn">Available</button>
+    <div id="products-container" class="products-grid"></div>
     </section>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const linkContainer = document.querySelector('.link');
-        const linkAnchor = linkContainer.querySelector('a');
-
-        // Prevent the link from immediately navigating away
-        linkAnchor.addEventListener('click', function(event) {
-            
-            // Check if the container is already expanded
-            const isExpanded = linkContainer.classList.contains('is-expanded');
-
-            if (!isExpanded) {
-                // If not expanded, prevent navigation and expand it
-                event.preventDefault(); 
-                linkContainer.classList.add('is-expanded');
-                
-            } else {
-                // If already expanded, allow the default link action (navigation)
-                // OR you can keep event.preventDefault() here and add logic 
-                // to close it again on a second click if desired.
-                // For simplicity, we'll let it navigate on the second click.
-            }
-        });
-    });
-</script>
+    
+ <script src="js/profile.js"></script>
 </body>
 </html>
