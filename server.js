@@ -195,6 +195,124 @@ app.get("/products/artistId/available/:artistId", async (req, res) => {
   }
 });
 
+// Wishlist Endpoints
+const { Types: { ObjectId } } = require('mongoose');
+
+// check ObjectId
+function isValidObjectId(id) { return ObjectId.isValid(id); }
+
+// get wishlist by userId
+app.get("/users/:userId/wishlist", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    if (!isValidObjectId(userId)) return res.status(400).json({ message: "Invalid userId" });
+
+    const user = await User.findById(userId, { wishList: 1, _id: 0 });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    return res.status(200).json(user.wishList || []);
+  } catch (err) {
+    console.error("GET /wishlist error:", err);
+    return res.status(500).json({ message: "Error fetching wishlist" });
+  }
+});
+
+// add to wishlist
+app.post("/users/:userId/wishlist", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { productId } = req.body;
+
+    if (!isValidObjectId(userId) || !isValidObjectId(productId)) {
+      return res.status(400).json({ message: "Invalid userId or productId" });
+    }
+
+    const exists = await product.exists({ _id: productId }); //check product existence
+    if (!exists) return res.status(404).json({ message: "Product not found" });
+
+    const updated = await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { wishList: productId } }, //to avoid duplicates
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ message: "User not found" }); //check user existence
+
+    return res.status(200).json({
+      message: "Added to wishlist",
+      wishlist: updated.wishList
+    });
+  } catch (err) {
+    console.error("POST /wishlist error:", err);
+    return res.status(500).json({ message: "Error adding to wishlist" });
+  }
+});
+
+// Remove from wishlist
+app.delete("/users/:userId/wishlist/:productId", async (req, res) => {
+  try {
+    const { userId, productId } = req.params;
+
+    if (!isValidObjectId(userId) || !isValidObjectId(productId)) {
+      return res.status(400).json({ message: "Invalid userId or productId" });
+    }
+
+    const updated = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { wishList: productId } }, //Remove productId from wishList array (if exists)
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ message: "User not found" }); //check user existence
+
+    return res.status(200).json({
+      message: "Removed from wishlist",
+      wishlist: updated.wishList
+    });
+  } catch (err) {
+    console.error("DELETE /wishlist/:productId error:", err);
+    return res.status(500).json({ message: "Error removing from wishlist" });
+  }
+});
+
+// toggle wishlist item to switch between add/remove in one button action (add if not exists, remove if exists)
+app.put("/users/:userId/wishlist/toggle", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { productId } = req.body;
+
+    if (!isValidObjectId(userId) || !isValidObjectId(productId)) {
+      return res.status(400).json({ message: "Invalid userId or productId" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" }); //check user existence
+
+    const exists = await product.exists({ _id: productId });
+    if (!exists) return res.status(404).json({ message: "Product not found" }); //check product existence
+
+
+    const idx = user.wishList.findIndex(id => id.toString() === productId); //check if productId exists in wishList
+    let toggled;
+    if (idx > -1) {
+      // delete
+      await User.updateOne({ _id: userId }, { $pull: { wishList: productId } }); //Remove productId from wishList array
+      toggled = "removed";
+    } else {
+      // add
+      await User.updateOne({ _id: userId }, { $addToSet: { wishList: productId } }); //to avoid duplicates
+      toggled = "added";
+    }
+
+    const populated = await User.findById(userId);
+    return res.status(200).json({ toggled, wishlist: populated.wishList });
+  } catch (err) {
+    console.error("PUT /wishlist/toggle error:", err);
+    return res.status(500).json({ message: "Error toggling wishlist" });
+  }
+});
+
+// End Wishlist Endpoints
 
 
 
