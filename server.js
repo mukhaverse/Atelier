@@ -27,6 +27,7 @@ app.get("/", (req,res)=>{
   res.send("Welcom to the Atelier server root!!!")
 })
 
+
 app.get("/products", async (req, res) =>{
 
   try{
@@ -41,6 +42,7 @@ app.get("/products", async (req, res) =>{
 
     
 })
+
 
 app.get("/products/category/:category", async (req, res) =>{
 
@@ -79,6 +81,7 @@ app.get("/products/category/:category", async (req, res) =>{
 
 })
 
+
 app.get("/products/id/:productId", async (req, res) =>{
     const id = req.params.productId
 
@@ -111,6 +114,7 @@ app.get("/products/id/:productId", async (req, res) =>{
 
 })
 
+
 app.get("/products/collection/:collection", async (req, res) =>{
   
   try{
@@ -141,6 +145,8 @@ app.get("/products/collection/:collection", async (req, res) =>{
   }
  
 })
+
+
 app.get("/collections", async (req, res) => {
   try {
     const collections = await product.distinct("collections");
@@ -155,6 +161,30 @@ app.get("/collections", async (req, res) => {
     res.send("error");
   }
 });
+
+
+app.get("/collections/artist/:artistId", async (req, res) => {
+  try {
+
+    const artistId = req.params.artistId;
+    const collections = await product.distinct("collections", { artistId: artistId });
+
+
+    if (!collections || collections.length === 0) {
+
+      return res.send("No collections found for this artist");
+    }
+
+    res.json(collections);
+    console.log("Fetching collections by artist completed!");
+  } catch (error) {
+    console.log("Error while fetching collections by artist: ", error);
+    res.send("error");
+  }
+
+});
+
+
 
 app.get("/products/artistId/:artistId", async (req, res) =>{
 
@@ -177,6 +207,7 @@ app.get("/products/artistId/:artistId", async (req, res) =>{
  
 
 })
+
 
 app.get("/products/artistId/available/:artistId", async (req, res) => {
   try {
