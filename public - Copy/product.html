@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Product Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/product.css">
+</head>
+
+<body>
+
+    <!-- Header with back button -->
+    <header class="page_header">
+        <a href="#" class="back_icon" onclick="history.back()">
+            <img src="assets/back_icon.svg" alt="back" width="22" height="22">
+        </a>
+    </header>
+
+    <main class="product_page">
+
+        <!-- Product image section -->
+        <section class="product_image">
+            <img alt="Artwork">
+        </section>
+
+        <!-- Product details card -->
+        <section class="product_card">
+
+            <!-- Artisan info -->
+            <section class="artisan account">
+                <h3></h3>
+                <p class="username"></p>
+                <img id="ArtisanAvatar" alt="ArtisanAvatar">
+            </section>
+
+            <!-- Product information -->
+            <section class="product_details">
+                <h2 class="title"></h2>
+                <p class="price"></p>
+                <p class="size"></p>
+                <p class="medium"></p>
+                <p class="description"></p>
+            </section>
+
+            <!-- Action icons (wishlist, cart, share) -->
+            <section class="icons">
+                <img class="add_to_wishlist" src="assets/heart_icon.svg" alt="wishlist icon" width="25" height="25">
+                
+                <button class="add_to_cart">
+                    <img src="assets/cart_icon.svg" alt="cart" width="22">
+                </button>
+
+                <img class="share" src="assets/share_icon.svg" width="25" height="25">
+            </section>
+
+        </section>
+        
+    </main>
+
+    <!-- JavaScript file that loads product data -->
+    <script src="js/product.js"></script>
+
+</body>
+
+</html>

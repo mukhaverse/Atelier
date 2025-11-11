@@ -1,0 +1,554 @@
+body{
+    background-color: #0d0d0d;
+    color:white;
+    font-family: 'Inter',sans-serif;
+    padding-top: 120px;
+   
+}
+
+h1{
+    font-size: 28px;
+    font-family:'playfair display';
+    font-weight: 400;
+    padding-left: 60px;
+    padding-top: 36px;
+    padding-bottom: 4px;
+
+}
+
+h2{
+  font-family:'playfair display';
+  font-size: 28px;
+}
+
+.icons{
+   display: flex; 
+   gap: 16px;
+   justify-content: flex-end;
+   align-items: center;
+   /*to move it down*/
+   margin-top: 5px;
+}
+.icon3 img{
+  width: 30px;
+  height: 30px;
+background-color: #9ca3af;
+border-radius: 50%;
+object-fit: cover;
+display:inline-block;
+vertical-align: middle;
+margin-top: -5px;
+}
+
+.icons a, .add_to_wishlist{
+    color: white;
+     float:right;
+     height: 30px;
+     top: 10px;
+     gap: 40px;
+     /*to make the icons in the same line*/
+      display: flex;
+    /*to remove the underline in the link*/
+     text-decoration: none;
+     /*to shift to the left*/
+      margin-right:20px;
+      
+  
+}
+.add_to_wishlist{
+  margin-bottom: 12px;
+  margin-right: 22px;
+}
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:10px 20px;
+}
+
+.navigation{
+
+    display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;       /* keep items in one line */
+  overflow-x: auto;        /* enable horizontal scroll */
+  scrollbar-width: none;   /* hide scrollbar (Firefox) */
+  -ms-overflow-style: none;/* hide scrollbar (IE/Edge) */
+
+    color: white;
+    font-size: 14px;
+    list-style: none
+    padding 0;
+    margin: 0;
+    margin-left:20px;
+    padding-right: 28px;
+    gap: 64px;
+    font-family: 'Inter',sans-serif;
+    font-weight: 300;
+   text-decoration: none;
+   
+}
+.navigation li{
+    /*to remove the points of list*/
+    list-style: none;
+   
+}
+
+
+
+.navigation a{
+    list-style: none;
+   color: white;
+   size: 18px;
+    font-weight: 400;
+   /*to remove the underline in the link*/
+   text-decoration: none;
+    /*to remove the points of list*/
+   list-style: none
+   
+
+}
+.navScroll{
+  position:relative;
+  padding-bottom: 16px;
+}
+
+.indicator{
+  position: absolute;
+  bottom: -2px; /*To make it at the same level as the line*/
+  height: 3px;
+  width: 110px;
+  background: #9ca3af;
+  border-radius: 999px;
+  transition: transform .26s ease;
+  transform:translate(25px);
+  background:#9ca3af;
+  z-index:2 ;
+}
+
+.line{
+  width: 100%;
+  height: 1px;
+  
+  background-color:#242424;
+  
+}
+.Logo{
+     display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    align-items: stretch;
+}
+
+h2{
+    margin-right:0;
+    padding-top:12px;
+    
+}
+.Logo img{
+  width: 50px;
+  /* height: 120px; */
+  margin-right: 7px;
+  
+}
+
+/*Collection styles*/
+.collections-grid{
+    display :flex;
+    gap: 32px;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    align-items: stretch;
+
+}
+.horizontal-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.gap-space{
+    width: 28px;
+    height: auto;
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.collection-info{
+    display:flex;
+    align-items: flex-start;
+    gap:8px;
+    margin-top: 12px;
+    
+}
+
+.collection-image{
+    width: 270px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10%;
+    
+}
+
+.collection-name{
+    margin:0;
+    font-size: 18px;
+    font-family:'Inter';
+    font-weight: 600;
+}
+
+.username{
+    margin:0;
+    font-size: 12px;
+    color:#9F9F9F;
+    font-family: 'Inter';
+    font-weight: 600;
+}
+
+.profile-picture{
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    flex-shrink: 0;
+    
+}
+
+
+/*Mayson Grid format*/
+.suggested-grid {
+  column-count: 4;          
+  column-gap: 30px;         
+  padding-left: 60px;
+  padding-right: 60px;
+}
+
+
+.suggested-card {
+  display: inline-block;    
+  margin-bottom: 30px;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.4s ease-in-out; 
+  border-radius: 10px; 
+  overflow: hidden; 
+}
+
+
+.photo {
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Make images responsive depending on the height */
+.suggested-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.4s ease-in-out; 
+  border-radius: 10px; 
+}
+
+.collection-image-container {
+  position: relative;
+  width: 270px; 
+  height: 200px; 
+  border-radius: 10%;
+  overflow: hidden; 
+  cursor: pointer;
+}
+
+
+.collection-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10%;
+  transition: opacity 0.5s ease-in-out;
+  display: block;
+}
+
+/* Responsive tweaks */
+@media (max-width: 1200px) {
+  .suggested-grid {
+    column-count: 3;
+    column-gap: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  .suggested-card {
+    margin-bottom: 30px;
+  }
+
+  h1{
+   padding-left: 30px;
+  }
+
+  .gap-space{
+    width:16px;
+  }
+
+  .collections-grid{
+    gap: 24px;
+  } 
+     .header{max-width: 1200pxx;margin: 0 auto;}
+
+}
+
+@media (max-width: 768px) {
+  .suggested-grid {
+    column-count: 2;
+    column-gap: 24px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .suggested-card {
+  margin-bottom: 24px;
+  }
+
+  h1{
+    padding-left: 24px;
+  }
+    
+  .gap-space{
+    width:0;
+  }
+
+  .collections-grid{
+    gap: 24px;
+  }
+
+  /*.navigation{gap:24px;}*/
+    .icons{gap:16px;}
+}
+
+@media (max-width: 480px) {
+  .suggested-grid {
+    column-count: 2;
+    column-gap: 14px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .suggested-card {
+  margin-bottom: 14px;
+  }
+
+  h1{
+    padding-left: 14px;
+    font-size: 22px;
+  }
+
+  .collection-image{
+    width: 180px;
+    height: 180px;
+  }
+  .collection-image-container {
+  width: 180px; 
+  height: 180px;
+  }
+
+  .gap-space{
+    width:0;
+  }
+
+  .collections-grid{
+    gap: 14px;
+  }
+
+  .collection-name{
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .username{
+    font-size: 10px;
+    font-weight: 500;
+  }
+  .profile-picture{
+    width: 30px;
+    height: 30px;
+  }
+  .header{flex-direction: column;align-items: stretch;gap: 12px;}
+.Logoimg{height: 36px;}
+/*.navigation{justify-content: space-between;gap: 16px;flex-wrap: wrap;}*/
+.navigation {gap: 44px;margin-left:0px;}
+.icons a {justify-content:flex-end;gap: 0; margin-right: 7px; }
+.icons img{margin-right: 0;}
+.indicator{
+  
+  width: 80px;}
+}
+
+/* Hovers */
+
+.suggested-card {
+    cursor: pointer;
+}
+
+.suggested-card:hover  {
+    transform: scale(1.05);
+}
+
+
+
+
+
+.collection-image-container .hover-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
+.collection-card:hover .hover-image {
+  opacity: 1;
+  /* border: 2px solid green ; */
+}
+
+.collection-card:hover .main-image {
+  opacity: 0;
+}
+
+/* Disable scaling just in case */
+.collection-card:hover .collection-image {
+  transform: none !important;
+}
+.fixed {
+    /* 1. Fixes the element relative to the viewport */
+    position: fixed; 
+    
+    /* 2. Positions it at the very top */
+    top: 0; 
+    
+    /* 3. Makes it span the full width */
+    left: 0;
+    right: 0;
+    width: 100%;
+    
+    /* 4. Ensures it stays above other content when scrolling */
+    z-index: 50; /* Use a high number to be safe */
+    background-color: #0d0d0d;
+}
+
+.icon3 img{
+  background-color: #0d0d0d;
+  width: 26px;
+  height: 26px;
+  margin-bottom: 8px;
+  margin-right: 2px;
+}
+
+
+
+/* Skeleton loading  */
+
+.skeleton {
+  background: linear-gradient(90deg, #1a1a1a 25%, #242424 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 10%;
+}
+
+.skeleton-square {
+  width: 270px;
+  height: 200px;
+  border-radius: 10%;
+}
+
+.skeleton-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.skeleton-text {
+  height: 16px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.skeleton-text.short {
+  width: 120px;
+}
+
+.skeleton-text.medium {
+  width: 180px;
+}
+
+
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+
+
+@media (max-width: 480px) {
+  .skeleton-square {
+    width: 180px;
+    height: 180px;
+  }
+  
+  .skeleton-circle {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .skeleton-text.short {
+    width: 100px;
+  }
+  
+  .skeleton-text.medium {
+    width: 140px;
+  }
+}
+
+/* skeleton for suggested */
+.suggested-card .skeleton {
+  background: linear-gradient(90deg, #1a1a1a 25%, #242424 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 10px;
+}
+
+.suggested-skeleton {
+  width: 100%;
+  height: 200px; 
+  border-radius: 10px;
+}
+
+
+
+@media (max-width: 1200px) {
+  .suggested-skeleton {
+    height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .suggested-skeleton {
+    height: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .suggested-skeleton {
+    height: 120px;
+  }
+}

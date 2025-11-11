@@ -5,8 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
+
 <body>
-    <h2>Testing nodemailer dynamic hbs again</h2>
-    <p>ISTG this better work</p>
+
+
+    <!-- to make the name of artist dynamic-->
+   <h2 style=" margin-bottom: 10px;">Hello {{artistname}}!</h2>
+
+    <br>
+    <div class="icons-div" style="text-align:center; margin:20px 0;">
+       <img src="cid:mail@atelier"
+           alt="Email Icon"
+           style="display:block; margin:0 auto; width:200px; height:200px;">
+     
+    </div>
+
+    <p>You've received a new commision request from</p>
+    <p>Name:</p>
+    <p>Details:</p>
+    <br>
+    <p>Please check your Atelier dashboard to view more details.</p>
+    <h3>Thank you!</h3>
+
 </body>
 </html>

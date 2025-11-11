@@ -31,9 +31,41 @@ transporter.use('compile', hbs(hbsOptions))
 
 const mailOptions = {
     from:  process.env.GMAIL_USER,
-    to: "shomok.a12@gmail.com",
+    to: "remasalsulami962@gmail.com", //temp
     subject: "Dynamic email Test ",
-    template: 'artisanView'
+    template: 'artisanView',
+    /* this is for artistView
+
+   context:{
+    artistname:"Atheer"
+    },
+    
+  attachments: [
+    
+    {
+      filename: 'Email_icon.svg',
+    path: '/home/remas/Atelier/views/Group 6 (3).svg',
+     cid: 'mail@atelier'
+    }
+  ]
+    */
+
+
+
+
+  /*this is for userView
+  
+  attachments: [
+  {
+    filename: 'Logo_w.svg',
+    path: '/home/remas/Atelier/views/Logo_w.svg', 
+    cid: 'logo@atelier' 
+      }
+   ]
+
+  */
+
+
 }
 
 transporter.sendMail(mailOptions, (error, info) => {
