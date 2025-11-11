@@ -333,7 +333,7 @@ app.post("/commission", async (req, res) => {
 
           await sendEmail({
             to: artistEmail,
-            subject: "New Commission Received!",
+            subject: "New Commission Request",
             template: 'artisanView',
             context: { artistname: username },
             attachments: [
@@ -352,7 +352,7 @@ app.post("/commission", async (req, res) => {
       try {
         await sendEmail({
           to: userEmail,
-          subject: "Your Commission Has Been Sent!", 
+          subject: "Your Commission Has Been Sent", 
           template: 'userView',
           context: { username },
           attachments: [
