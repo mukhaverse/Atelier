@@ -236,12 +236,14 @@ function isValidObjectId(id) { return ObjectId.isValid(id); }
 app.get("/users/:userId/wishlist", async (req, res) => {
   try {
     const { userId } = req.params;
-    if (!isValidObjectId(userId)) return res.status(400).json({ message: "Invalid userId" });
+    if (!isValidObjectId(userId)) {
+      return res.status(400).json({ message: "Invalid userId" });
+    }
 
-    const user = await User.findById(userId, { wishList: 1, _id: 0 });
+    const user = await User.findById(userId, { wishList: 1, _id: 0 }).lean();
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    return res.status(200).json(user.wishList || []);
+    return res.status(200).json(Array.isArray(user.wishList) ? user.wishList : []);
   } catch (err) {
     console.error("GET /wishlist error:", err);
     return res.status(500).json({ message: "Error fetching wishlist" });
@@ -258,20 +260,20 @@ app.post("/users/:userId/wishlist", async (req, res) => {
       return res.status(400).json({ message: "Invalid userId or productId" });
     }
 
-    const exists = await product.exists({ _id: productId }); //check product existence
+    const exists = await product.exists({ _id: productId }); // check product existence
     if (!exists) return res.status(404).json({ message: "Product not found" });
 
     const updated = await User.findByIdAndUpdate(
       userId,
-      { $addToSet: { wishList: productId } }, //to avoid duplicates
-      { new: true }
+      { $addToSet: { wishList: productId } }, // avoid duplicates
+      { new: true, projection: { wishList: 1 } }
     );
 
-    if (!updated) return res.status(404).json({ message: "User not found" }); //check user existence
+    if (!updated) return res.status(404).json({ message: "User not found" });
 
     return res.status(200).json({
       message: "Added to wishlist",
-      wishlist: updated.wishList
+      wishlist: updated.wishList || []
     });
   } catch (err) {
     console.error("POST /wishlist error:", err);
@@ -290,15 +292,15 @@ app.delete("/users/:userId/wishlist/:productId", async (req, res) => {
 
     const updated = await User.findByIdAndUpdate(
       userId,
-      { $pull: { wishList: productId } }, //Remove productId from wishList array (if exists)
-      { new: true }
+      { $pull: { wishList: productId } }, // remove if exists
+      { new: true, projection: { wishList: 1 } }
     );
 
-    if (!updated) return res.status(404).json({ message: "User not found" }); //check user existence
+    if (!updated) return res.status(404).json({ message: "User not found" });
 
     return res.status(200).json({
       message: "Removed from wishlist",
-      wishlist: updated.wishList
+      wishlist: updated.wishList || []
     });
   } catch (err) {
     console.error("DELETE /wishlist/:productId error:", err);
@@ -306,7 +308,7 @@ app.delete("/users/:userId/wishlist/:productId", async (req, res) => {
   }
 });
 
-// toggle wishlist item to switch between add/remove in one button action (add if not exists, remove if exists)
+// toggle wishlist item (add if not exists, remove if exists)
 app.put("/users/:userId/wishlist/toggle", async (req, res) => {
   try {
     const { userId } = req.params;
@@ -316,27 +318,23 @@ app.put("/users/:userId/wishlist/toggle", async (req, res) => {
       return res.status(400).json({ message: "Invalid userId or productId" });
     }
 
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: "User not found" }); //check user existence
+    const user = await User.findById(userId, { wishList: 1 });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     const exists = await product.exists({ _id: productId });
-    if (!exists) return res.status(404).json({ message: "Product not found" }); //check product existence
+    if (!exists) return res.status(404).json({ message: "Product not found" });
 
+    const hasIt = (user.wishList || []).some(id => id.equals(productId));
+    const update = hasIt
+      ? { $pull: { wishList: productId } }
+      : { $addToSet: { wishList: productId } };
 
-    const idx = user.wishList.findIndex(id => id.toString() === productId); //check if productId exists in wishList
-    let toggled;
-    if (idx > -1) {
-      // delete
-      await User.updateOne({ _id: userId }, { $pull: { wishList: productId } }); //Remove productId from wishList array
-      toggled = "removed";
-    } else {
-      // add
-      await User.updateOne({ _id: userId }, { $addToSet: { wishList: productId } }); //to avoid duplicates
-      toggled = "added";
-    }
+    const updated = await User.findByIdAndUpdate(userId, update, { new: true, projection: { wishList: 1 } });
 
-    const populated = await User.findById(userId);
-    return res.status(200).json({ toggled, wishlist: populated.wishList });
+    return res.status(200).json({
+      toggled: hasIt ? "removed" : "added",
+      wishlist: updated?.wishList || []
+    });
   } catch (err) {
     console.error("PUT /wishlist/toggle error:", err);
     return res.status(500).json({ message: "Error toggling wishlist" });
@@ -344,6 +342,7 @@ app.put("/users/:userId/wishlist/toggle", async (req, res) => {
 });
 
 // End Wishlist Endpoints
+
 
 
 

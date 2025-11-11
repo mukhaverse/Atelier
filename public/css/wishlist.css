@@ -47,6 +47,7 @@ body {
 }
 
 main.wishlist_page{
+  width: 100%;
   min-height:100vh;
   padding: 100px 60px 60px;
   box-sizing:border-box;
@@ -61,6 +62,7 @@ main.wishlist_page{
   text-align:center;
   margin-bottom:20px;
   font-size: 18px;
+  width: 100%;
 }
 
 .wishlistTitle h1{
@@ -69,22 +71,34 @@ main.wishlist_page{
   margin: 5px 0 50px;
 }
 
+.wishlist_line_section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.wishlist_line {
+  width: 90%;
+  border: none;
+  border-top: 2px solid #333;
+  margin: 0;
+}
+
+
+
 /* Masonry-style image layout using CSS columns */
 .grid_gallery {
   column-count: 4;      
   column-gap: 30px;      
   width: 100%;
-
   margin-bottom: 30px;
-  border-top: 2px solid #333;
-  padding-top: 30px;
-  padding-left: 0px;
-  padding-right: 0px;
+
 }
 
 .grid_gallery > a {
   position: relative;
-  break-inside: avoid;   /* prevent images from breaking between columns */
+  break-inside: avoid;
   display: block;
   margin-bottom: 30px;
   text-decoration: none;
@@ -102,11 +116,6 @@ main.wishlist_page{
 
 .grid_gallery img:hover {
   transform: scale(1.05);
-}
-
-/* ===== Heart icon (toggle without JS) ===== */
-.fav_icon-toggle{
-  position:absolute; opacity:0; pointer-events:none;
 }
 
 .fav_icon{
@@ -185,6 +194,52 @@ main.wishlist_page{
   pointer-events: auto;
   transition: opacity .25s ease, transform .25s ease;
 }
+
+.wishlist_card {
+  transition: opacity 0.4s ease, transform 0.3s ease;
+}
+.wishlist_card.fade-out {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.login_prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 40vh;
+  width: 100%;
+  display: none;
+}
+
+.login_prompt p {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.login_prompt button {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  background-color: #a855f7;
+  color: #fff;
+  font-size: 15px;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 30px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.login_prompt button:hover {
+  background-color: #9b4ce0;
+  transform: scale(1.05);
+}
+
 
 
 /* Responsive design*/
