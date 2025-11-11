@@ -211,11 +211,22 @@ app.get("/products/artistId/:artistId", async (req, res) =>{
 
     const productsByArtisan = await product.find({ artistId: artistId })
 
-    if(!productsByArtisan){
-      return res.send("No product was found for this category")
+     if (!productsByArtisan || productsByArtisan.length === 0) {
+      return res.send("No product was found for this artist")
     }
 
-    res.json(productsByArtisan)
+
+    const artistInfo = await artist.findOne({ artistId })
+
+    if (!artistInfo) {
+      return res.send("No artist info found for this artist")
+    }
+
+    res.json({
+      artist: artistInfo,
+      products: productsByArtisan
+    })
+
     
 
   }catch (error) {
