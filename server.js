@@ -175,7 +175,25 @@ app.get("/collections/artist/:artistId", async (req, res) => {
       return res.send("No collections found for this artist");
     }
 
-    res.json(collections);
+    //fetch product images
+    const results = [];
+
+    for (const collection of collections) {
+      const productsInCollection = await product
+        .find({ artistId, collections: collection })
+        .limit(2) 
+        .select("images"); 
+
+      
+      const images = productsInCollection.map(p => p.images[0]).filter(Boolean);
+
+      results.push({
+        collection,
+        images
+      });
+    }
+
+    res.json(results);
     console.log("Fetching collections by artist completed!");
   } catch (error) {
     console.log("Error while fetching collections by artist: ", error);
