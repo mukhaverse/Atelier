@@ -292,6 +292,7 @@ app.post("/artists", async (req, res) => {
 });
 
 
+const { sendEmail } = require('./email');
 
 app.post("/commission", async (req, res) => {
   try {
@@ -326,6 +327,45 @@ app.post("/commission", async (req, res) => {
     }
 
     console.log('New commission requested: ', newCommission)
+
+    // artist email 
+        try {
+
+          await sendEmail({
+            to: artistEmail,
+            subject: "New Commission Received!",
+            template: 'artisanView',
+            context: { artistname: username },
+            attachments: [
+              {
+                filename: 'Email_icon.svg',
+                path: __dirname + '/views/Group 6 (3).svg',
+                cid: 'mail@atelier'
+              }
+            ]
+    })} catch (error) {
+      console.error("Email error: ", error);
+    }
+
+
+    //  user email
+      try {
+        await sendEmail({
+          to: userEmail,
+          subject: "Your Commission Has Been Sent!", 
+          template: 'userView',
+          context: { username },
+          attachments: [
+        {
+          filename: 'Logo_w.svg',
+            path: __dirname + '/views/Logo_w.svg',
+          cid: 'logo@atelier'
+        }
+      ]
+    })} catch (error) {
+      console.error("Email error:" , error);
+    }
+
 
     res.status(201).json({
       message: "Commission request received successfully! ",

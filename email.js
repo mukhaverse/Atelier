@@ -1,93 +1,46 @@
-
-require('dotenv').config()
+require('dotenv').config();
 const nodemailer = require("nodemailer");
-const hbs = require('nodemailer-express-handlebars')
+const hbs = require('nodemailer-express-handlebars');
 
-
-// Create a test account or replace with real credentials.
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
-  secure: false, // true for 465, false for other ports
+  secure: false,
   auth: {
-    user:  process.env.GMAIL_USER,
+    user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASS,
   },
 });
 
-
-
 const hbsOptions = {
   viewEngine: {
     extname: '.hbs',
-    defaultLayout: false
+    defaultLayout: false,
   },
   viewPath: 'views',
-  extName: '.hbs'
-}
- 
+  extName: '.hbs',
+};
 
-transporter.use('compile', hbs(hbsOptions))
+transporter.use('compile', hbs(hbsOptions));
 
-const mailOptions = {
-    from:  process.env.GMAIL_USER,
-    to: "remasalsulami962@gmail.com", //temp
-    subject: "Dynamic email Test ",
-    template: 'artisanView',
-    /* this is for artistView
+async function sendEmail({ to, subject, template, context, attachments }) {
+  const mailOptions = {
+    from: process.env.GMAIL_USER,
+    to,
+    subject,   
+    template,
+    context,
+    attachments,
+  };
 
-   context:{
-    artistname:"Atheer"
-    },
-    
-  attachments: [
-    
-    {
-      filename: 'Email_icon.svg',
-    path: '/home/remas/Atelier/views/Group 6 (3).svg',
-     cid: 'mail@atelier'
-    }
-  ]
-    */
-
-
-
-
-  /*this is for userView
-  
-  attachments: [
-  {
-    filename: 'Logo_w.svg',
-    path: '/home/remas/Atelier/views/Logo_w.svg', 
-    cid: 'logo@atelier' 
-      }
-   ]
-
-  */
-
-
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully: ', info.response);
+    return info;
+  } catch (error) {
+    console.error('Error sending email:', error);
+    throw error;
+  }
 }
 
-transporter.sendMail(mailOptions, (error, info) => {
-
-    if(error){
-        console.log('Error with sending the mail', error)
-    } else {
-        console.log('Email sent sucssesfuly ^0^ ', info.response)
-    }
-})
-
-
-
-// Wrap in an async IIFE so we can use await.
-// (async () => {
-//   const info = await transporter.sendMail({
-//     from:  process.env.GMAIL_USER,
-//     to: "shomok.a12@gmail.com",
-//     subject: "First Mail Test ✔",
-//     text: "Hiiii, you just sent your first nodejs email ", // plain‑text body
-//     html: "<b>Hello world?</b>", // HTML body
-//   });
-
-//   console.log("Message sent:", info.messageId);
-// })();
+module.exports = { sendEmail };
