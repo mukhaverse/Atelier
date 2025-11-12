@@ -18,45 +18,33 @@ const mid = window.matchMedia("(max-width: 768px)");
 const small = window.matchMedia("(max-width: 480px)");
 
 
-if (larg.matches) {
-  console.log("Viewport is 1700px or smaller.");
-
-
-  timeline1.to(welc,{opacity: 0, x: 30, duration: .7, stagger:.2 })
-            // .to(img,{opacity: 0, duration: .7})
-            .to(shape, { scale: 3,  duration: 1, ease: 'circ' })
-            .to(logLeft, { opacity: 0, duration: 0.1 })
-            .to(signRight, {opacity: 1, duration: 0.1})
-            .to(shape,{  x: '-100%',scale: 1, duration: 1,  ease: 'circ' })
-            .to(join,{opacity: 1, x: 30, duration: .7, stagger:.2 })
-            
-
-  console.log(7)
-
-} 
-else if (mid.matches) {
-    console.log("Medium screen (≤768px)");
-
-     timeline1.to(shape, { scale: 4.3, duration: 1, ease: 'circ'})
-            .to(logLeft, { opacity: 0, duration: 0.3 })
-            .to(signRight, {opacity: 1, duration: 0.3})
-            .to(shape,{  x: '-140%', scale: 1,y: '-145%' , duration: 1, ease: 'circ' })
-    
-
-
-
-  } else if (small.matches) {
+if (small.matches) {
   console.log("Viewport is 480px or smaller.");
 
+  timeline1.to(shape, { scale: 4, duration: .7, ease: 'sine.inOut'})
+           .to(logLeft, { opacity: 0, duration: 0.05 })
+           .to(signRight, {opacity: 1, duration: 0.05})
+           .to(shape,{  x: '-115%', scale: 1, y: '-150%', duration: .7, ease: 'sine.inOut' })
 
-  timeline1.to(shape, { scale: 4, duration: 1, ease: 'circ'})
-            .to(logLeft, { opacity: 0, duration: 0.1 })
-            .to(signRight, {opacity: 1, duration: 0.1})
-            .to(shape,{  x: '-50%', scale: 1,y: '-270%' , duration: 1, ease: 'circ' })
-  
+} else if (mid.matches) {
+  console.log("Medium screen (≤768px)");
 
+  timeline1.to(shape, { scale: 4.3, duration: .7, ease: 'sine.inOut'})
+           .to(logLeft, { opacity: 0, duration: 0.05 })
+           .to(signRight, {opacity: 1, duration: 0.05})
+           .to(shape,{  x: '-130%', scale: 1, y: '-140%', duration: .7, ease: 'sine.inOut' })
 
-} 
+} else if (larg.matches) {
+  console.log("Viewport is 1700px or smaller.");
+
+  timeline1.to(welc,{opacity: 0, x: 30, duration: .7, stagger:.2 })
+           .to(shape, { scale: 3,  duration: .7, ease: 'sine.inOut' })
+           .to(logLeft, { opacity: 0, duration: 0.1 })
+           .to(signRight, {opacity: 1, duration: 0.1})
+           .to(shape,{  x: '-100%',scale: 1, duration: .7,  ease: 'sine.inOut' })
+           .to(join,{opacity: 1, x: 30, duration: .7, stagger:.2 })
+}
+
 
 
 
@@ -112,5 +100,9 @@ loginForm.addEventListener('submit', (e) =>{
 
 function setLoggedIn(username, password) {
   localStorage.setItem('loggedIn', JSON.stringify({ username, password }))
-  console.log('user logged :', username)
+
+
+  const user = JSON.parse(localStorage.getItem('loggedIn'))
+  console.log(user.username)
+
 }

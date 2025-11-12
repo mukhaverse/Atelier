@@ -175,7 +175,25 @@ app.get("/collections/artist/:artistId", async (req, res) => {
       return res.send("No collections found for this artist");
     }
 
-    res.json(collections);
+    //fetch product images
+    const results = [];
+
+    for (const collection of collections) {
+      const productsInCollection = await product
+        .find({ artistId, collections: collection })
+        .limit(2) 
+        .select("images"); 
+
+      
+      const images = productsInCollection.map(p => p.images[0]).filter(Boolean);
+
+      results.push({
+        collection,
+        images
+      });
+    }
+
+    res.json(results);
     console.log("Fetching collections by artist completed!");
   } catch (error) {
     console.log("Error while fetching collections by artist: ", error);
@@ -193,11 +211,22 @@ app.get("/products/artistId/:artistId", async (req, res) =>{
 
     const productsByArtisan = await product.find({ artistId: artistId })
 
-    if(!productsByArtisan){
-      return res.send("No product was found for this category")
+     if (!productsByArtisan || productsByArtisan.length === 0) {
+      return res.send("No product was found for this artist")
     }
 
-    res.json(productsByArtisan)
+
+    const artistInfo = await artist.findOne({ artistId })
+
+    if (!artistInfo) {
+      return res.send("No artist info found for this artist")
+    }
+
+    res.json({
+      artist: artistInfo,
+      products: productsByArtisan
+    })
+
     
 
   }catch (error) {
@@ -263,6 +292,7 @@ app.post("/artists", async (req, res) => {
 });
 
 
+const { sendEmail } = require('./email');
 
 app.post("/commission", async (req, res) => {
   try {
@@ -297,6 +327,45 @@ app.post("/commission", async (req, res) => {
     }
 
     console.log('New commission requested: ', newCommission)
+
+    // artist email 
+        try {
+
+          await sendEmail({
+            to: artistEmail,
+            subject: "New Commission Request",
+            template: 'artisanView',
+            context: { artistname: username },
+            attachments: [
+              {
+                filename: 'Email_icon.svg',
+                path: __dirname + '/views/Group 6 (3).svg',
+                cid: 'mail@atelier'
+              }
+            ]
+    })} catch (error) {
+      console.error("Email error: ", error);
+    }
+
+
+    //  user email
+      try {
+        await sendEmail({
+          to: userEmail,
+          subject: "Your Commission Has Been Sent", 
+          template: 'userView',
+          context: { username },
+          attachments: [
+        {
+          filename: 'Logo_w.svg',
+            path: __dirname + '/views/Logo_w.svg',
+          cid: 'logo@atelier'
+        }
+      ]
+    })} catch (error) {
+      console.error("Email error:" , error);
+    }
+
 
     res.status(201).json({
       message: "Commission request received successfully! ",

@@ -1,45 +1,46 @@
+require('dotenv').config();
 const nodemailer = require("nodemailer");
-require('dotenv').config()
+const hbs = require('nodemailer-express-handlebars');
 
-// Create a test account or replace with real credentials.
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com   ",
+  host: "smtp.gmail.com",
   port: 587,
-  secure: false, // true for 465, false for other ports
+  secure: false,
   auth: {
-    user:  process.env.GMAIL_USER,
+    user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASS,
   },
 });
 
+const hbsOptions = {
+  viewEngine: {
+    extname: '.hbs',
+    defaultLayout: false,
+  },
+  viewPath: 'views',
+  extName: '.hbs',
+};
 
-const mailOptions = {
-    from:  process.env.GMAIL_USER,
-    to: "shomok.a12@gmail.com",
-    subject: "Second Mail Test ✔",
-    text: "Hiiii, you just sent your second nodejs email "
+transporter.use('compile', hbs(hbsOptions));
+
+async function sendEmail({ to, subject, template, context, attachments }) {
+  const mailOptions = {
+    from: process.env.GMAIL_USER,
+    to,
+    subject,   
+    template,
+    context,
+    attachments,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully: ', info.response);
+    return info;
+  } catch (error) {
+    console.error('Error sending email:', error);
+    throw error;
+  }
 }
 
-transporter.sendMail(mailOptions, (error, info) => {
-
-    if(error){
-        console.log('Error with sending the mail', error)
-    } else {
-        console.log('Email sent sucssesfuly ^0^ ', info.response)
-    }
-})
-
-
-
-// Wrap in an async IIFE so we can use await.
-// (async () => {
-//   const info = await transporter.sendMail({
-//     from:  process.env.GMAIL_USER,
-//     to: "shomok.a12@gmail.com",
-//     subject: "First Mail Test ✔",
-//     text: "Hiiii, you just sent your first nodejs email ", // plain‑text body
-//     html: "<b>Hello world?</b>", // HTML body
-//   });
-
-//   console.log("Message sent:", info.messageId);
-// })();
+module.exports = { sendEmail };

@@ -32,8 +32,6 @@ z-index: 100;
 
 .int-logo-header img{
     width: 20%;
-    /* margin-top: 100px;
-    margin-right: 10px; */
     top: 0%;
     left: 0%;
     position: absolute;
@@ -42,9 +40,6 @@ z-index: 100;
 .int-logo-header h1{
     margin-left: 20px;
 }
-
-
-
 
 .int-logo-slogan {
   display: block; 
@@ -66,7 +61,6 @@ z-index: 100;
     transform: scale(1);  
     transition: all 1s ease-in-out;
     margin:0;
-    
     padding: 0;
 }
 
@@ -78,7 +72,6 @@ z-index: 100;
 
 .int-logo.fade{
    opacity: 0;
-  ;
 }
 
 .int-logo-slogan.active {
@@ -89,4 +82,61 @@ z-index: 100;
 .int-logo-slogan.fade {
   opacity: 0;
   transform: translateY(0); 
+}
+
+
+.intro-options {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s ease-in-out;
+  pointer-events: auto;
+}
+
+.intro-options.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.intro-options.fade {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.intro-btn {
+  padding: 0.8rem 2rem;
+  font-size: 0.9rem;
+  font-family: 'Playfair Display', serif;
+  border: 2px solid aliceblue;
+  background: transparent;
+  color: aliceblue;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+  pointer-events: auto;
+}
+
+.intro-btn:hover {
+  background: aliceblue;
+  color: rgb(10, 10, 10);
+  transform: translateY(-2px);
+}
+
+.guest-btn {
+  font-weight: 300;
+}
+
+.login-btn {
+  font-weight: 400;
+  background: aliceblue;
+  color: rgb(10, 10, 10);
+}
+
+.login-btn:hover {
+  background: transparent;
+  color: aliceblue;
 }
