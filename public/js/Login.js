@@ -95,7 +95,7 @@ if (signupForm) {
         const password = inputs[2].value.trim();    
         
         try {
-            const response = await fetch('http://localhost:3000/api/register', {
+            const response = await fetch('https://atelier-0adu.onrender.com/api/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, email, password })
