@@ -8,15 +8,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   const artisanData = await fetchArtisanByProduct(productId);
    artisanID = artisanData.artistId;   // Display artisan info at the top
 
+   
    hideArtisanSkeleton();
   displayArtisanInfo(artisanData);
 
   const artisanProducts = await fetchArtisanProduct(artisanID);
+  const artisanCollections = await fetchArtisanCollection(artisanID);
   // Default: show products
   displayProducts(artisanProducts);
 
   // Set up tab switching
-  setupCategorySwitching(artisanProducts);
+  setupCategorySwitching(artisanProducts,artisanCollections);
 });
 
 function showArtisanSkeleton() {
@@ -64,6 +66,7 @@ async function fetchArtisanByProduct(productId) {
 }
 
 
+
 async function fetchArtisanProduct(artistId) {
 const res1 = await fetch(`https://atelier-0adu.onrender.com/products/artistId/${artistId}`);
 const data1 = await res1.json();
@@ -84,6 +87,19 @@ console.log("Products for artist:", data1);
     return products; 
 }
 
+async function fetchArtisanCollection(artistId){
+
+    const restemp = await fetch(`https://atelier-0adu.onrender.com/collections/artist/${artistId}`);
+const datatemp = await restemp.json();
+console.log("collection for artist:", datatemp);
+
+     let collections = []; // initialize as an empty array
+
+    const res = await fetch(`https://atelier-0adu.onrender.com/collections/artist/${artistId}`);
+    const data = await res.json();
+    collections = data;
+    return collections ;
+}
 
 
 // === Display artisan info ===
@@ -112,7 +128,7 @@ async function displayProducts(products) {
     const container = document.getElementById('products-container');
     
     container.innerHTML = '';
-
+    
     
 
     products = shuffleArray(products);
@@ -191,51 +207,154 @@ inStockButton.addEventListener('click', async () => {
 });
 
 
-/*
+
 // === Display collections ===
-function displayCollections(collections) {
-  const container = document.getElementById("content-container");
-  container.innerHTML = "";
+async function displayCollections(collections) {
+    const container = document.getElementById('collections-container');
+    container.innerHTML = '';
 
-  collections.forEach(collection => {
-    const card = document.createElement("div");
-    card.className = "collection-card";
-    card.innerHTML = `
-      <img src="${collection.cover}" alt="${collection.title}">
-      <p>${collection.title}</p>
-    `;
-    container.appendChild(card);
-  });
-}
-*/
-// === Category (tab) switching === 
-function setupCategorySwitching(artisanProducts) {
-  const navLinks = document.querySelectorAll(".navigation a");
-  const indicator = document.getElementById("indicator");
+    // Shuffle collections
+    collections = shuffleArray(collections);
 
-  navLinks.forEach(link => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
+    // Fetch all products once to avoid multiple network calls
+    let allProducts = [];
+    try {
+        const res = await fetch('https://atelier-0adu.onrender.com/products');
+        const data = await res.json();
+        allProducts = Array.isArray(data) ? data : (data.products || []);
+    } catch (err) {
+        console.error('Error fetching products:', err);
+    }
 
-      // update active link
-      navLinks.forEach(l => l.classList.remove("active"));
-      link.classList.add("active");
-
-      // move indicator under the clicked link
-      indicator.style.width = link.offsetWidth + "px";
-      indicator.style.transform = `translateX(${link.offsetLeft}px)`;
-
-      // load correct content
-      const cat = link.dataset.cat;
-      if (cat === "products") displayProducts(artisanProducts);
-      else displayCollections(artisanData.collections);
+    collections.forEach(collection => {
+        const card = createCollectionCard(collection, allProducts);
+        container.appendChild(card);
     });
-  });
+}
 
-  // set indicator initially under the active link
-  const active = document.querySelector(".navigation a.active");
-  if (active) {
-    indicator.style.width = active.offsetWidth + "px";
-    indicator.style.transform = `translateX(${active.offsetLeft}px)`;
-  }
+function createCollectionCard(collection, allProducts) {
+    const card = document.createElement('div');
+    card.className = 'collection-card';
+
+    const mainImgSrc = collection.images?.[0] || '';
+    const hoverImgSrc = collection.images?.[1] || mainImgSrc;
+
+    card.innerHTML = `
+        <div class="collection-image-container">
+            <img src="${collection.images && collection.images[0] ? collection.images[0] : ''}" 
+                 alt="Collection Image"
+                 class="collection-image">
+        </div>
+        <div class="collection-info">
+            <p class="collection-name">${collection.collection}</p>
+        </div>
+    `;
+
+    // Hover Logics 
+    try {
+        const imgContainer = card.querySelector('.collection-image-container');
+        const mainImg = imgContainer.querySelector('.collection-image');
+
+        
+        if (mainImg && !mainImg.classList.contains('main-image')) {
+            mainImg.classList.add('main-image');
+        }
+
+        const hoverImg = document.createElement('img');
+        hoverImg.src = (collection.images && collection.images[1])
+                        ? collection.images[1]
+                        : (collection.images && collection.images[0]) ? collection.images[0] : '';
+        hoverImg.alt = 'Hover Image';
+        hoverImg.className = 'collection-image hover-image';
+
+        
+        imgContainer.appendChild(hoverImg);
+
+        const collectionKeys = Array.isArray(collection.collections)
+            ? collection.collections
+            : (collection.collections ? [collection.collections] : []);
+
+        // fetching another product
+        fetch('https://atelier-0adu.onrender.com/products')
+          .then(res => res.json())
+          .then(data => {
+              const products = Array.isArray(data) ? data : (data.products || []);
+              
+              // find the first product that isn't the current one & shares the same collections
+              const related = products.find(p =>
+                  p._id !== collection._id &&
+                  Array.isArray(p.collections) &&
+                  p.collections.some(c => collectionKeys.includes(c)) 
+              );
+
+              if (related) {
+                  hoverImg.src = related.images[0];
+              }
+          })
+          .catch(err => {
+              console.error('Could not fetch related product image:', err);
+          });
+
+    } catch (err) {
+        console.error('Error while setting up hover image:', err);
+    }
+
+    // Navigation
+    card.addEventListener('click', () => {
+        const collectionName = collection.collection;
+        if (collectionName) {
+            window.location.href = `public/collection.html?name=${encodeURIComponent(collectionName)}`;
+        }
+    });
+
+    return card;
+}
+
+
+// === Category (tab) switching === 
+
+function setupCategorySwitching(artisanProducts, artisanCollections) {
+    const navLinks = document.querySelectorAll(".navigation a");
+    const indicator = document.getElementById("indicator");
+    
+
+    navLinks.forEach(link => {
+        link.addEventListener("click", async (e) => {
+            e.preventDefault();
+
+            // update active link
+            navLinks.forEach(l => l.classList.remove("active"));
+            link.classList.add("active");
+
+            // move indicator under clicked link
+            if (indicator) {
+                indicator.style.width = link.offsetWidth + "px";
+                indicator.style.transform = `translateX(${link.offsetLeft}px)`;
+            }
+
+            // toggle containers
+            const productsContainer = document.getElementById('products-container');
+            const collectionsContainer = document.getElementById('collections-container');
+
+            const cat = link.dataset.cat;
+            if (cat === "products") {
+                productsContainer.style.display = "block";
+                collectionsContainer.style.display = "none";
+                inStockButton.style.display = "block";
+                await displayProducts(artisanProducts);
+            } else {
+                productsContainer.style.display = "none";
+                collectionsContainer.style.display = "grid";
+                inStockButton.style.display = "none";
+                await displayCollections(artisanCollections);
+            }
+        });
+    });
+
+    // Initial indicator position
+    const active = document.querySelector(".navigation a.active");
+    if (active && indicator) {
+        indicator.style.width = active.offsetWidth + "px";
+        indicator.style.transform = `translateX(${active.offsetLeft}px)`;
+    }
 }

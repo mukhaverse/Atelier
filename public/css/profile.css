@@ -247,6 +247,12 @@ h1{
     padding: 10px 20px;
     border-radius: 20px;
     cursor: pointer;
+    transition: transform 0.5s ease;
+}
+
+.filter-btn:hover  {
+    transform: scale(1.05);
+    
 }
 
 .filter-btn.active {
@@ -274,6 +280,7 @@ h1{
 }
 
 
+
 .photo {
   width: 100%;
   overflow: hidden;
@@ -295,6 +302,7 @@ h1{
 
 .products-card:hover  {
     transform: scale(1.05);
+    
 }
 
 /* skeleton for suggested */
@@ -340,5 +348,143 @@ h1{
   100% { background-position: -100% 0; }
 }
 
+/*
+.collection-image-container .hover-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+}
 
 
+.collection-card:hover .hover-image {
+  opacity: 1;
+}
+
+.collection-card:hover .main-image {
+  opacity: 0;
+}
+
+.collection-card:hover .collection-image {
+  transform: none !important;
+}
+
+.collection-image-container {
+  position: relative;
+  width: 270px; 
+  height: 200px; 
+  border-radius: 10%;
+  overflow: hidden; 
+  cursor: pointer;
+}
+
+
+.collection-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10%;
+  transition: opacity 0.5s ease-in-out;
+  display: block;
+}
+
+.collection-grid {
+  column-count: 4;          
+  column-gap: 30px;         
+  padding-left: 60px;
+  padding-right: 60px;
+}
+
+
+.collection-card {
+  display: inline-block;    
+  margin-bottom: 30px;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.4s ease-in-out; 
+  border-radius: 10px; 
+  overflow: hidden; 
+}
+
+.collection-name{
+    margin:0;
+    font-size: 18px;
+    font-family:'Inter';
+    font-weight: 600;
+    cursor: pointer;
+}
+
+*/
+
+#collections-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    gap: 40px; /* space between cards */
+    padding: 60px;
+}
+
+.collection-card {
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.5s ease; /* scale effect */
+}
+
+
+.collection-card:hover {
+    transform: scale(1.05); /* slightly bigger on hover */
+}
+
+.collection-image-container {
+    position: relative;
+    width: 100%;
+    padding-top: 75%; /* 4:3 ratio, adjust as needed */
+    overflow: hidden;
+    border-radius: 10px;
+
+}
+
+.collection-image-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 1s ease; /* smooth hover fade */
+}
+
+.collection-image-container .hover-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
+.collection-card:hover .hover-image {
+  opacity: 1;
+}
+
+.collection-card:hover .main-image {
+  opacity: 0;
+}
+
+.collection-card:hover .collection-image {
+  transform: none !important;
+}
+.collection-info {
+    text-align:center;
+    padding-left: 10px ;
+}
+
+.collection-name {
+    font-family: 'Inter',sans-serif;
+    font-weight: 500;
+    font-size: 22px;
+    color: white;
+}
