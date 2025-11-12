@@ -108,6 +108,8 @@ if (signupForm) {
                 console.log("Registration Successful!", data);
                 
                 timeline1.reverse(); 
+                logLeft.style.pointerEvents = "auto"
+                signRight.style.pointerEvents = "none"
 
             } else {
                 alert(`Registration Failed: ${data.message || 'Email or Username already in use.'}`);
