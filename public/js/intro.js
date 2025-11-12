@@ -57,7 +57,7 @@ function showLoginOptions() {
   loginBtn.textContent = 'Login';
   loginBtn.onclick = () => {
     sessionStorage.setItem('introPlayed', 'true');
-    window.location.href = 'Login.html';
+    window.location.href = 'public/Login.html';
   };
   
  
