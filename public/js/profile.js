@@ -170,14 +170,14 @@ inStockButton.addEventListener('click', async () => {
 
             // Highlight the button
             inStockButton.classList.add('active');
-            inStockButton.textContent = " All Items";
+            inStockButton.textContent = "Show All Items";
         } else {
             // Show all products
             products = await fetchArtisanProduct(artisanID);
 
             // Remove highlight
             inStockButton.classList.remove('active');
-            inStockButton.textContent = "Available";
+            inStockButton.textContent = "Show Available";
         }
 
         displayProducts(products);
