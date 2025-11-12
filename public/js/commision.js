@@ -2,37 +2,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
 //fetch the profile picture and name of artist
 (async () => {
-  const artistId = new URLSearchParams(location.search).get("artistId");
-  if (!artistId) return;
+    const artistId = new URLSearchParams(location.search).get("artistId");
+    if (!artistId) return;
 
-  try {
-    const res  = await fetch(`https://atelier-0adu.onrender.com/products/artistId/${artistId}`);
-    const list = await res.json();
-    if (!Array.isArray(list) || !list.length) return;
+    try {
+      const res = await fetch(`https://atelier-0adu.onrender.com/products/artistId/${artistId}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      
+      const data = await res.json();
+      const artist = data.artist;
+      if (!artist) {
+        console.warn("No artist found in response");
+        return;
+      }
 
-    const artist = list[0].artist;
-    if (!artist) return;
+      
+      const nameP = document.querySelector(".artist-name p");
+      if (nameP) nameP.textContent = artist.username || artist.name || "Artist";
 
-    // الاسم
-    const nameP = document.querySelector(".artist-name p");
-    if (nameP) nameP.textContent = artist.username || artist.name || "Artist";
+      
+      const box = document.querySelector(".profile-picture");
+      if (box && artist.profilePic) {
+        let img = box.querySelector("img");
+        if (!img) {
+          img = document.createElement("img");
+          img.alt = "artist";
+          box.appendChild(img);
+        }
+        img.src = artist.profilePic;
+      }
 
-    
-    const box = document.querySelector(".profile-picture");
-    if (box && artist.profilePic) {
-      let img = box.querySelector("img");
-      if (!img) { img = document.createElement("img"); img.alt = "artist"; box.appendChild(img); }
-      img.src = artist.profilePic;
+    } catch (e) {
+      console.error("Artist fetch failed:", e);
     }
-  } catch (e) {
-    console.error("Artist fetch failed:", e);
-  }
-})();
+  })();
 
 
 
 
-  // Gift Message Show/Hide
+
+  // gift message show and hide
   const yesRadio = document.getElementById("gift-yes");
   const noRadio  = document.getElementById("gift-no");
   const msgBox   = document.getElementById("gift-message-box");
@@ -85,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
     summaryIcon?.classList.remove("step-active");
   };
 
+
   // stats
   const formState = {
     
@@ -101,6 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
     giftMessage: ""
   };
 
+
   // save info 
   function orderPage() {
     formState.type        = document.getElementById("options")?.value || "";
@@ -109,6 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
     formState.description = document.getElementById("description")?.value || "";
     console.log("Order Saved:", formState);
   }
+
 
   //save info
   function personPage() {
@@ -120,6 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
     formState.giftMessage = document.getElementById("gift-message")?.value || "";
     console.log("Person Saved:", formState);
   }
+
 
   // show all info
   function showSummary() {
@@ -145,6 +158,7 @@ Description: ${formState.description}
 Attachment: ${attachmentName}
 `;
 }
+
 
 
   //Validation 

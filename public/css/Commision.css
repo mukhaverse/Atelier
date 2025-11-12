@@ -48,8 +48,8 @@ font-family: 'Inter';
 
 
 .profile-picture img{
-width:60px;
-height:60px;
+width:70px;
+height:70px;
 border-radius:50%;
 object-fit:cover;
 display:block;
@@ -335,7 +335,7 @@ select{
   appearance:none;         
   padding-right:0px;      
   background-image: linear-gradient(45deg,transparent 50%,#9a9a9f 50%),
-                    linear-gradient(135deg,#9a9a9f 50%,transparent 50%);
+  linear-gradient(135deg,#9a9a9f 50%,transparent 50%);
   background-position: calc(100% - 16px) 16px, calc(100% - 10px) 16px;
   background-size: 6px 6px, 6px 6px;
   background-repeat:no-repeat;
@@ -344,38 +344,49 @@ select{
 
 
 #dimension{
-    width: 51%;
+ width: 51%;
 }
 
 .attachment-div{
-    margin-top: 60px;
+  margin-top: 60px;
 }
 
 .Folder{
-  position:relative;
-  align-items:center;
-  display:flex;
-  
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; 
+  width: 100%;
 }
 .Folder label{
-    background-color: #232326;
-    min-height: 38px;
-    width :50%;
-    border-radius: 10px;
-    font-family: 'Inter';
-    padding-inline:70px;
-     border:1px solid #34343a;
+  background-color: #232326;
+  min-height: 38px;
+  width: 60%;                 
+  border-radius: 10px;
+  font-family: 'Inter';
+  padding: 2px 2px;         
+  border:1px solid #34343a;
+  display: flex;              
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;                 
+  text-align: left;   
+  padding-left: 15px;   
 }
 
 #label-brows{
-  white-space: nowrap;
+ white-space: nowrap;
+  margin: 0; 
   
 }
 #upload-file{
-    width: 100%; 
-    height: 100%;
-    opacity: 0;
-    border-radius: 50%;
+  position: absolute;       
+  inset: 0;                  
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  border-radius: 10px;   
    
 }
 
@@ -387,7 +398,11 @@ select{
   color:#bdbdc6;
   pointer-events:none;
 }
-.Folder:hover{ border-color:#8b7dff; color:#fff; }
+
+.Folder:hover{ 
+  border-color:#8b7dff;
+  color:#fff; 
+}
 
 
 .description-text{ min-height:100px; resize:vertical; margin-top: 50px;}
@@ -483,8 +498,31 @@ select{
   color: #111;
 }
 
+::-webkit-scrollbar {
+  width: 8px; 
+}
 
 
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2); 
+  border-radius: 10px;
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+
+
+
+
+/*confirm messag*/
 :root{
  
   --overlay-opacity: 0.78;
@@ -518,7 +556,16 @@ select{
   opacity: 0;
   animation: modalIn .18s ease-out forwards;
 }
+.confirm-overlay{
+    background:#1a1a1d;
+}
+
+
+
+/*animation*/
 @keyframes modalIn{ to{ transform: scale(1); opacity: 1; } }
+
+
 .email-icon{
   display: flex;
   justify-content: center;
@@ -527,8 +574,9 @@ select{
 }
 
 .email-icon img{
-  width: 70px;   
-  height: 70px;
+  width: 180px;   
+  height: 180px;
+  margin-left: 15px;
 }
 .message-text{
   display: flex;
@@ -548,39 +596,32 @@ select{
   padding: 8px 60px;
   border-radius: 10px;
   border: 2px solid #8b7dff;
-  background: #202024;
+  background: #2c2c30;
   color: #eee;
   cursor: pointer;
   transition: .2s;
   font-family: 'Inter';
   font-size: 18px;
+ 
 }
-
 .closed-button:hover{
   background: #8b7dff;
   color: #111;
 }
 
-/*@keyframes btn-shake {
-  10%, 90% { transform: translateX(-2px); }
-  20%, 80% { transform: translateX(4px); }
-  30%, 50%, 70% { transform: translateX(-6px); }
-  40%, 60% { transform: translateX(6px); }
-}
-.shake { animation: btn-shake .35s; }
-*/
+
 .input-error{
   outline: 2px solid #8b7dff;
   box-shadow: 0 0 0 3px rgba(139,125,255,.22);
 }
 
-/* دعم موف للـ placeholder أثناء الخطأ (اختياري) */
+
 .input-error::placeholder{
   color: #8b7dff;
   opacity: .95;
 }
 
-/* اهتزاز (استخدم keyframes اللي عندك) */
+/*animation*/
 @keyframes btn-shake {
   10%, 90% { transform: translateX(-2px); }
   20%, 80% { transform: translateX(4px); }
@@ -590,4 +631,110 @@ select{
 
 .shake { 
   animation: btn-shake .35s; 
+}
+
+
+/*responsive*/
+@media (max-width: 992px) and (min-width: 768px) {
+
+  .profile-picture img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .Profile-section h1 {
+    font-size: 22px;
+  }
+
+  .artist-name p {
+    font-size: 14px;
+  }
+
+  .steps-progress {
+    transform: scale(0.9); 
+  }
+
+  .person-icon,
+  .order-icon,
+  .summery-icon {
+    width: 22px;
+    height: 22px;
+    font-size: 13px;
+  }
+
+  .person-text p,
+  .order-text p,
+  .summery-text p {
+    font-size: 13px;
+  }
+}
+
+
+
+
+@media (max-width: 768px) {
+
+
+  .steps-progress {
+    order: -1; 
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  
+  .steps-progress::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 15%;
+    right: 15%;
+    height: 2px;
+    background: #515157;
+    z-index: 0;
+  }
+
+
+  .person-icon,
+  .order-icon,
+  .summery-icon {
+    position: relative;
+    z-index: 1;
+    background: #515157;
+    color: #000;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: grid;
+    place-items: center;
+  }
+
+  .step-active {
+    background: #ffffff;
+    color: #111;
+    border: 2px solid #ffffff;
+  }
+
+  .person-info,
+  .order-info,
+  .summery {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+  }
+
+ 
+  .Person-Details-div,
+  .Order-Details,
+  .Summary-Details {
+    width: 90%;
+    margin-top: 20px;
+  }
 }
