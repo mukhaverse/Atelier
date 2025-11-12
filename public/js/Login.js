@@ -100,5 +100,9 @@ loginForm.addEventListener('submit', (e) =>{
 
 function setLoggedIn(username, password) {
   localStorage.setItem('loggedIn', JSON.stringify({ username, password }))
-  console.log('user logged :', username)
+
+
+  const user = JSON.parse(localStorage.getItem('loggedIn'))
+  console.log(user.username)
+
 }

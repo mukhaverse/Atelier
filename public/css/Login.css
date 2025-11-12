@@ -178,7 +178,7 @@ body{
         left: 80%;
         top: 50%;
         transform: translate(-50%, -50%);
-        width: 400px;
+        width: 500px;
         color: #fdfdfd;
         text-align: center;
         padding-right: 30px;
@@ -193,9 +193,9 @@ body{
     }
     .wm{
          /* font-family: "Lato", sans-serif; */
-           font-weight: 100;
-          
-          font-size: 2rem;
+           
+          font-weight: lighter;
+          font-size: 1.8rem;
     }
     .join h2{
         margin-bottom: 80px;
@@ -204,8 +204,8 @@ body{
     }
     .jm{
         opacity: 0;
-        font-size: 2rem;
-        
+        font-size: 1.8rem;
+        font-weight: lighter;
     }
 
  .join{
@@ -214,7 +214,7 @@ body{
         left: 20%;
         top: 50%;
         transform: translate(-50%, -50%);
-        width: 400px;
+        width: 500px;
         color: #fdfdfd;
         
         text-align: center;
