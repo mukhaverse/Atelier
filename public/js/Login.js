@@ -74,35 +74,99 @@ loginBtn.addEventListener("click", () => {
 
 
 /////////////////////////////////////////////////////////// Logic
-
-
-
-const loginForm = document.querySelector('.Login form')
-
-loginForm.addEventListener('submit', (e) =>{
-    e.preventDefault()
-    const username = document.getElementById('login-username').value
-    const password = document.getElementById('login-password').value
-
-    // here add the backend logic to check the account exist or not
-
-
-
-
-
-    
-    
-// if true then log them in &  store in localstorage  
-    setLoggedIn(username, password)
-    
-})
-
-
 function setLoggedIn(username, password) {
-  localStorage.setItem('loggedIn', JSON.stringify({ username, password }))
+    localStorage.setItem('loggedIn', JSON.stringify({ username, password }))
+    const user = JSON.parse(localStorage.getItem('loggedIn'))
+    console.log(user.username)
+}
 
 
-  const user = JSON.parse(localStorage.getItem('loggedIn'))
-  console.log(user.username)
+const loginForm = document.querySelector('.log-div .form-div.Login form');
+const signupForm = document.querySelector('.sign-div .form-div.Sign form');
 
+
+if (signupForm) {
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); 
+        
+        const inputs = signupForm.querySelectorAll('input');
+        const username = inputs[0].value.trim(); 
+        const email = inputs[1].value.trim();      
+        const password = inputs[2].value.trim();    
+        
+        try {
+            const response = await fetch('http://localhost:3000/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert("Registration successful! You can now log in.");
+                console.log("Registration Successful!", data);
+                
+                timeline1.reverse(); 
+
+            } else {
+                alert(`Registration Failed: ${data.message || 'Email or Username already in use.'}`);
+                console.error("Registration Failed:", data.message);
+            }
+
+        } catch (error) {
+            console.error('Network Error during registration:', error);
+        }
+    });
+}
+
+
+
+if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); 
+        
+        const loginInputs = loginForm.querySelectorAll('input');
+        const emailOrUsername = loginInputs[0].value.trim(); 
+        const password = loginInputs[1].value.trim();
+
+        if (!emailOrUsername || !password) {
+            console.error('Username/Password are required.');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:3000/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: emailOrUsername, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) { 
+                console.log("Login Successful!", data);
+                
+                localStorage.setItem('userToken', data.token); 
+                localStorage.setItem('userId', data.user.id);
+                
+                setLoggedIn(data.user.username, password); 
+                
+                alert("Login successful!");
+                setTimeout(() => { 
+                    window.location.href = '/index.html'; 
+                }, 100); 
+
+            } else {
+                alert(`Login Failed: ${data.message || 'Incorrect credentials.'}`);
+                console.error("Login Failed:", data.message);
+            }
+
+        } catch (error) {
+            console.error('Network Error during login:', error);
+            alert('A network error occurred while connecting to the server.');
+        }
+    });
 }
