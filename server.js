@@ -291,6 +291,7 @@ app.post("/artists", async (req, res) => {
 
 
 const { sendEmail } = require('./email');
+const user = require("./models/user");
 
 app.post("/commission", async (req, res) => {
   try {
@@ -478,6 +479,21 @@ app.post('/api/wishlist/add', auth, async (req, res) => {
         res.status(500).json({ message: 'Server error while adding to wishlist.' });
     }
 });
+
+app.get("/users", async (req, res) =>{
+
+  try{
+    const users = await user.find()
+    console.log("Fething users completed!" )
+    res.json(users)
+    return
+  }catch (error) {
+    console.log("error while fetching users ", error)
+    return res.send("error ")
+  }
+
+    
+})
 
 
 app.listen(3000, () =>{
