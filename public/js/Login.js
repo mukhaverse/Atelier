@@ -151,10 +151,7 @@ if (loginForm) {
             if (response.ok) { 
                 console.log("Login Successful!", data);
                 
-                localStorage.setItem('userToken', data.token); 
-                localStorage.setItem('userId', data.user.id);
-                
-                setLoggedIn(data.user.username, password); 
+                loginUser(data.token, data.user.id);
                 
                 alert("Login successful!");
                 setTimeout(() => { 
