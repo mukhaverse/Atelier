@@ -124,34 +124,33 @@ if (signupForm) {
 
 
 
+
 if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault(); 
         
-        const loginInputs = loginForm.querySelectorAll('input');
-        const emailOrUsername = loginInputs[0].value.trim(); 
-        const password = loginInputs[1].value.trim();
+        const identifier = document.getElementById('login-username').value.trim(); 
+        const password = document.getElementById('login-password').value.trim();
 
-        if (!emailOrUsername || !password) {
-            console.error('Username/Password are required.');
+        if (!identifier || !password) {
+            alert('Please enter your username/email and password.');
             return;
         }
 
         try {
             const response = await fetch('https://atelier-0adu.onrender.com/api/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email: emailOrUsername, password })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: identifier, password: password })
             });
 
             const data = await response.json();
 
             if (response.ok) { 
-                console.log("Login Successful!", data);
+                localStorage.setItem('userToken', data.token); 
+                localStorage.setItem('userId', data.user.id);
                 
-                loginUser(data.token, data.user.id);
+                setLoggedIn(data.user.username, password); 
                 
                 alert("Login successful!");
                 setTimeout(() => { 
@@ -160,7 +159,6 @@ if (loginForm) {
 
             } else {
                 alert(`Login Failed: ${data.message || 'Incorrect credentials.'}`);
-                console.error("Login Failed:", data.message);
             }
 
         } catch (error) {
