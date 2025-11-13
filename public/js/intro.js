@@ -46,7 +46,7 @@ function showLoginOptions() {
   guestBtn.className = 'intro-btn guest-btn';
   guestBtn.textContent = 'Continue as Guest';
   guestBtn.onclick = () => {
-    localStorage.setItem('user', 'guest');
+    setGuest();
     sessionStorage.setItem('introPlayed', 'true');
     fadeOutIntro();
   };
@@ -57,7 +57,7 @@ function showLoginOptions() {
   loginBtn.textContent = 'Login';
   loginBtn.onclick = () => {
     sessionStorage.setItem('introPlayed', 'true');
-    window.location.href = 'Login.html';
+    window.location.href = 'public/Login.html';
   };
   
  

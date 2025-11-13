@@ -1,5 +1,28 @@
 // ===== API =====
 const API_COLLECTION = "https://atelier-0adu.onrender.com/products/collection";
+const API_BASE = "https://atelier-0adu.onrender.com";
+
+async function wishlistApi(path, { method = "GET", body, headers = {} } = {}) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_BASE}${path}`, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...headers,
+    },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+  });
+
+  if (!res.ok) {
+    const msg = await res.text().catch(() => "");
+    throw new Error(`HTTP ${res.status} – ${msg || res.statusText}`);
+  }
+
+  const ct = res.headers.get("content-type") || "";
+  return ct.includes("application/json") ? res.json() : null;
+}
 
 // ===== DOM (نفس IDs في HTML) =====
 const $title  = document.getElementById("collectionTitle");
@@ -8,6 +31,10 @@ const $handle = document.getElementById("collectionHandle");
 const $avatar = document.getElementById("collectionAvatar");
 const $grid   = document.getElementById("grid");
 const $status = document.getElementById("status");
+const $heart = document.querySelector(".icons img[alt='wishlist icon']");
+const HEART_OUTLINE = "assets/heart_icon.svg";
+const HEART_FILLED  = "assets/heart_icon_(added in wishlist).svg";
+
 
 function setStatus(msg) { if ($status) $status.textContent = msg || ""; }
 
@@ -39,12 +66,60 @@ function addCard(item) {
   $grid.appendChild(a);
 }
 
+function setupCollectionWishlistHeart() {
+  if (!$heart) return;
+
+  const slug   = new URLSearchParams(location.search).get("name") || "";
+  const userId = localStorage.getItem("userId");
+
+  function setHeart(filled) {
+    $heart.src = filled ? HEART_FILLED : HEART_OUTLINE;
+    $heart.dataset.filled = filled ? "1" : "0";
+  }
+
+  // لو مو مسجلة دخول
+  if (!userId) {
+    setHeart(false);
+    $heart.addEventListener("click", () => {
+      alert("Please login to save this collection.");
+      location.href = "login.html";
+    });
+    return;
+  }
+
+  // أولاً: نتأكد هل الكوليكشن محفوظ في الويشليست أو لا
+  wishlistApi(`/users/${userId}/wishlist/collections`)
+    .then((list) => {
+      const exists =
+        Array.isArray(list) && list.some((c) => c.collection === slug);
+      setHeart(exists);
+    })
+    .catch(() => setHeart(false));
+
+  // لما تضغطي الهارت → نرسل toggle
+  $heart.addEventListener("click", async () => {
+    try {
+      const result = await wishlistApi(
+        `/users/${userId}/wishlist/collections/toggle`,
+        {
+          method: "PUT",
+          body: { collection: slug },
+        }
+      );
+
+      setHeart(result?.toggled === "added");
+    } catch (err) {
+      console.error("toggle collection wishlist error:", err);
+      alert("Could not update wishlist. Please try again.");
+    }
+  });
+}
+
 
 async function loadCollection(collectionParam) {
   const fromQuery = new URLSearchParams(location.search).get("name");
   const slug = (collectionParam || fromQuery || "").trim();
   if (!slug) { setStatus("No collection provided."); return; }
-
   
   $title.textContent  = slug;
   $meta.textContent   = "";
@@ -90,4 +165,5 @@ window.loadCollection = loadCollection;
 (function () {
   const q = new URLSearchParams(location.search).get("name");
   if (q) loadCollection(q);
+  setupCollectionWishlistHeart();
 })();

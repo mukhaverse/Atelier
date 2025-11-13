@@ -134,3 +134,108 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   loadProductById(id);
 });
+
+
+/************ Wishlist on Product Page (init + toggle) ************/
+const API_BASE_WL = "https://atelier-0adu.onrender.com"; // نفس دومين الباك
+const WL_ICON_OUTLINE = "assets/heart_icon.svg";
+const WL_ICON_FILLED  = "assets/heart_icon_(added in wishlist).svg";
+
+const WL_token  = localStorage.getItem("token");   // لو عندك JWT
+const WL_userId = localStorage.getItem("userId");  // خزّنيه عند تسجيل الدخول
+
+// استدعاء API عام
+async function wlApi(path, { method = "GET", body, headers = {} } = {}) {
+  const res = await fetch(`${API_BASE_WL}${path}`, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      ...(WL_token ? { Authorization: `Bearer ${WL_token}` } : {}),
+      ...headers,
+    },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+    credentials: "include", // احذفيها لو ما تستخدمين كوكيز
+  });
+  if (!res.ok) {
+    const msg = await res.text().catch(() => "");
+    throw new Error(`HTTP ${res.status} – ${msg || res.statusText}`);
+  }
+  const ct = res.headers.get("content-type") || "";
+  return ct.includes("application/json") ? res.json() : null;
+}
+
+function wlPulse(el) {
+  el.style.transform = "scale(1.12)";
+  setTimeout(() => (el.style.transform = ""), 140);
+}
+
+// تعرض الأيقونة حسب الحالة
+function setHeartState(heartImgEl, isInWishlist) {
+  heartImgEl.src = isInWishlist ? WL_ICON_FILLED : WL_ICON_OUTLINE;
+  heartImgEl.setAttribute("aria-label", isInWishlist ? "Remove from wishlist" : "Add to wishlist");
+}
+
+// (اختياري) تحديث عدّاد الويشليست في الهيدر عبر localStorage
+function updateWishlistBadgeLocally(productId, isInWishlist) {
+  try {
+    let wl = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    if (isInWishlist && !wl.includes(productId)) wl.push(productId);
+    if (!isInWishlist) wl = wl.filter(id => id !== productId);
+    localStorage.setItem("wishlist", JSON.stringify(wl));
+    // لبعض الهيدرات نطلق حدث storage لتحديث البادج
+    window.dispatchEvent(new Event("storage"));
+  } catch {}
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const productId = new URLSearchParams(location.search).get("id");
+  const heart = document.querySelector(".add_to_wishlist"); // <img class="add_to_wishlist" ...>
+  if (!heart || !productId) return;
+
+  // الحالة الابتدائية: اقرأ IDs من الويشليست وحدّد الأيقونة
+  let isInWishlist = false;
+  try {
+    if (!WL_userId) throw new Error("No user");
+    const list = await wlApi(`/users/${WL_userId}/wishlist`); // يرجّع IDs
+    isInWishlist = Array.isArray(list) && list.some(id => String(id) === String(productId));
+    setHeartState(heart, isInWishlist);
+  } catch (err) {
+    // لو المستخدم مو داخل أو أي خطأ: خليه على الأيقونة الفارغة
+    setHeartState(heart, false);
+  }
+
+  // التبديل عند الضغط
+  heart.addEventListener("click", async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!WL_userId) {
+      alert("Please sign in to use wishlist.");
+      location.href = "login.html";
+      return;
+    }
+
+    if (heart.dataset.busy === "1") return;
+    heart.dataset.busy = "1";
+
+    try {
+      const result = await wlApi(`/users/${WL_userId}/wishlist/toggle`, {
+        method: "PUT",
+        body: { productId }
+      });
+
+      // حدّث الحالة بحسب الاستجابة
+      if (result?.toggled === "added")  isInWishlist = true;
+      if (result?.toggled === "removed") isInWishlist = false;
+
+      setHeartState(heart, isInWishlist);
+      wlPulse(heart);
+      updateWishlistBadgeLocally(productId, isInWishlist); // اختياري
+    } catch (err) {
+      console.error("Wishlist toggle failed:", err);
+      alert("Could not update wishlist. Please try again.");
+    } finally {
+      heart.dataset.busy = "0";
+    }
+  });
+});

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Wishlist</title>
+    <link rel="stylesheet" href="css/wishlist.css" />
+  </head>
+
+  <body>
+    <!-- Page header with back and home and cart buttons -->
+    <header class="page_header">
+      <a href="javascript:history.back()" class="back_icon" location.href='/index.html'>
+        <img src="assets/back_icon.svg" alt="back" width="22" height="22" />
+      </a>
+      <section class="side_icons">
+        <img src="assets/home_icon.svg" alt="home icon" width="22" height="22" onclick="location.href='/index.html'" />
+        <img src="assets/cart_icon.svg" alt="cart icon" width="22" height="22" onclick="location.href=''" />
+      </section>
+    </header>
+
+    <!-- Main content area for wishlist page -->
+    <main class="wishlist_page">
+      
+      <!-- Wishlist title -->
+      <section class="wishlistTitle">
+        <h1 id="wishlistTitle">Wishlist</h1>
+      </section>
+
+      <!-- Tabs + long line -->
+      <div class="wishlist_tabs_wrapper">
+        <div class="wishlist_tabs">
+          <ul class="navigation" id="wishlistNav">
+            <li><a href="#" data-tab="products" class="active">Products</a></li>
+            <li><a href="#" data-tab="collections">Collections</a></li>
+          </ul>
+
+          <div id="indicator" class="indicator"></div>
+        </div>
+
+        <hr class="wishlist_long_line" />
+      </div>
+
+      <!-- Message and button -->
+      <section class="login_prompt">
+        <p>Please login to view your wishlist</p>
+        <button onclick="location.href='login.html'">login</button>
+      </section>
+
+      <!-- Product wishlist -->
+      <section id="grid" class="grid_gallery"></section>
+      
+      <!-- Collections wishlist -->
+      <section id="collections-grid" class="grid_gallery" style="display:none"></section>
+    </main>
+
+    <script src="./js/wishlist.js"></script>
+  </body>
+</html>

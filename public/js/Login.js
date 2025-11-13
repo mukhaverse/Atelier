@@ -95,7 +95,7 @@ if (signupForm) {
         const password = inputs[2].value.trim();    
         
         try {
-            const response = await fetch('http://localhost:3000/api/register', {
+            const response = await fetch('https://atelier-0adu.onrender.com/api/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, email, password })
@@ -108,6 +108,8 @@ if (signupForm) {
                 console.log("Registration Successful!", data);
                 
                 timeline1.reverse(); 
+                logLeft.style.pointerEvents = "auto"
+                signRight.style.pointerEvents = "none"
 
             } else {
                 alert(`Registration Failed: ${data.message || 'Email or Username already in use.'}`);
@@ -122,33 +124,29 @@ if (signupForm) {
 
 
 
+
 if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault(); 
         
-        const loginInputs = loginForm.querySelectorAll('input');
-        const emailOrUsername = loginInputs[0].value.trim(); 
-        const password = loginInputs[1].value.trim();
+        const identifier = document.getElementById('login-username').value.trim(); 
+        const password = document.getElementById('login-password').value.trim();
 
-        if (!emailOrUsername || !password) {
-            console.error('Username/Password are required.');
+        if (!identifier || !password) {
+            alert('Please enter your username/email and password.');
             return;
         }
 
         try {
-            const response = await fetch('http://localhost:3000/api/login', {
+            const response = await fetch('https://atelier-0adu.onrender.com/api/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email: emailOrUsername, password })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: identifier, password: password })
             });
 
             const data = await response.json();
 
             if (response.ok) { 
-                console.log("Login Successful!", data);
-                
                 localStorage.setItem('userToken', data.token); 
                 localStorage.setItem('userId', data.user.id);
                 
@@ -161,7 +159,6 @@ if (loginForm) {
 
             } else {
                 alert(`Login Failed: ${data.message || 'Incorrect credentials.'}`);
-                console.error("Login Failed:", data.message);
             }
 
         } catch (error) {
