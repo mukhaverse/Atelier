@@ -1,15 +1,14 @@
-// public/js/wishlist.js
-
-const API_BASE             = "https://atelier-0adu.onrender.com";
-const API_PRODUCT_BY_ID    = `${API_BASE}/products/id/`;
+const API_BASE               = "https://atelier-0adu.onrender.com";
+const API_PRODUCT_BY_ID      = `${API_BASE}/products/id/`;
 const API_COLLECTION_BY_SLUG = `${API_BASE}/products/collection/`;
-const PRODUCT_PAGE         = "./product.html";
-const HEART_FILLED_ICON = "assets/heart_icon_(added in wishlist).svg";
-const CART_ICON         = "assets/cart_icon.svg";
-const FALLBACK_IMG      = "assets/placeholder.jpg";
+const PRODUCT_PAGE           = "./product.html";
+const HEART_FILLED_ICON      = "assets/heart_icon_(added in wishlist).svg";
+const CART_ICON              = "assets/cart_icon.svg";
+const FALLBACK_IMG           = "assets/placeholder.jpg";
 
 const productMap = {}; // id → product data cache
 
+/* API HELPER */
 async function api(path, { method = "GET", body, headers = {} } = {}) {
   // Always get latest token
   const freshToken = localStorage.getItem("token");
@@ -21,8 +20,8 @@ async function api(path, { method = "GET", body, headers = {} } = {}) {
       ...(freshToken ? { Authorization: `Bearer ${freshToken}` } : {}),
       ...headers,
     },
-    ...(body ? { body: JSON.stringify(body)} : {}),
-    // Removed credentials: "include"
+    ...(body ? { body: JSON.stringify(body) } : {}),
+
   });
 
   // Handle API errors
@@ -36,6 +35,7 @@ async function api(path, { method = "GET", body, headers = {} } = {}) {
   return ct.includes("application/json") ? res.json() : null;
 }
 
+/* UTILITIES */
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, m => ({
     "&": "&amp;",
@@ -54,11 +54,12 @@ function pulse(el) {
 function renderEmpty(grid) {
   grid.innerHTML = `
     <div style="text-align:center; opacity:.85; padding:32px 12px">
-      <p>Your wishlist is empty ✨</p>
+      <p>Your wishlist is empty</p>
       <button onclick="location.href='index.html'">Browse products</button>
     </div>`;
 }
 
+/* CARD RENDERING */
 function renderCard(p) {
   const id    = p._id || p.id;
   const title = p.name || p.title || "Product";
@@ -91,6 +92,7 @@ function renderCard(p) {
   `;
 }
 
+/* FETCH PRODUCTS BY IDS */
 async function fetchProductsByIds(ids) {
   const tasks = ids.map(async (id) => {
     try {
@@ -109,7 +111,7 @@ async function fetchProductsByIds(ids) {
   return arr.filter(Boolean);
 }
 
-/* --------- PRODUCTS TAB LOADING --------- */
+/* PRODUCTS TAB LOADING */
 async function loadWishlistProducts() {
   const grid        = document.getElementById("grid");
   const loginPrompt = document.querySelector(".login_prompt");
@@ -130,7 +132,7 @@ async function loadWishlistProducts() {
   grid.innerHTML            = `<p style="opacity:.8">Loading wishlist…</p>`;
 
   try {
-    // Use the new endpoint that returns product IDs only
+    // just get product IDs in wishlist
     const ids = await api(`/users/${userId}/wishlist/products`);
     if (!Array.isArray(ids) || ids.length === 0) {
       renderEmpty(grid);
@@ -145,12 +147,22 @@ async function loadWishlistProducts() {
 
     grid.innerHTML = items.map(renderCard).join("");
   } catch (err) {
-    console.error(err);
+    console.error("loadWishlistProducts error:", err);
+    const msg = String(err.message || "");
+
+    // if the userId is invalid, clear it and show login prompt
+    if (msg.includes("Invalid userId")) {
+      localStorage.removeItem("userId");
+      loginPrompt.style.display = "flex";
+      grid.style.display        = "none";
+      return;
+    }
+
     grid.innerHTML = `<p style="color:#ff6b6b">Failed to load wishlist. Please try again.</p>`;
   }
 }
 
-/* --------- COLLECTIONS TAB LOADING --------- */
+/* COLLECTIONS TAB LOADING */
 async function loadWishlistCollections() {
   const collectionsGrid = document.getElementById("collections-grid");
   const userId          = localStorage.getItem("userId");
@@ -166,7 +178,7 @@ async function loadWishlistCollections() {
   collectionsGrid.innerHTML = `<p style="opacity:.8">Loading collections…</p>`;
 
   try {
-    // This endpoint returns something like: [ { collection: "Floral", count: 3 }, ... ]
+    // returns like: [ { collection: "Floral", count: 3 }, ... ]
     const collections = await api(`/users/${userId}/wishlist/collections`);
 
     if (!Array.isArray(collections) || !collections.length) {
@@ -223,18 +235,26 @@ async function loadWishlistCollections() {
     collectionsGrid.innerHTML = cardsHtml.join("");
   } catch (err) {
     console.error("Failed to load wishlist collections:", err);
+    const msg = String(err.message || "");
+
+    if (msg.includes("Invalid userId")) {
+      localStorage.removeItem("userId");
+      collectionsGrid.innerHTML = "";
+      return;
+    }
+
     collectionsGrid.innerHTML = `<p style="color:#ff6b6b">Failed to load collections. Please try again.</p>`;
   }
 }
 
-/* --------- GLOBAL CLICK HANDLERS (PRODUCT CARDS) --------- */
+/* GLOBAL CLICK HANDLERS (PRODUCT CARDS) */
 document.addEventListener("click", async (e) => {
   const userId = localStorage.getItem("userId");
   const link   = e.target.closest(".image_link");
   const favBtn = e.target.closest(".fav_icon");
   const cartBtn = e.target.closest(".cart_icon");
 
-  // When clicking the product image → store product data in sessionStorage before navigation
+  // Clicking product image → store product data in sessionStorage before navigation
   if (link) {
     const card = link.closest(".wishlist_card");
     const id   = card?.dataset?.id;
@@ -252,7 +272,7 @@ document.addEventListener("click", async (e) => {
     e.stopPropagation();
   }
 
-  // Remove / toggle a product in wishlist (with fade-out effect)
+  // Toggle / remove a product in wishlist (with fade-out effect)
   if (favBtn) {
     if (!userId) {
       alert("Please sign in to use wishlist.");
@@ -268,7 +288,6 @@ document.addEventListener("click", async (e) => {
     favBtn.dataset.busy = "1";
 
     try {
-      // When (re)adding from wishlist page, we can attach the first collection as metadata if available
       const collection =
         productMap[id] && Array.isArray(productMap[id].collections)
           ? productMap[id].collections[0]
@@ -284,7 +303,7 @@ document.addEventListener("click", async (e) => {
         card.classList.add("fade-out");
         setTimeout(() => card.remove(), 400);
 
-        // Update localStorage "wishlist" (optional badge sync)
+        // Update localStorage "wishlist" cache (optional)
         try {
           let wl = JSON.parse(localStorage.getItem("wishlist") || "[]");
           wl = wl.filter(x => String(x) !== String(id));
@@ -309,7 +328,7 @@ document.addEventListener("click", async (e) => {
   }
 });
 
-/* --------- LOGIN BUTTON REDIRECT HANDLER --------- */
+/* LOGIN BUTTON REDIRECT HANDLER */
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("button, a");
   if (!btn) return;
@@ -326,12 +345,12 @@ document.addEventListener("click", (e) => {
   }
 });
 
-/* --------- TABS (Products / Collections) --------- */
+/* TABS (Products / Collections) */
 function initWishlistTabs() {
-  const navLinks          = document.querySelectorAll("#wishlistNav a");
-  const indicator         = document.getElementById("indicator");
-  const tabsWrapper       = document.querySelector(".wishlist_tabs");
-  const productsSection   = document.getElementById("grid");
+  const navLinks           = document.querySelectorAll("#wishlistNav a");
+  const indicator          = document.getElementById("indicator");
+  const tabsWrapper        = document.querySelector(".wishlist_tabs");
+  const productsSection    = document.getElementById("grid");
   const collectionsSection = document.getElementById("collections-grid");
 
   if (!navLinks.length || !indicator || !tabsWrapper || !productsSection || !collectionsSection) return;
@@ -371,14 +390,12 @@ function initWishlistTabs() {
       } else {
         productsSection.style.display    = "block";
         collectionsSection.style.display = "none";
-        // Optionally reload products when returning to this tab:
-        // await loadWishlistProducts();
       }
     });
   });
 }
 
-/* --------- BOOTSTRAP --------- */
+/* BOOTSTRAP */
 window.addEventListener("DOMContentLoaded", () => {
   loadWishlistProducts();
   initWishlistTabs();
