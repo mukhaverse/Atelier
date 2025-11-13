@@ -17,6 +17,18 @@ body {
   transform: scale(1.1);
 }
 
+.icon-btn {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  outline: none !important;
+}
+
+.icon-btn:hover img {
+  transform: scale(1.1);
+}
+
+
 main.collection_page {
   min-height: 100vh;
   padding: 60px;

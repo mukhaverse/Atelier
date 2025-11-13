@@ -1,3 +1,5 @@
+// ================== PRODUCT & ARTIST LOADING ==================
+
 // API endpoints
 const API_PRODUCT_BY_ID      = "https://atelier-0adu.onrender.com/products/id/";
 const API_COLLECTION_BY_SLUG = "https://atelier-0adu.onrender.com/products/collection/";
@@ -16,7 +18,7 @@ function extractArtist(p) {
 
 // Render the product page from a product object
 function renderProduct(p) {
-  //Grab DOM elements
+  // Grab DOM elements
   const $img    = document.querySelector(".product_image img");
   const $title  = document.querySelector(".title");
   const $price  = document.querySelector(".price");
@@ -27,7 +29,7 @@ function renderProduct(p) {
   const $user   = document.querySelector(".artisan.account .username");
   const $avatar = document.querySelector(".artisan.account img");
 
-  //Map product fields
+  // Map product fields
   const imageUrl = pick(
     Array.isArray(p.images) && (p.images[0]?.url || p.images[0]),
     p.image, p.imageUrl, p.photo, p.url
@@ -38,10 +40,10 @@ function renderProduct(p) {
   const medium   = pick(p.medium, p.material, p.category);
   const desc     = pick(p.description, p.details, "");
 
-  //Resolve artist info
+  // Resolve artist info
   const { name: artistName, username, avatar } = extractArtist(p);
 
-  //Paint product image 
+  // Product image
   if ($img && imageUrl) {
     $img.src = imageUrl;
     $img.onerror = () => { $img.src = "assets/post5.jpg"; };
@@ -51,24 +53,27 @@ function renderProduct(p) {
 
   // Price
   if ($price) {
-    if (price != null) $price.textContent = (typeof price === "number" ? `${price} SR` : String(price));
-    else $price.style.display = "none";
+    if (price != null) {
+      $price.textContent = (typeof price === "number" ? `${price} SR` : String(price));
+    } else {
+      $price.style.display = "none";
+    }
   }
 
-  // Size
+  // Size / Medium
   if ($size)   (size   ? $size.textContent   = size   : $size.style.display   = "none");
   if ($medium) (medium ? $medium.textContent = medium : $medium.style.display = "none");
 
   // Description
-  if ($desc)   $desc.textContent = desc;
+  if ($desc) $desc.textContent = desc;
 
-  //Fill artist area
+  // Artist
   if ($name)   $name.textContent = artistName;
   if ($user)   $user.textContent = username;
   if ($avatar && avatar) $avatar.src = avatar;
 }
 
-// Fallback, fetch artist from the collection endpoint if needed 
+// (Optional) enrich artist from collection endpoint if needed
 async function enrichArtistFromCollectionIfNeeded(product) {
   const alreadyHasArtist = product.artist && typeof product.artist === "object";
   if (alreadyHasArtist) return product;
@@ -84,25 +89,22 @@ async function enrichArtistFromCollectionIfNeeded(product) {
 
     const payload = await res.json();
 
-    // If the collection payload has an artist object, merge it into the product
     if (payload?.artist && typeof payload.artist === "object") {
       return { ...product, artist: payload.artist };
     }
     return product;
   } catch {
-    // On any error, keep the original product
     return product;
   }
 }
 
-// Fetch product by ID then merge artist if returned separately
+// Fetch product by ID then render
 async function loadProductById(id) {
   if (!id) {
     console.error("No product id provided in URL.");
     return;
   }
   try {
-    // Fetch product by ID
     const res = await fetch(`${API_PRODUCT_BY_ID}${encodeURIComponent(id)}`, {
       headers: { Accept: "application/json" }
     });
@@ -112,20 +114,20 @@ async function loadProductById(id) {
 
     const baseProduct = data?.product ?? data;
 
-    //If artist is returned at the top level, merge it under product.artist
     let product = baseProduct;
     if (data?.artist && typeof data.artist === "object") {
       product = { ...baseProduct, artist: data.artist };
+    } else {
+      product = await enrichArtistFromCollectionIfNeeded(baseProduct);
     }
 
-    // Render the page
     renderProduct(product);
   } catch (err) {
     console.error("Failed to load product:", err);
   }
 }
 
-// Bootstrap, read ?id= from URL and load the product
+// Load product on DOM ready
 document.addEventListener("DOMContentLoaded", () => {
   const id = new URLSearchParams(location.search).get("id");
   if (!id) {
@@ -136,30 +138,31 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-/************ Wishlist on Product Page (init + toggle) ************/
-const API_BASE_WL = "https://atelier-0adu.onrender.com"; // نفس دومين الباك
-const WL_ICON_OUTLINE = "assets/heart_icon.svg";
-const WL_ICON_FILLED  = "assets/heart_icon_(added in wishlist).svg";
+// ================== WISHLIST (PRODUCT PAGE) ==================
 
-const WL_token  = localStorage.getItem("token");   // لو عندك JWT
-const WL_userId = localStorage.getItem("userId");  // خزّنيه عند تسجيل الدخول
+const API_BASE_WL       = "https://atelier-0adu.onrender.com";
+const WL_ICON_OUTLINE   = "assets/heart_icon.svg";
+const WL_ICON_FILLED    = "assets/heart_icon_(added in wishlist).svg";
 
-// استدعاء API عام
+// generic wishlist API helper (يجيب التوكن كل مرة)
 async function wlApi(path, { method = "GET", body, headers = {} } = {}) {
+  const token = localStorage.getItem("token");
+
   const res = await fetch(`${API_BASE_WL}${path}`, {
     method,
     headers: {
       "Content-Type": "application/json",
-      ...(WL_token ? { Authorization: `Bearer ${WL_token}` } : {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
     ...(body ? { body: JSON.stringify(body) } : {}),
-    credentials: "include", // احذفيها لو ما تستخدمين كوكيز
   });
+
   if (!res.ok) {
     const msg = await res.text().catch(() => "");
     throw new Error(`HTTP ${res.status} – ${msg || res.statusText}`);
   }
+
   const ct = res.headers.get("content-type") || "";
   return ct.includes("application/json") ? res.json() : null;
 }
@@ -169,47 +172,55 @@ function wlPulse(el) {
   setTimeout(() => (el.style.transform = ""), 140);
 }
 
-// تعرض الأيقونة حسب الحالة
 function setHeartState(heartImgEl, isInWishlist) {
+  if (!heartImgEl) return;
   heartImgEl.src = isInWishlist ? WL_ICON_FILLED : WL_ICON_OUTLINE;
-  heartImgEl.setAttribute("aria-label", isInWishlist ? "Remove from wishlist" : "Add to wishlist");
+  heartImgEl.setAttribute(
+    "aria-label",
+    isInWishlist ? "Remove from wishlist" : "Add to wishlist"
+  );
 }
 
-// (اختياري) تحديث عدّاد الويشليست في الهيدر عبر localStorage
+// (optional) keep local badge in sync
 function updateWishlistBadgeLocally(productId, isInWishlist) {
   try {
     let wl = JSON.parse(localStorage.getItem("wishlist") || "[]");
     if (isInWishlist && !wl.includes(productId)) wl.push(productId);
-    if (!isInWishlist) wl = wl.filter(id => id !== productId);
+    if (!isInWishlist) wl = wl.filter(id => String(id) !== String(productId));
     localStorage.setItem("wishlist", JSON.stringify(wl));
-    // لبعض الهيدرات نطلق حدث storage لتحديث البادج
     window.dispatchEvent(new Event("storage"));
   } catch {}
 }
 
+// init wishlist heart on product page
 document.addEventListener("DOMContentLoaded", async () => {
   const productId = new URLSearchParams(location.search).get("id");
-  const heart = document.querySelector(".add_to_wishlist"); // <img class="add_to_wishlist" ...>
+  const heart     = document.querySelector(".add_to_wishlist"); // <img class="add_to_wishlist" ...>
   if (!heart || !productId) return;
 
-  // الحالة الابتدائية: اقرأ IDs من الويشليست وحدّد الأيقونة
   let isInWishlist = false;
+  const userId = localStorage.getItem("userId");
+
+  // initial state
   try {
-    if (!WL_userId) throw new Error("No user");
-    const list = await wlApi(`/users/${WL_userId}/wishlist`); // يرجّع IDs
-    isInWishlist = Array.isArray(list) && list.some(id => String(id) === String(productId));
+    if (!userId) throw new Error("No user");
+    // نستخدم endpoint اللي يرجّع IDs فقط
+    const list = await wlApi(`/users/${userId}/wishlist/products`);
+    isInWishlist = Array.isArray(list) &&
+                   list.some(id => String(id) === String(productId));
     setHeartState(heart, isInWishlist);
   } catch (err) {
-    // لو المستخدم مو داخل أو أي خطأ: خليه على الأيقونة الفارغة
+    // لو مو مسجلة دخول أو في خطأ نخليها فاضية
     setHeartState(heart, false);
   }
 
-  // التبديل عند الضغط
+  // toggle on click
   heart.addEventListener("click", async (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (!WL_userId) {
+    const currentUserId = localStorage.getItem("userId");
+    if (!currentUserId) {
       alert("Please sign in to use wishlist.");
       location.href = "login.html";
       return;
@@ -219,18 +230,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     heart.dataset.busy = "1";
 
     try {
-      const result = await wlApi(`/users/${WL_userId}/wishlist/toggle`, {
-        method: "PUT",
-        body: { productId }
-      });
+      const collectionSlug =
+        new URLSearchParams(location.search).get("collection") || null;
 
-      // حدّث الحالة بحسب الاستجابة
+      const result = await wlApi(
+        `/users/${currentUserId}/wishlist/products/toggle`,
+        {
+          method: "PUT",
+          body: { productId, collection: collectionSlug },
+        }
+      );
+
       if (result?.toggled === "added")  isInWishlist = true;
       if (result?.toggled === "removed") isInWishlist = false;
 
       setHeartState(heart, isInWishlist);
       wlPulse(heart);
-      updateWishlistBadgeLocally(productId, isInWishlist); // اختياري
+      updateWishlistBadgeLocally(productId, isInWishlist);
     } catch (err) {
       console.error("Wishlist toggle failed:", err);
       alert("Could not update wishlist. Please try again.");
