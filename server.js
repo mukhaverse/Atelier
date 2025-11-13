@@ -495,6 +495,24 @@ app.get("/users", async (req, res) =>{
     
 })
 
+app.get("/user/:userId", async (req,res) =>{
+  const userId = req.params.userId
+  try{
+    const userinfo = await user.findById(userId).select("username email")
+
+    if (!userinfo){
+      return res.status(404).send("User not found");
+    }
+
+    res.send(userinfo)
+    console.log("User info fetched successfully")
+
+  }catch(error){
+    console.log("error while fetching a user info ", error)
+    res.status(500).send("Error while fetching user info")
+  }
+}) 
+
 
 app.listen(3000, () =>{
     console.log("I'm listening in the port 3000")
