@@ -258,13 +258,17 @@ app.get("/products/artistId/available/:artistId", async (req, res) => {
   }
 });
 
+
 // Wishlist Endpoints
-const { Types: { ObjectId } } = require('mongoose');
+const { Types: { ObjectId } } = mongoose;
 
-// check ObjectId
-function isValidObjectId(id) { return ObjectId.isValid(id); }
+function isValidObjectId(id) {
+  return ObjectId.isValid(id);
+}
 
-// get wishlist by userId
+/**
+ * retrieves the full wishlist
+ */
 app.get("/users/:userId/wishlist", async (req, res) => {
   try {
     const { userId } = req.params;
@@ -282,104 +286,116 @@ app.get("/users/:userId/wishlist", async (req, res) => {
   }
 });
 
-// add to wishlist
-app.post("/users/:userId/wishlist", async (req, res) => {
+/**
+ * retrieves only the productIds from the wishlist
+ */
+app.get("/users/:userId/wishlist/products", async (req, res) => {
   try {
     const { userId } = req.params;
-    const { productId } = req.body;
-
-    if (!isValidObjectId(userId) || !isValidObjectId(productId)) {
-      return res.status(400).json({ message: "Invalid userId or productId" });
+    if (!isValidObjectId(userId)) {
+      return res.status(400).json({ message: "Invalid userId" });
     }
 
-    const exists = await product.exists({ _id: productId }); // check product existence
-    if (!exists) return res.status(404).json({ message: "Product not found" });
-
-    const updated = await User.findByIdAndUpdate(
-      userId,
-      { $addToSet: { wishList: productId } }, // avoid duplicates
-      { new: true, projection: { wishList: 1 } }
-    );
-
-    if (!updated) return res.status(404).json({ message: "User not found" });
-
-    return res.status(200).json({
-      message: "Added to wishlist",
-      wishlist: updated.wishList || []
-    });
-  } catch (err) {
-    console.error("POST /wishlist error:", err);
-    return res.status(500).json({ message: "Error adding to wishlist" });
-  }
-});
-
-// Remove from wishlist
-app.delete("/users/:userId/wishlist/:productId", async (req, res) => {
-  try {
-    const { userId, productId } = req.params;
-
-    if (!isValidObjectId(userId) || !isValidObjectId(productId)) {
-      return res.status(400).json({ message: "Invalid userId or productId" });
-    }
-
-    const updated = await User.findByIdAndUpdate(
-      userId,
-      { $pull: { wishList: productId } }, // remove if exists
-      { new: true, projection: { wishList: 1 } }
-    );
-
-    if (!updated) return res.status(404).json({ message: "User not found" });
-
-    return res.status(200).json({
-      message: "Removed from wishlist",
-      wishlist: updated.wishList || []
-    });
-  } catch (err) {
-    console.error("DELETE /wishlist/:productId error:", err);
-    return res.status(500).json({ message: "Error removing from wishlist" });
-  }
-});
-
-// toggle wishlist item (add if not exists, remove if exists)
-app.put("/users/:userId/wishlist/toggle", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { productId } = req.body;
-
-    if (!isValidObjectId(userId) || !isValidObjectId(productId)) {
-      return res.status(400).json({ message: "Invalid userId or productId" });
-    }
-
-    const user = await User.findById(userId, { wishList: 1 });
+    const user = await User.findById(userId, { wishList: 1, _id: 0 }).lean();
     if (!user) return res.status(404).json({ message: "User not found" });
 
+    const productIds = (user.wishList || [])
+      .filter(item => item && item.product)
+      .map(item => item.product);
+
+    return res.status(200).json(productIds);
+  } catch (err) {
+    console.error("GET /wishlist/products error:", err);
+    return res.status(500).json({ message: "Error fetching product wishlist" });
+  }
+});
+
+/**
+ * adds/removes a product from the wishlist
+ */
+app.put("/users/:userId/wishlist/products/toggle", async (req, res) => {
+  try {
+    const { userId }   = req.params;
+    const { productId, collection } = req.body;
+
+    if (!isValidObjectId(userId) || !isValidObjectId(productId)) {
+      return res.status(400).json({ message: "Invalid userId or productId" });
+    }
+
+    // to verify product exists
     const exists = await product.exists({ _id: productId });
     if (!exists) return res.status(404).json({ message: "Product not found" });
 
-    const hasIt = (user.wishList || []).some(id => id.equals(productId));
-    const update = hasIt
-      ? { $pull: { wishList: productId } }
-      : { $addToSet: { wishList: productId } };
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    const updated = await User.findByIdAndUpdate(userId, update, { new: true, projection: { wishList: 1 } });
+    const list = user.wishList || [];
+    const index = list.findIndex(
+      item => item.product && item.product.toString() === productId
+    );
+
+    let toggled;
+
+    if (index > -1) {
+      // remove
+      list.splice(index, 1);
+      toggled = "removed";
+    } else {
+      // add
+      list.push({
+        product: productId,
+        collection: collection || null,
+        dateAdded: new Date()
+      });
+      toggled = "added";
+    }
+
+    user.wishList = list;
+    await user.save();
 
     return res.status(200).json({
-      toggled: hasIt ? "removed" : "added",
-      wishlist: updated?.wishList || []
+      toggled,
+      wishlist: user.wishList
     });
   } catch (err) {
-    console.error("PUT /wishlist/toggle error:", err);
-    return res.status(500).json({ message: "Error toggling wishlist" });
+    console.error("PUT /wishlist/products/toggle error:", err);
+    return res.status(500).json({ message: "Error toggling product wishlist" });
+  }
+});
+
+/**
+ * retrieves wishlist collections with counts
+ */
+app.get("/users/:userId/wishlist/collections", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    if (!isValidObjectId(userId)) {
+      return res.status(400).json({ message: "Invalid userId" });
+    }
+
+    const user = await User.findById(userId, { wishList: 1, _id: 0 }).lean();
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const map = new Map();
+
+    (user.wishList || []).forEach(item => {
+      if (!item || !item.collection) return;
+      const key = item.collection;
+      const prev = map.get(key) || { collection: key, count: 0 };
+      prev.count += 1;
+      map.set(key, prev);
+    });
+
+    const collections = Array.from(map.values());
+
+    return res.status(200).json(collections);
+  } catch (err) {
+    console.error("GET /wishlist/collections error:", err);
+    return res.status(500).json({ message: "Error fetching collection wishlist" });
   }
 });
 
 // End Wishlist Endpoints
-
-
-
-
-
-
 
 app.post("/product", async (req, res) => {
   try {
