@@ -46,7 +46,7 @@ function showLoginOptions() {
   guestBtn.className = 'intro-btn guest-btn';
   guestBtn.textContent = 'Continue as Guest';
   guestBtn.onclick = () => {
-    localStorage.setItem('user', 'guest');
+    setGuest();
     sessionStorage.setItem('introPlayed', 'true');
     fadeOutIntro();
   };
