@@ -9,7 +9,7 @@ const artistSchema = new mongoose.Schema({
     username: { type: String, required: true },
     profilePic: { type: String, default: "" },
     email: { type: String, default: "", required: true},
-  links: { type: [String], default: [] },
+  links: { type: String, default:"" },
   bio: {type: String,default: "" }
 });
 

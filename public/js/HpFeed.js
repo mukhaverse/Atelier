@@ -293,7 +293,23 @@ function createCollectionCard(collection) {
             </div>          
         </div>
     `;
-    
+      // === Artisan Profile Navigation ===
+        const profilePic = card.querySelector('.profile-picture');
+        const username = card.querySelector('.username');
+        //const name = card.querySelector('.collection-name'); // this is the artisan's name
+
+        // When the user clicks name, username, or profile picture
+        [profilePic, username].forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.stopPropagation(); // prevent the whole card click
+            e.preventDefault();
+
+            const productId = collection._id;
+            window.location.href = `public/profile.html?productId=${encodeURIComponent(productId)}`;
+        });
+        });
+
+
     // hover image logices I had to add
     try {
         const imgContainer = card.querySelector('.collection-image-container');
