@@ -21,6 +21,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupCategorySwitching(artisanProducts,artisanCollections);
 });
 
+//commision button
+function goToCommission() {
+    window.location.href = "commision.html";
+}
+
+
 function showArtisanSkeleton() {
     const profilePic = document.querySelector(".profilePic img");
     const name = document.querySelector(".name");
