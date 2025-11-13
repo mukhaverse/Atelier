@@ -305,6 +305,7 @@ app.post("/commission", async (req, res) => {
       country,
       city,
       isGift,
+      artistname,
       artistEmail,
       userEmail,
       username
@@ -319,6 +320,7 @@ app.post("/commission", async (req, res) => {
       country,
       city,
       isGift,
+      artistname,
       artistEmail,
       userEmail,
       username,
@@ -334,7 +336,7 @@ app.post("/commission", async (req, res) => {
             to: artistEmail,
             subject: "New Commission Request",
             template: 'artisanView',
-            context: { artistname: username },
+            context: { artistname: artistname },
             attachments: [
               {
                 filename: 'Email_icon.svg',
