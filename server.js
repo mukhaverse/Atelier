@@ -418,7 +418,7 @@ app.put("/users/:userId/wishlist/collections/toggle", async (req, res) => {
 
     const list = user.wishList || [];
 
-    // ✅ نبحث فقط عن الـ bookmark حق الكولكشن (product = null أو undefined)
+    // look for bookmark (product: null)
     const index = list.findIndex(
       (item) =>
         item &&
@@ -429,11 +429,11 @@ app.put("/users/:userId/wishlist/collections/toggle", async (req, res) => {
     let toggled;
 
     if (index > -1) {
-      // موجود → نحذفه
+      //if found → remove bookmark
       list.splice(index, 1);
       toggled = "removed";
     } else {
-      // مو موجود → نضيف bookmark للكولكشن بس بدون أي productId
+      //if not found → add bookmark
       list.push({
         product: null,        // bookmark فقط
         collection,

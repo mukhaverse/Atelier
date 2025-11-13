@@ -2,7 +2,10 @@
 const API_COLLECTION = "https://atelier-0adu.onrender.com/products/collection";
 const API_BASE       = "https://atelier-0adu.onrender.com";
 
-async function wishlistApi(path, { method = "GET", body, headers = {} } = {}) {
+async function wishlistApi(
+  path,
+  { method = "GET", body, headers = {} } = {}
+) {
   const token = localStorage.getItem("token");
 
   const res = await fetch(`${API_BASE}${path}`, {
@@ -36,7 +39,7 @@ const $heart  = document.querySelector(".icons img[alt='wishlist icon']");
 const HEART_OUTLINE = "assets/heart_icon.svg";
 const HEART_FILLED  = "assets/heart_icon_(added in wishlist).svg";
 
-// متغيّرات عامة عشان نعرف أي كوليكشن وأي منتج يمثّلها
+// ===== STATE =====
 let collectionSlug = "";
 let collectionPrimaryProductId = null;
 
@@ -48,7 +51,11 @@ function setStatus(msg) {
 function addCard(item) {
   const src =
     (Array.isArray(item.images) && (item.images[0]?.url || item.images[0])) ||
-    item.image || item.imageUrl || item.url || item.photo;
+    item.image ||
+    item.imageUrl ||
+    item.url ||
+    item.photo;
+
   if (!src) return;
 
   const a = document.createElement("a");
@@ -63,8 +70,10 @@ function addCard(item) {
   // Click to product page
   a.addEventListener("click", (e) => {
     e.preventDefault();
+
     const id   = item._id || item.id;
     const slug = new URLSearchParams(location.search).get("name");
+
     window.location.href =
       `product.html?id=${encodeURIComponent(id)}&collection=${encodeURIComponent(slug)}`;
   });
@@ -84,7 +93,7 @@ async function setupCollectionWishlistHeart() {
     $heart.dataset.filled = filled ? "1" : "0";
   }
 
-  // مو لاقين user أو ما عندنا منتج نمثل به الكوليكشن
+// If no user, set empty and onclick to login
   if (!userId) {
     setHeart(false);
     $heart.onclick = () => {
@@ -95,25 +104,26 @@ async function setupCollectionWishlistHeart() {
   }
 
   if (!collectionPrimaryProductId) {
-    // ما فيه منتج في هذي الكوليكشن لسبب ما
+
     setHeart(false);
     $heart.onclick = null;
     return;
   }
 
-  // نتأكد هل المنتج الممثل موجود مسبقاً في الويشليست
+  // Initial state
   try {
     const ids = await wishlistApi(`/users/${userId}/wishlist/products`);
     const exists =
       Array.isArray(ids) &&
       ids.some((id) => String(id) === String(collectionPrimaryProductId));
+
     setHeart(exists);
   } catch (err) {
     console.error("check wishlist products error:", err);
     setHeart(false);
   }
 
-  // الضغط على الهارت → نستخدم endpoint تبع المنتجات
+// Toggle on click
   $heart.onclick = async () => {
     try {
       const result = await wishlistApi(
@@ -122,7 +132,6 @@ async function setupCollectionWishlistHeart() {
           method: "PUT",
           body: {
             productId: collectionPrimaryProductId,
-            // نحفظ اسم الكوليكشن جوّا الويشليست عشان تبويب Collections
             collection: collectionSlug || null,
           },
         }
@@ -144,24 +153,25 @@ async function setupCollectionWishlistHeart() {
 async function loadCollection(collectionParam) {
   const fromQuery = new URLSearchParams(location.search).get("name");
   const slug = (collectionParam || fromQuery || "").trim();
+
   if (!slug) {
     setStatus("No collection provided.");
     return;
   }
 
-  // خزّني اسم الكوليكشن في المتغيّر العام
   collectionSlug = slug;
 
   $title.textContent  = slug;
   $meta.textContent   = "";
   $handle.textContent = "";
-  $grid.innerHTML = "";
+  $grid.innerHTML     = "";
   setStatus("Loading...");
 
   try {
     const res = await fetch(`${API_COLLECTION}/${encodeURIComponent(slug)}`, {
       headers: { Accept: "application/json" },
     });
+
     if (!res.ok) {
       setStatus(`Collection not found (HTTP ${res.status}).`);
       return;
@@ -178,15 +188,16 @@ async function loadCollection(collectionParam) {
     const products = Array.isArray(payload?.products) ? payload.products : [];
     const artist   = payload?.artist || {};
 
-    // أول منتج نستخدمه كممثّل للكوليكشن في الويشليست
     collectionPrimaryProductId =
       products[0]?._id || products[0]?.id || null;
 
     // Header
     $meta.textContent   = artist.name || "";
     $handle.textContent = artist.username || "";
+
     const avatarSrc =
       artist.profilePic || artist.avatar || artist.avatarUrl;
+
     if (avatarSrc) $avatar.src = avatarSrc;
 
     // Products
@@ -194,6 +205,7 @@ async function loadCollection(collectionParam) {
       setStatus("No products in this collection.");
       return;
     }
+
     for (const p of products) addCard(p);
 
     setStatus("");
@@ -209,8 +221,10 @@ window.loadCollection = loadCollection;
 // ===== BOOTSTRAP =====
 (async function () {
   const q = new URLSearchParams(location.search).get("name");
+
   if (q) {
     await loadCollection(q);
   }
+
   await setupCollectionWishlistHeart();
 })();

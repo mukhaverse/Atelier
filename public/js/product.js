@@ -144,7 +144,7 @@ const API_BASE_WL       = "https://atelier-0adu.onrender.com";
 const WL_ICON_OUTLINE   = "assets/heart_icon.svg";
 const WL_ICON_FILLED    = "assets/heart_icon_(added in wishlist).svg";
 
-// generic wishlist API helper (يجيب التوكن كل مرة)
+// Wishlist API helper
 async function wlApi(path, { method = "GET", body, headers = {} } = {}) {
   const token = localStorage.getItem("token");
 
@@ -204,13 +204,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   // initial state
   try {
     if (!userId) throw new Error("No user");
-    // نستخدم endpoint اللي يرجّع IDs فقط
+    //user is logged in
     const list = await wlApi(`/users/${userId}/wishlist/products`);
     isInWishlist = Array.isArray(list) &&
                    list.some(id => String(id) === String(productId));
     setHeartState(heart, isInWishlist);
   } catch (err) {
-    // لو مو مسجلة دخول أو في خطأ نخليها فاضية
+    // not logged in or error
     setHeartState(heart, false);
   }
 

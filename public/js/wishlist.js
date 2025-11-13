@@ -47,7 +47,7 @@ function pulse(el) {
   setTimeout(() => (el.style.transform = ""), 140);
 }
 
-/* ✅ موحّد لمنتجات + كوليكشنز */
+// ===== RENDER EMPTY STATE =====
 function renderEmpty(grid, type = "products") {
   const text =
     type === "collections"
@@ -59,11 +59,10 @@ function renderEmpty(grid, type = "products") {
   `;
 }
 
-/* CARD RENDERING */
+// ===== RENDER CARD =====
 function renderCard(p) {
   const id    = p._id || p.id;
   const title = p.name || p.title || "Product";
-  const price = (typeof p.price === "number") ? `${p.price} SAR` : (p.price || "");
   const img   =
     (Array.isArray(p.images) && (p.images[0]?.url || p.images[0])) ||
     p.mainImage || p.image || p.imageUrl || p.photo || FALLBACK_IMG;
@@ -71,24 +70,24 @@ function renderCard(p) {
   productMap[id] = p;
 
   return `
-    <article class="wishlist_card" data-id="${escapeHtml(id)}">
-      <a class="image_link" href="${PRODUCT_PAGE}?id=${encodeURIComponent(id)}" aria-label="${escapeHtml(title)}">
-        <img src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'" />
-      </a>
+    <a class="image_link"
+       href="${PRODUCT_PAGE}?id=${encodeURIComponent(id)}"
+       aria-label="${escapeHtml(title)}">
+      <article class="wishlist_card" data-id="${escapeHtml(id)}">
+        <img src="${escapeHtml(img)}"
+             alt="${escapeHtml(title)}"
+             loading="lazy"
+             onerror="this.src='${FALLBACK_IMG}'" />
 
-      <button class="fav_icon" aria-label="Remove from wishlist" title="Remove from wishlist">
-        <img src="${HEART_FILLED_ICON}" alt="">
-      </button>
+        <button class="fav_icon" aria-label="Remove from wishlist" title="Remove from wishlist">
+          <img src="${HEART_FILLED_ICON}" alt="">
+        </button>
 
-      <button class="cart_icon" aria-label="Add to cart" title="Add to cart">
-        <img src="${CART_ICON}" alt="">
-      </button>
-
-      <div class="meta">
-        <h3 class="title">${escapeHtml(title)}</h3>
-        ${price ? `<span class="price">${escapeHtml(price)}</span>` : ""}
-      </div>
-    </article>
+        <button class="cart_icon" aria-label="Add to cart" title="Add to cart">
+          <img src="${CART_ICON}" alt="">
+        </button>
+      </article>
+    </a>
   `;
 }
 
@@ -158,7 +157,7 @@ async function loadWishlistProducts() {
   }
 }
 
-/* COLLECTIONS TAB LOADING */
+// COLLECTIONS TAB LOADING
 async function loadWishlistCollections() {
   const collectionsGrid = document.getElementById("collections-grid");
   const userId          = localStorage.getItem("userId");
@@ -208,20 +207,26 @@ async function loadWishlistCollections() {
             }
           }
         } catch {
-          // ignore errors and keep fallback image
+          // keep fallback
         }
 
         return `
-          <article class="wishlist_card" data-collection="${escapeHtml(slug)}">
-            <a class="image_link" href="collection.html?name=${encodeURIComponent(slug)}" aria-label="${escapeHtml(slug)}">
-              <img src="${escapeHtml(coverImg)}" alt="${escapeHtml(slug)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'" />
-            </a>
-            <div class="meta">
-              <h3 class="title">${escapeHtml(slug)}</h3>
-              <span class="price">${c.count} item${c.count > 1 ? "s" : ""}</span>
-            </div>
-          </article>
-        `;
+  <a class="image_link"
+     href="collection.html?name=${encodeURIComponent(slug)}"
+     aria-label="${escapeHtml(slug)}">
+    <article class="wishlist_card" data-collection="${escapeHtml(slug)}">
+      <img src="${escapeHtml(coverImg)}"
+           alt="${escapeHtml(slug)}"
+           loading="lazy"
+           onerror="this.src='${FALLBACK_IMG}'" />
+
+      <div class="meta">
+        <h3 class="title">${escapeHtml(slug)}</h3>
+      </div>
+    </article>
+  </a>
+`;
+
       })
     );
 
@@ -241,37 +246,31 @@ async function loadWishlistCollections() {
 }
 
 /* GLOBAL CLICK HANDLERS (PRODUCT CARDS) */
+/* GLOBAL CLICK HANDLERS (PRODUCT CARDS) */
 document.addEventListener("click", async (e) => {
   const userId = localStorage.getItem("userId");
-  const link   = e.target.closest(".image_link");
-  const favBtn = e.target.closest(".fav_icon");
+
+  //determine clicked element
+  const favBtn  = e.target.closest(".fav_icon");
   const cartBtn = e.target.closest(".cart_icon");
+  const link    = e.target.closest(".image_link");
 
-  if (link) {
-    const card = link.closest(".wishlist_card");
-    const id   = card?.dataset?.id;
-    if (id && productMap[id]) {
-      try {
-        sessionStorage.setItem(`product_cache:${id}`, JSON.stringify(productMap[id]));
-      } catch {}
-    }
-    return;
-  }
-
-  if (favBtn || cartBtn) {
+  //wishlist toggle button
+  if (favBtn) {
     e.preventDefault();
     e.stopPropagation();
-  }
 
-  if (favBtn) {
     if (!userId) {
       alert("Please sign in to use wishlist.");
       location.href = "login.html";
       return;
     }
 
-    const card = favBtn.closest(".wishlist_card");
-    const id   = card?.dataset?.id;
+    const card    = favBtn.closest(".wishlist_card");
+    if (!card) return;
+    const wrapper = card.closest("a.image_link") || card;
+
+    const id = card.dataset.id;
     if (!id) return;
 
     if (favBtn.dataset.busy === "1") return;
@@ -290,19 +289,21 @@ document.addEventListener("click", async (e) => {
 
       if (result?.toggled === "removed") {
         card.classList.add("fade-out");
-        setTimeout(() => card.remove(), 400);
+        setTimeout(() => {
+          wrapper.remove();
 
-        try {
-          let wl = JSON.parse(localStorage.getItem("wishlist") || "[]");
-          wl = wl.filter(x => String(x) !== String(id));
-          localStorage.setItem("wishlist", JSON.stringify(wl));
-          window.dispatchEvent(new Event("storage"));
-        } catch {}
+          try {
+            let wl = JSON.parse(localStorage.getItem("wishlist") || "[]");
+            wl = wl.filter(x => String(x) !== String(id));
+            localStorage.setItem("wishlist", JSON.stringify(wl));
+            window.dispatchEvent(new Event("storage"));
+          } catch {}
 
-        const grid = document.getElementById("grid");
-        if (grid && grid.querySelectorAll(".wishlist_card").length === 1) {
-          setTimeout(() => renderEmpty(grid, "products"), 420);
-        }
+          const grid = document.getElementById("grid");
+          if (grid && grid.querySelectorAll(".wishlist_card").length === 0) {
+            renderEmpty(grid, "products");
+          }
+        }, 400);
       } else {
         pulse(favBtn);
       }
@@ -314,7 +315,27 @@ document.addEventListener("click", async (e) => {
     }
     return;
   }
+
+ //add to cart button
+  if (cartBtn) {
+    e.preventDefault();
+    e.stopPropagation();
+    return;
+  }
+
+  //cache product data on link click
+  if (link) {
+    const card = link.querySelector(".wishlist_card");
+    const id   = card?.dataset?.id;
+    if (id && productMap[id]) {
+      try {
+        sessionStorage.setItem(`product_cache:${id}`, JSON.stringify(productMap[id]));
+      } catch {}
+    }
+    return;
+  }
 });
+
 
 /* LOGIN BUTTON REDIRECT HANDLER */
 document.addEventListener("click", (e) => {
