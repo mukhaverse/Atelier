@@ -6,6 +6,8 @@
  const bcrypt = require('bcrypt'); 
  const cors = require('cors');
  const jwt = require('jsonwebtoken');
+const JWT_SECRET = 'AA.201424'; 
+const auth = require('./middleware/auth');
 
 const Commission = require('./models/commission'); 
 
@@ -584,9 +586,10 @@ app.post('/api/login', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Login Error:', error.message);
+    console.error(error);
     res.status(500).json({ message: 'Server error during login.' });
   }
+ 
 });
 
 
