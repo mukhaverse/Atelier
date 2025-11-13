@@ -329,13 +329,15 @@ const rmErr  = el => el && el.classList.remove("input-error");
     e.preventDefault();
 
 
-    //send to server
-    await sendCommission();
+    
 
 
     // show the confirm message
     overlay?.classList.remove("hidden");
     document.documentElement.style.overflow = "hidden";
+    
+    //send to server
+    await sendCommission();
   });
 
   closeBtn?.addEventListener("click", () => {
