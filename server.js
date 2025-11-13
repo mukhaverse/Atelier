@@ -402,7 +402,7 @@ app.get("/users/:userId/wishlist/collections", async (req, res) => {
  */
 app.put("/users/:userId/wishlist/collections/toggle", async (req, res) => {
   try {
-    const { userId } = req.params;
+    const { userId }   = req.params;
     const { collection } = req.body;
 
     if (!isValidObjectId(userId)) {
@@ -418,24 +418,24 @@ app.put("/users/:userId/wishlist/collections/toggle", async (req, res) => {
 
     const list = user.wishList || [];
 
-    // search for collection bookmark (product=null)
+    // ✅ نبحث فقط عن الـ bookmark حق الكولكشن (product = null أو undefined)
     const index = list.findIndex(
       (item) =>
         item &&
-        !item.product &&                // product is null
+        (item.product === null || item.product === undefined) &&
         item.collection === collection
     );
 
     let toggled;
 
     if (index > -1) {
-      // in the list → remove bookmark
+      // موجود → نحذفه
       list.splice(index, 1);
       toggled = "removed";
     } else {
-      // not in the list → add bookmark
+      // مو موجود → نضيف bookmark للكولكشن بس بدون أي productId
       list.push({
-        product: null,          // bookmark for collection
+        product: null,        // bookmark فقط
         collection,
         dateAdded: new Date(),
       });

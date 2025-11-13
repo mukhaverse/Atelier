@@ -1,6 +1,6 @@
 // ===== API =====
 const API_COLLECTION = "https://atelier-0adu.onrender.com/products/collection";
-const API_BASE = "https://atelier-0adu.onrender.com";
+const API_BASE       = "https://atelier-0adu.onrender.com";
 
 async function wishlistApi(path, { method = "GET", body, headers = {} } = {}) {
   const token = localStorage.getItem("token");
@@ -24,21 +24,27 @@ async function wishlistApi(path, { method = "GET", body, headers = {} } = {}) {
   return ct.includes("application/json") ? res.json() : null;
 }
 
-// ===== DOM (نفس IDs في HTML) =====
+// ===== DOM =====
 const $title  = document.getElementById("collectionTitle");
-const $meta   = document.getElementById("collectionMeta");   
-const $handle = document.getElementById("collectionHandle");  
+const $meta   = document.getElementById("collectionMeta");
+const $handle = document.getElementById("collectionHandle");
 const $avatar = document.getElementById("collectionAvatar");
 const $grid   = document.getElementById("grid");
 const $status = document.getElementById("status");
-const $heart = document.querySelector(".icons img[alt='wishlist icon']");
+const $heart  = document.querySelector(".icons img[alt='wishlist icon']");
+
 const HEART_OUTLINE = "assets/heart_icon.svg";
 const HEART_FILLED  = "assets/heart_icon_(added in wishlist).svg";
 
+// متغيّرات عامة عشان نعرف أي كوليكشن وأي منتج يمثّلها
+let collectionSlug = "";
+let collectionPrimaryProductId = null;
 
-function setStatus(msg) { if ($status) $status.textContent = msg || ""; }
+function setStatus(msg) {
+  if ($status) $status.textContent = msg || "";
+}
 
-
+// ===== GRID CARDS =====
 function addCard(item) {
   const src =
     (Array.isArray(item.images) && (item.images[0]?.url || item.images[0])) ||
@@ -56,20 +62,21 @@ function addCard(item) {
 
   // Click to product page
   a.addEventListener("click", (e) => {
-  e.preventDefault();
-  const id   = item._id || item.id;
-  const slug = new URLSearchParams(location.search).get("name");
-  window.location.href = `product.html?id=${encodeURIComponent(id)}&collection=${encodeURIComponent(slug)}`;
-});
+    e.preventDefault();
+    const id   = item._id || item.id;
+    const slug = new URLSearchParams(location.search).get("name");
+    window.location.href =
+      `product.html?id=${encodeURIComponent(id)}&collection=${encodeURIComponent(slug)}`;
+  });
 
   a.appendChild(img);
   $grid.appendChild(a);
 }
 
-function setupCollectionWishlistHeart() {
+// ===== HEART (Wishlist) =====
+async function setupCollectionWishlistHeart() {
   if (!$heart) return;
 
-  const slug   = new URLSearchParams(location.search).get("name") || "";
   const userId = localStorage.getItem("userId");
 
   function setHeart(filled) {
@@ -77,50 +84,74 @@ function setupCollectionWishlistHeart() {
     $heart.dataset.filled = filled ? "1" : "0";
   }
 
-  // لو مو مسجلة دخول
+  // مو لاقين user أو ما عندنا منتج نمثل به الكوليكشن
   if (!userId) {
     setHeart(false);
-    $heart.addEventListener("click", () => {
+    $heart.onclick = () => {
       alert("Please login to save this collection.");
       location.href = "login.html";
-    });
+    };
     return;
   }
 
-  // أولاً: نتأكد هل الكوليكشن محفوظ في الويشليست أو لا
-  wishlistApi(`/users/${userId}/wishlist/collections`)
-    .then((list) => {
-      const exists =
-        Array.isArray(list) && list.some((c) => c.collection === slug);
-      setHeart(exists);
-    })
-    .catch(() => setHeart(false));
+  if (!collectionPrimaryProductId) {
+    // ما فيه منتج في هذي الكوليكشن لسبب ما
+    setHeart(false);
+    $heart.onclick = null;
+    return;
+  }
 
-  // لما تضغطي الهارت → نرسل toggle
-  $heart.addEventListener("click", async () => {
+  // نتأكد هل المنتج الممثل موجود مسبقاً في الويشليست
+  try {
+    const ids = await wishlistApi(`/users/${userId}/wishlist/products`);
+    const exists =
+      Array.isArray(ids) &&
+      ids.some((id) => String(id) === String(collectionPrimaryProductId));
+    setHeart(exists);
+  } catch (err) {
+    console.error("check wishlist products error:", err);
+    setHeart(false);
+  }
+
+  // الضغط على الهارت → نستخدم endpoint تبع المنتجات
+  $heart.onclick = async () => {
     try {
       const result = await wishlistApi(
-        `/users/${userId}/wishlist/collections/toggle`,
+        `/users/${userId}/wishlist/products/toggle`,
         {
           method: "PUT",
-          body: { collection: slug },
+          body: {
+            productId: collectionPrimaryProductId,
+            // نحفظ اسم الكوليكشن جوّا الويشليست عشان تبويب Collections
+            collection: collectionSlug || null,
+          },
         }
       );
 
-      setHeart(result?.toggled === "added");
+      if (result?.toggled === "added") {
+        setHeart(true);
+      } else if (result?.toggled === "removed") {
+        setHeart(false);
+      }
     } catch (err) {
       console.error("toggle collection wishlist error:", err);
       alert("Could not update wishlist. Please try again.");
     }
-  });
+  };
 }
 
-
+// ===== LOAD COLLECTION =====
 async function loadCollection(collectionParam) {
   const fromQuery = new URLSearchParams(location.search).get("name");
   const slug = (collectionParam || fromQuery || "").trim();
-  if (!slug) { setStatus("No collection provided."); return; }
-  
+  if (!slug) {
+    setStatus("No collection provided.");
+    return;
+  }
+
+  // خزّني اسم الكوليكشن في المتغيّر العام
+  collectionSlug = slug;
+
   $title.textContent  = slug;
   $meta.textContent   = "";
   $handle.textContent = "";
@@ -129,21 +160,33 @@ async function loadCollection(collectionParam) {
 
   try {
     const res = await fetch(`${API_COLLECTION}/${encodeURIComponent(slug)}`, {
-      headers: { "Accept": "application/json" }
+      headers: { Accept: "application/json" },
     });
-    if (!res.ok) { setStatus(`Collection not found (HTTP ${res.status}).`); return; }
+    if (!res.ok) {
+      setStatus(`Collection not found (HTTP ${res.status}).`);
+      return;
+    }
 
     let payload;
-    try { payload = await res.json(); }
-    catch { setStatus("Server returned invalid data."); return; }
+    try {
+      payload = await res.json();
+    } catch {
+      setStatus("Server returned invalid data.");
+      return;
+    }
 
     const products = Array.isArray(payload?.products) ? payload.products : [];
     const artist   = payload?.artist || {};
 
-    //Header
+    // أول منتج نستخدمه كممثّل للكوليكشن في الويشليست
+    collectionPrimaryProductId =
+      products[0]?._id || products[0]?.id || null;
+
+    // Header
     $meta.textContent   = artist.name || "";
     $handle.textContent = artist.username || "";
-    const avatarSrc = artist.profilePic || artist.avatar || artist.avatarUrl;
+    const avatarSrc =
+      artist.profilePic || artist.avatar || artist.avatarUrl;
     if (avatarSrc) $avatar.src = avatarSrc;
 
     // Products
@@ -153,8 +196,9 @@ async function loadCollection(collectionParam) {
     }
     for (const p of products) addCard(p);
 
-    setStatus(""); 
-  } catch {
+    setStatus("");
+  } catch (err) {
+    console.error("loadCollection error:", err);
     setStatus("Network error. Please try again.");
   }
 }
@@ -162,8 +206,11 @@ async function loadCollection(collectionParam) {
 // Send Parameter
 window.loadCollection = loadCollection;
 
-(function () {
+// ===== BOOTSTRAP =====
+(async function () {
   const q = new URLSearchParams(location.search).get("name");
-  if (q) loadCollection(q);
-  setupCollectionWishlistHeart();
+  if (q) {
+    await loadCollection(q);
+  }
+  await setupCollectionWishlistHeart();
 })();
