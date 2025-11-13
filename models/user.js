@@ -16,10 +16,21 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  wishList: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product'
-  }]
+ wishList: [{
+  product: { 
+ type: mongoose.Schema.Types.ObjectId,
+ ref: 'Product',
+ required: true
+ },
+ collection: { 
+ type: String,
+ required: false
+ },
+ dateAdded: {
+   type: Date,
+ default: Date.now
+}
+}]
 }, { 
     timestamps: true
 });

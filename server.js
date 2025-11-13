@@ -6,9 +6,9 @@
  const bcrypt = require('bcrypt'); 
  const cors = require('cors');
  const jwt = require('jsonwebtoken');
-const JWT_SECRET = 'AA.201424';
+
 const Commission = require('./models/commission'); 
-const auth = require('./middleware/auth');
+
  mongoose
    .connect("mongodb+srv://ghaida:GS.201424@cluster.cakgapc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster")
    .then(() => {
@@ -573,31 +573,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-app.post('/api/wishlist/add', auth, async (req, res) => {
-    const { productId } = req.body; 
-    const userId = req.user.userId;
 
-    try {
-        const user = await User.findByIdAndUpdate(
-            userId,
-            { $addToSet: { wishList: productId } }, 
-            { new: true } 
-        ).populate('wishList', 'name price images');
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found.' });
-        }
-
-        res.status(200).json({ 
-            message: 'Product added to wishlist successfully!', 
-            wishList: user.wishList
-        });
-
-    } catch (error) {
-        console.error('Wishlist Add Error:', error);
-        res.status(500).json({ message: 'Server error while adding to wishlist.' });
-    }
-});
 
 app.get("/users", async (req, res) =>{
 
