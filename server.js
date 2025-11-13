@@ -397,6 +397,66 @@ app.get("/users/:userId/wishlist/collections", async (req, res) => {
   }
 });
 
+/**
+ * adds/removes a collection bookmark from the wishlist
+ */
+app.put("/users/:userId/wishlist/collections/toggle", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { collection } = req.body;
+
+    if (!isValidObjectId(userId)) {
+      return res.status(400).json({ message: "Invalid userId" });
+    }
+
+    if (!collection || typeof collection !== "string") {
+      return res.status(400).json({ message: "Collection is required" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const list = user.wishList || [];
+
+    // search for collection bookmark (product=null)
+    const index = list.findIndex(
+      (item) =>
+        item &&
+        !item.product &&                // product is null
+        item.collection === collection
+    );
+
+    let toggled;
+
+    if (index > -1) {
+      // in the list → remove bookmark
+      list.splice(index, 1);
+      toggled = "removed";
+    } else {
+      // not in the list → add bookmark
+      list.push({
+        product: null,          // bookmark for collection
+        collection,
+        dateAdded: new Date(),
+      });
+      toggled = "added";
+    }
+
+    user.wishList = list;
+    await user.save();
+
+    return res.status(200).json({
+      toggled,
+      wishlist: user.wishList,
+    });
+  } catch (err) {
+    console.error("PUT /wishlist/collections/toggle error:", err);
+    return res
+      .status(500)
+      .json({ message: "Error toggling collection wishlist" });
+  }
+});
+
 // End Wishlist Endpoints
 
 app.post("/product", async (req, res) => {

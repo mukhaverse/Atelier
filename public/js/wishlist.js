@@ -10,7 +10,6 @@ const productMap = {}; // id → product data cache
 
 /* API HELPER */
 async function api(path, { method = "GET", body, headers = {} } = {}) {
-  // Always get latest token
   const freshToken = localStorage.getItem("token");
 
   const res = await fetch(`${API_BASE}${path}`, {
@@ -21,16 +20,13 @@ async function api(path, { method = "GET", body, headers = {} } = {}) {
       ...headers,
     },
     ...(body ? { body: JSON.stringify(body) } : {}),
-
   });
 
-  // Handle API errors
   if (!res.ok) {
     const msg = await res.text().catch(() => "");
     throw new Error(`HTTP ${res.status} – ${msg || res.statusText}`);
   }
 
-  // Parse JSON if exists
   const ct = res.headers.get("content-type") || "";
   return ct.includes("application/json") ? res.json() : null;
 }
@@ -51,12 +47,16 @@ function pulse(el) {
   setTimeout(() => (el.style.transform = ""), 140);
 }
 
-function renderEmpty(grid) {
+/* ✅ موحّد لمنتجات + كوليكشنز */
+function renderEmpty(grid, type = "products") {
+  const text =
+    type === "collections"
+      ? "No collections in your wishlist yet."
+      : "No products in your wishlist yet.";
+
   grid.innerHTML = `
-    <div style="text-align:center; opacity:.85; padding:32px 12px">
-      <p>Your wishlist is empty</p>
-      <button onclick="location.href='index.html'">Browse products</button>
-    </div>`;
+    <p style="opacity:.8">${text}</p>
+  `;
 }
 
 /* CARD RENDERING */
@@ -119,29 +119,26 @@ async function loadWishlistProducts() {
 
   if (!grid || !loginPrompt) return;
 
-  // Not logged in → show login message
   if (!userId) {
     loginPrompt.style.display = "flex";
     grid.style.display        = "none";
     return;
   }
 
-  // Logged in
   loginPrompt.style.display = "none";
   grid.style.display        = "block";
   grid.innerHTML            = `<p style="opacity:.8">Loading wishlist…</p>`;
 
   try {
-    // just get product IDs in wishlist
     const ids = await api(`/users/${userId}/wishlist/products`);
     if (!Array.isArray(ids) || ids.length === 0) {
-      renderEmpty(grid);
+      renderEmpty(grid, "products");
       return;
     }
 
     const items = await fetchProductsByIds(ids);
     if (!items.length) {
-      renderEmpty(grid);
+      renderEmpty(grid, "products");
       return;
     }
 
@@ -150,7 +147,6 @@ async function loadWishlistProducts() {
     console.error("loadWishlistProducts error:", err);
     const msg = String(err.message || "");
 
-    // if the userId is invalid, clear it and show login prompt
     if (msg.includes("Invalid userId")) {
       localStorage.removeItem("userId");
       loginPrompt.style.display = "flex";
@@ -169,7 +165,6 @@ async function loadWishlistCollections() {
 
   if (!collectionsGrid) return;
 
-  // If not logged in, just clear collections section (login message already handled by products)
   if (!userId) {
     collectionsGrid.innerHTML = "";
     return;
@@ -178,15 +173,13 @@ async function loadWishlistCollections() {
   collectionsGrid.innerHTML = `<p style="opacity:.8">Loading collections…</p>`;
 
   try {
-    // returns like: [ { collection: "Floral", count: 3 }, ... ]
     const collections = await api(`/users/${userId}/wishlist/collections`);
 
     if (!Array.isArray(collections) || !collections.length) {
-      collectionsGrid.innerHTML = `<p style="opacity:.8">No collections in your wishlist yet.</p>`;
+      renderEmpty(collectionsGrid, "collections");
       return;
     }
 
-    // For each collection, fetch one product to use its image as a cover
     const cardsHtml = await Promise.all(
       collections.map(async (c) => {
         const slug = c.collection;
@@ -254,7 +247,6 @@ document.addEventListener("click", async (e) => {
   const favBtn = e.target.closest(".fav_icon");
   const cartBtn = e.target.closest(".cart_icon");
 
-  // Clicking product image → store product data in sessionStorage before navigation
   if (link) {
     const card = link.closest(".wishlist_card");
     const id   = card?.dataset?.id;
@@ -266,13 +258,11 @@ document.addEventListener("click", async (e) => {
     return;
   }
 
-  // Prevent navigation when clicking on action buttons
   if (favBtn || cartBtn) {
     e.preventDefault();
     e.stopPropagation();
   }
 
-  // Toggle / remove a product in wishlist (with fade-out effect)
   if (favBtn) {
     if (!userId) {
       alert("Please sign in to use wishlist.");
@@ -299,11 +289,9 @@ document.addEventListener("click", async (e) => {
       });
 
       if (result?.toggled === "removed") {
-        // Fade-out animation before removal
         card.classList.add("fade-out");
         setTimeout(() => card.remove(), 400);
 
-        // Update localStorage "wishlist" cache (optional)
         try {
           let wl = JSON.parse(localStorage.getItem("wishlist") || "[]");
           wl = wl.filter(x => String(x) !== String(id));
@@ -313,7 +301,7 @@ document.addEventListener("click", async (e) => {
 
         const grid = document.getElementById("grid");
         if (grid && grid.querySelectorAll(".wishlist_card").length === 1) {
-          setTimeout(() => renderEmpty(grid), 420);
+          setTimeout(() => renderEmpty(grid, "products"), 420);
         }
       } else {
         pulse(favBtn);
