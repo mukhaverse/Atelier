@@ -128,8 +128,14 @@ async function displayProducts(products) {
     const container = document.getElementById('products-container');
     
     container.innerHTML = '';
+    // laod skeletons 
+
+    for (let i = 0; i < 8; i++) {
+        const skeletonCard = createProductSkeletonCard();
+        container.appendChild(skeletonCard);
+    }
     
-    
+    await new Promise(res => setTimeout(res, 1000));
 
     products = shuffleArray(products);
     
@@ -211,8 +217,17 @@ inStockButton.addEventListener('click', async () => {
 // === Display collections ===
 async function displayCollections(collections) {
     const container = document.getElementById('collections-container');
+      container.scrollIntoView({ behavior: "smooth", block: "start" });
     container.innerHTML = '';
 
+    for (let i = 0; i < 8; i++) {
+        const skeletonCard = createCollectionSkeletonCard();
+        container.appendChild(skeletonCard);
+    }
+
+      await new Promise(res => setTimeout(res, 800));
+
+        container.innerHTML = '';
     // Shuffle collections
     collections = shuffleArray(collections);
 
@@ -357,4 +372,36 @@ function setupCategorySwitching(artisanProducts, artisanCollections) {
         indicator.style.width = active.offsetWidth + "px";
         indicator.style.transform = `translateX(${active.offsetLeft}px)`;
     }
+}
+
+
+function createProductSkeletonCard() {
+    const skeletonCard = document.createElement('div');
+    skeletonCard.className = 'products-card';
+    
+    skeletonCard.innerHTML = `
+        <div class="column">
+            <div class="photo">
+                <div class="product-skeleton skeleton"></div>
+            </div>
+        </div>
+    `;
+    
+    return skeletonCard;
+}
+
+function createCollectionSkeletonCard() {
+    const skeletonCard = document.createElement('div');
+    skeletonCard.className = 'collections-card';
+    
+    skeletonCard.innerHTML = `
+        <div class="collection-image-container">
+            <div class="collection-image skeleton skeleton-square"></div>
+        </div>
+        <div class="collection-info">            
+                <div class="skeleton skeleton-text medium"></div>
+        </div>
+    `;
+    
+    return skeletonCard;
 }
