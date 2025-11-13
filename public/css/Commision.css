@@ -29,12 +29,16 @@ flex-direction:column;
 gap:0px;
 }
 
-.back-icon{
+.back_icon{
+width: 28px;
+height: 28px;
 color: #d9d9d9;
 background-color: #000000;
 font-size:26px; 
 border: none; 
-margin-left: -15px;
+margin-left: -70px;
+position: fixed;
+text-decoration: none;  
 }
 
 .Profile-section h1{
