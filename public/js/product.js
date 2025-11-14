@@ -28,6 +28,7 @@ function renderProduct(p) {
   const $name   = document.querySelector(".artisan.account h3");
   const $user   = document.querySelector(".artisan.account .username");
   const $avatar = document.querySelector(".artisan.account img");
+  const $artisanId = document.querySelector(".artisan.account._id");
 
   // Map product fields
   const imageUrl = pick(
@@ -71,6 +72,34 @@ function renderProduct(p) {
   if ($name)   $name.textContent = artistName;
   if ($user)   $user.textContent = username;
   if ($avatar && avatar) $avatar.src = avatar;
+//
+ const artistObj = p.artist || p.artistData || {};
+const artistId = artistObj._id || artistObj.id;
+
+//This is working all good just fix the artist ID
+if (!artistId) {
+  console.warn("No artist ID found for this product:", p);
+} else {
+  function navigateToArtisanProfile(id) {
+    window.location.href = `profile.html?id=${encodeURIComponent(id)}`;
+  }
+
+  if ($avatar) {
+    $avatar.style.cursor = "pointer";
+    $avatar.addEventListener("click", () => navigateToArtisanProfile(artistId));
+  }
+
+  if ($name) {
+    $name.style.cursor = "pointer";
+    $name.addEventListener("click", () => navigateToArtisanProfile(artistId));
+  }
+
+  if ($user) {
+    $user.style.cursor = "pointer";
+    $user.addEventListener("click", () => navigateToArtisanProfile(artistId));
+  }
+}
+
 }
 
 // (Optional) enrich artist from collection endpoint if needed

@@ -99,7 +99,7 @@ h1{
 .link .link-text {
     opacity: 0;
     
-    margin-left: -80px; 
+    margin-left: -72px; 
     
     transition: opacity 0.3s ease-in-out, margin-left 0.3s ease-in-out;
 }

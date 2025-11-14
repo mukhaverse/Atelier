@@ -118,7 +118,7 @@ function displayArtisanInfo(artist) {
     document.querySelector(".description p").textContent =
       artist.bio || "No description available.";
     document.querySelector(".link-text").textContent =
-      artist.website ? artist.website : "No website";
+      artist.website ? artist.website : "Instagram";
     document.querySelector(".link a").href =
       artist.website || "#";
 }
@@ -178,6 +178,18 @@ function createProductsCard(product) {
             </div>
         </div>
     `;
+    // Navigation
+    card.addEventListener('click', (e) => {
+        e.preventDefault();      
+        const productId = product._id || product.id;
+        
+        if (productId) {
+
+            window.location.href = `/public/product.html?id=${encodeURIComponent(productId)}`;
+        } else {
+            console.error('No product ID found for suggested item:', product);
+        }
+    });
     return card;
 }
 
@@ -321,12 +333,13 @@ function createCollectionCard(collection, allProducts) {
     }
 
     // Navigation
-    card.addEventListener('click', () => {
-        const collectionName = collection.collection;
-        if (collectionName) {
-            window.location.href = `public/collection.html?name=${encodeURIComponent(collectionName)}`;
-        }
-    });
+   // from profile.js
+card.addEventListener('click', () => {
+    const collectionName = collection.collection;
+    if (collectionName) {
+        window.location.href = `/public/collection.html?name=${encodeURIComponent(collectionName)}`;
+    }
+});
 
     return card;
 }
@@ -411,3 +424,4 @@ function createCollectionSkeletonCard() {
     
     return skeletonCard;
 }
+

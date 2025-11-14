@@ -203,6 +203,30 @@ async function loadCollection(collectionParam) {
 
     if (avatarSrc) $avatar.src = avatarSrc;
 
+    //The is working all good just fix the artistID
+    // ===== Add click listeners to navigate to artisan profile =====
+    
+function navigateToArtisanProfile(artistId) {
+  if (!artistId) return;
+  window.location.href = `profile.html?id=${encodeURIComponent(artistId)}`;
+}
+
+if ($avatar) {
+  $avatar.style.cursor = "pointer";
+  $avatar.addEventListener("click", () => navigateToArtisanProfile(artist._id));
+}
+
+if ($meta.textContent) {
+  $meta.style.cursor = "pointer";
+  $meta.addEventListener("click", () => navigateToArtisanProfile(artist._id));
+}
+
+if ($handle) {
+  $handle.style.cursor = "pointer";
+  $handle.addEventListener("click", () => navigateToArtisanProfile(artist._id));
+}
+
+
     // Products
     if (!products.length) {
       setStatus("No products in this collection.");
