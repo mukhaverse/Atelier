@@ -144,7 +144,7 @@ async function setupCollectionWishlistHeart() {
       }
     } catch (err) {
       console.error("toggle collection wishlist error:", err);
-      alert("Could not update wishlist. Please try again.");
+      alert("Please sign in to use wishlist");
     }
   };
 }
