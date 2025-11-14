@@ -34,15 +34,15 @@ const $handle = document.getElementById("collectionHandle");
 const $avatar = document.getElementById("collectionAvatar");
 const $grid   = document.getElementById("grid");
 const $status = document.getElementById("status");
-const $heart  = document.querySelector(".icons img[alt='wishlist icon']");
+const $heart  = document.getElementById("collectionFavIcon");
 
 const HEART_OUTLINE = "assets/heart_icon.svg";
 const HEART_FILLED  = "assets/heart_icon_(added in wishlist).svg";
 
 // ===== STATE =====
 let collectionSlug = "";
-let collectionPrimaryProductId = null;
 
+// ===== STATUS =====
 function setStatus(msg) {
   if ($status) $status.textContent = msg || "";
 }
@@ -67,7 +67,7 @@ function addCard(item) {
   img.alt = item.name || item.title || "item";
   img.loading = "lazy";
 
-  // Click to product page
+  // Go to product page
   a.addEventListener("click", (e) => {
     e.preventDefault();
 
@@ -82,7 +82,9 @@ function addCard(item) {
   $grid.appendChild(a);
 }
 
-// ===== HEART (Wishlist) =====
+// =======================================
+// ❤️ WISHLIST FOR COLLECTIONS ONLY
+// =======================================
 async function setupCollectionWishlistHeart() {
   if (!$heart) return;
 
@@ -93,7 +95,7 @@ async function setupCollectionWishlistHeart() {
     $heart.dataset.filled = filled ? "1" : "0";
   }
 
-// If no user, set empty and onclick to login
+  // User not logged in
   if (!userId) {
     setHeart(false);
     $heart.onclick = () => {
@@ -103,47 +105,35 @@ async function setupCollectionWishlistHeart() {
     return;
   }
 
-  if (!collectionPrimaryProductId) {
-
-    setHeart(false);
-    $heart.onclick = null;
-    return;
-  }
-
-  // Initial state
+  // Initial state → check wishlist/collections
   try {
-    const ids = await wishlistApi(`/users/${userId}/wishlist/products`);
+    const collections = await wishlistApi(`/users/${userId}/wishlist/collections`);
+
     const exists =
-      Array.isArray(ids) &&
-      ids.some((id) => String(id) === String(collectionPrimaryProductId));
+      Array.isArray(collections) &&
+      collections.some((c) => String(c) === String(collectionSlug));
 
     setHeart(exists);
   } catch (err) {
-    console.error("check wishlist products error:", err);
+    console.error("check wishlist collections error:", err);
     setHeart(false);
   }
 
-// Toggle on click
+  // Toggle collection wishlist
   $heart.onclick = async () => {
     try {
       const result = await wishlistApi(
-        `/users/${userId}/wishlist/products/toggle`,
+        `/users/${userId}/wishlist/collections/toggle`,
         {
           method: "PUT",
-          body: {
-            productId: collectionPrimaryProductId,
-            collection: collectionSlug || null,
-          },
+          body: { collection: collectionSlug },
         }
       );
 
-      if (result?.toggled === "added") {
-        setHeart(true);
-      } else if (result?.toggled === "removed") {
-        setHeart(false);
-      }
+      if (result?.toggled === "added") setHeart(true);
+      else if (result?.toggled === "removed") setHeart(false);
     } catch (err) {
-      console.error("toggle collection wishlist error:", err);
+      console.error("toggle wishlist collection error:", err);
       alert("Could not update wishlist. Please try again.");
     }
   };
@@ -177,21 +167,12 @@ async function loadCollection(collectionParam) {
       return;
     }
 
-    let payload;
-    try {
-      payload = await res.json();
-    } catch {
-      setStatus("Server returned invalid data.");
-      return;
-    }
+    const payload = await res.json();
 
     const products = Array.isArray(payload?.products) ? payload.products : [];
     const artist   = payload?.artist || {};
 
-    collectionPrimaryProductId =
-      products[0]?._id || products[0]?.id || null;
-
-    // Header
+    // Header info
     $meta.textContent   = artist.name || "";
     $handle.textContent = artist.username || "";
 
@@ -215,7 +196,7 @@ async function loadCollection(collectionParam) {
   }
 }
 
-// Send Parameter
+// Make function public
 window.loadCollection = loadCollection;
 
 // ===== BOOTSTRAP =====
