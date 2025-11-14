@@ -93,7 +93,7 @@ async function setupCollectionWishlistHeart() {
     $heart.dataset.filled = filled ? "1" : "0";
   }
 
-  // مو لاقين user أو ما عندنا منتج نمثل به الكوليكشن
+  // ما فيه يوزر → خليه فاضي ووديه على صفحة اللوق ان
   if (!userId) {
     setHeart(false);
     $heart.onclick = () => {
@@ -103,37 +103,39 @@ async function setupCollectionWishlistHeart() {
     return;
   }
 
-  if (!collectionPrimaryProductId) {
-    // ما فيه منتج في هذي الكوليكشن لسبب ما
+  // نتأكد إن عندنا الـ slug للكولكشن
+  if (!collectionSlug) {
+    const fromQuery = new URLSearchParams(location.search).get("name");
+    collectionSlug = (fromQuery || "").trim();
+  }
+
+  if (!collectionSlug) {
     setHeart(false);
     $heart.onclick = null;
     return;
   }
 
-  // نتأكد هل المنتج الممثل موجود مسبقاً في الويشليست
+  // ✅ هنا نستخدم endpoint الكوليكشنز مو المنتجات
   try {
-    const ids = await wishlistApi(`/users/${userId}/wishlist/products`);
+    const cols = await wishlistApi(`/users/${userId}/wishlist/collections`);
     const exists =
-      Array.isArray(ids) &&
-      ids.some((id) => String(id) === String(collectionPrimaryProductId));
+      Array.isArray(cols) &&
+      cols.some((c) => c && c.collection === collectionSlug);
 
     setHeart(exists);
   } catch (err) {
-    console.error("check wishlist products error:", err);
+    console.error("check wishlist collections error:", err);
     setHeart(false);
   }
 
-  // الضغط على الهارت → نستخدم endpoint تبع المنتجات
+  // الضغط على الهارت → نستخدم /wishlist/collections/toggle
   $heart.onclick = async () => {
     try {
       const result = await wishlistApi(
-        `/users/${userId}/wishlist/products/toggle`,
+        `/users/${userId}/wishlist/collections/toggle`,
         {
           method: "PUT",
-          body: {
-            productId: collectionPrimaryProductId,
-            collection: collectionSlug || null, // لحفظ الكوليكشن مع المنتج
-          },
+          body: { collection: collectionSlug },
         }
       );
 
@@ -148,6 +150,7 @@ async function setupCollectionWishlistHeart() {
     }
   };
 }
+
 
 // ===== LOAD COLLECTION =====
 async function loadCollection(collectionParam) {
