@@ -221,7 +221,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const currentUserId = localStorage.getItem("userId");
     if (!currentUserId) {
-      alert("Please sign in to use wishlist.");
+      alert("Please sign in to use wishlist");
       location.href = "login.html";
       return;
     }
@@ -249,7 +249,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       updateWishlistBadgeLocally(productId, isInWishlist);
     } catch (err) {
       console.error("Wishlist toggle failed:", err);
-      alert("Could not update wishlist. Please try again.");
+      alert("Please sign in to use wishlist");
     } finally {
       heart.dataset.busy = "0";
     }
