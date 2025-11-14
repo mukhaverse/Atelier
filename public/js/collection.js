@@ -39,9 +39,8 @@ const $heart  = document.querySelector(".icons img[alt='wishlist icon']");
 const HEART_OUTLINE = "assets/heart_icon.svg";
 const HEART_FILLED  = "assets/heart_icon_(added in wishlist).svg";
 
-// متغيّرات عامة عشان نعرف أي كوليكشن وأي منتج يمثّلها
+// ===== STATE =====
 let collectionSlug = "";
-let collectionPrimaryProductId = null;
 
 function setStatus(msg) {
   if ($status) $status.textContent = msg || "";
@@ -93,7 +92,7 @@ async function setupCollectionWishlistHeart() {
     $heart.dataset.filled = filled ? "1" : "0";
   }
 
-  // ما فيه يوزر → خليه فاضي ووديه على صفحة اللوق ان
+  // if no user assume not in wishlist
   if (!userId) {
     setHeart(false);
     $heart.onclick = () => {
@@ -103,7 +102,7 @@ async function setupCollectionWishlistHeart() {
     return;
   }
 
-  // نتأكد إن عندنا الـ slug للكولكشن
+  // determine collection slug
   if (!collectionSlug) {
     const fromQuery = new URLSearchParams(location.search).get("name");
     collectionSlug = (fromQuery || "").trim();
@@ -115,7 +114,7 @@ async function setupCollectionWishlistHeart() {
     return;
   }
 
-  // ✅ هنا نستخدم endpoint الكوليكشنز مو المنتجات
+  // initial state
   try {
     const cols = await wishlistApi(`/users/${userId}/wishlist/collections`);
     const exists =
@@ -128,7 +127,7 @@ async function setupCollectionWishlistHeart() {
     setHeart(false);
   }
 
-  // الضغط على الهارت → نستخدم /wishlist/collections/toggle
+  // toggle on click
   $heart.onclick = async () => {
     try {
       const result = await wishlistApi(
@@ -191,7 +190,7 @@ async function loadCollection(collectionParam) {
     const products = Array.isArray(payload?.products) ? payload.products : [];
     const artist   = payload?.artist || {};
 
-    // أول منتج نستخدمه كممثّل للكوليكشن
+    // Set global primary product ID
     collectionPrimaryProductId =
       products[0]?._id || products[0]?.id || null;
 
