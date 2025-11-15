@@ -20,10 +20,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupCategorySwitching(artisanProducts, artisanCollections);
 });
 
+
 //commision button
-function goToCommission() {
-    window.location.href = "commision.html";
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const commissionBtn = document.querySelector(".Commission");
+
+  if (commissionBtn) {
+    commissionBtn.addEventListener("click", () => {
+      window.location.href = `commision.html?artistId=${window.artisanID}`;
+
+
+    });
+  }
+});
+
+
 
 
 function showArtisanSkeleton() {

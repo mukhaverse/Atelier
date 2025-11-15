@@ -24,31 +24,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-  //get artist info
+    // get artist info
   (async () => {
     const artistId = new URLSearchParams(location.search).get("artistId");
-    if (!artistId) return;
+    console.log("artistId from URL:", artistId);
+
+   
 
     try {
       const res = await fetch(`https://atelier-0adu.onrender.com/products/artistId/${artistId}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) throw new Error("HTTP " + res.status);
 
       const data = await res.json();
-      const artist = data.artist;
-      if (!artist) {
-        console.warn("No artist found in response");
-        return;
-      }
+      console.log("artist api response:", data);
+
+      
+      const artist = data.artist || data;
 
     
+     //save info
       formState.artistEmail = artist.email || "";
       formState.artistName  = artist.username || artist.name || "";
 
-      
+  
       const nameP = document.querySelector(".artist-name");
-      if (nameP) nameP.textContent = formState.artistName || "Artist";
+      if (nameP) {
+        nameP.textContent = formState.artistName || "Artist";
+      }
 
-      
+      //show the profile picture
       const box = document.querySelector(".profile-picture");
       if (box && artist.profilePic) {
         let img = box.querySelector("img");
@@ -63,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Artist fetch failed:", e);
     }
   })();
+
 
  
 
@@ -352,3 +357,4 @@ const rmErr  = el => el && el.classList.remove("input-error");
     }
   });
 });
+ 
