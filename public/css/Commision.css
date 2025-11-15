@@ -109,13 +109,25 @@ font-style:inherit;
 }
 
 .person-text p,.order-text p,.summery-text p{
-margin:0;
-font-size:14px;
-color:#eee;
-grid-column:2;
-margin-top: 7px;
-font-family: 'Inter';
+ margin:0;
+  font-size:14px;
+  color:#eee;
+  grid-column:2;
+  font-family: 'Inter';
+  margin-top: 10px;
 }
+.summery-text p {
+  margin: 0;
+  font-size: 14px;
+  color: #eee;
+  grid-column: 2;
+  font-family: 'Inter';
+  position: relative;
+  top: -24px;
+  margin-left: -40px;
+
+}
+
 
 
 .line {
