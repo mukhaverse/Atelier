@@ -12,7 +12,7 @@
 
     <!-- Page header with back button -->
     <header class="page_header">
-        <a href="javascript:history.back()" class="back_icon" location.href='/index.html'>
+        <a href="javascript:history.back()" class="back_icon">
             <img src="assets/back_icon.svg" alt="back" width="22" height="22">
         </a>
     </header>
@@ -20,31 +20,33 @@
     <!-- Main content area for the collection page -->
     <main class="collection_page">
 
-        <!-- Collection title and artisan info -->
-        <section class="profile_info">
-            <h1 id="collectionTitle">Collection Name</h1>
-            <h4 id="collectionMeta">Artisan Name</h4>
-            <h5 id="collectionHandle">@username</h5>
-        </section>
+        <!-- Profile clickable (picture + info) -->
+        <a id="artisanProfileLink" class="profile_link" href="#">
+            <!-- Profile picture of the artisan -->
+            <section class="profile_pictures">
+                <img id="collectionAvatar" alt="collectionAvatar">
+            </section>
 
-        <!-- Profile picture of the artisan -->
-        <section class="profile_pictures">
-            <img id="collectionAvatar" alt="collectionAvatar">
-        </section>
+            <!-- Collection title and artisan info -->
+            <section class="profile_info">
+                <h1 id="collectionTitle">Collection Name</h1>
+                <h4 id="collectionMeta">Artisan Name</h4>
+                <h5 id="collectionHandle">@username</h5>
+            </section>
+        </a>
 
         <!-- Icons for wishlist and share -->
         <section class="icons">
-        <!-- heart button -->
-        <button id="collectionFavBtn" class="icon-btn">
-            <img id="collectionFavIcon" src="assets/heart_icon.svg" alt="wishlist icon" width="25" height="25">
-        </button>
+            <!-- heart button -->
+            <button id="collectionFavBtn" class="icon-btn">
+                <img id="collectionFavIcon" src="assets/heart_icon.svg" alt="wishlist icon" width="25" height="25">
+            </button>
 
-        <!--share button  -->
-        <button class="icon-btn">
-            <img src="assets/share_icon.svg" alt="share icon" width="25" height="25" id="shareBtn" width="25" height="25">
-        </button>
-</section>
-
+            <!-- share button -->
+            <button class="icon-btn">
+                <img src="assets/share_icon.svg" alt="share icon" id="shareBtn" width="25" height="25">
+            </button>
+        </section>
 
         <!-- Status -->
         <div id="status" class="status"></div>
@@ -57,6 +59,6 @@
 
     <!-- JavaScript file that loads collection data -->
     <script src="js/collection.js"></script>
-    
+
 </body>
 </html>

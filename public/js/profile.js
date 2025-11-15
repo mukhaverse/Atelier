@@ -1,24 +1,23 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
-  const productId = params.get("productId");
+  const productId = params.get("productId") || params.get("id");
   if (!productId) return console.error("No product ID in URL");
 
-    showArtisanSkeleton();
+  showArtisanSkeleton();
   // Fetch artisan info + their products/collections
   const artisanData = await fetchArtisanByProduct(productId);
-   artisanID = artisanData.artistId;   // Display artisan info at the top
+  artisanID = artisanData.artistId;   // Display artisan info at the top
 
-   
-   hideArtisanSkeleton();
+  hideArtisanSkeleton();
   displayArtisanInfo(artisanData);
 
-  const artisanProducts = await fetchArtisanProduct(artisanID);
+  const artisanProducts    = await fetchArtisanProduct(artisanID);
   const artisanCollections = await fetchArtisanCollection(artisanID);
   // Default: show products
   displayProducts(artisanProducts);
 
   // Set up tab switching
-  setupCategorySwitching(artisanProducts,artisanCollections);
+  setupCategorySwitching(artisanProducts, artisanCollections);
 });
 
 //commision button
@@ -57,54 +56,75 @@ function hideArtisanSkeleton() {
 // === Fetch data ===
 async function fetchArtisanByProduct(productId) {
 
+  const res = await fetch(`https://atelier-0adu.onrender.com/products/id/${productId}`);
+  const data = await res.json();
 
- const res = await fetch(`https://atelier-0adu.onrender.com/products/id/${productId}`);
-    const data = await res.json();
+  const artist = data.artist;
 
-    const artist = data.artist;
+  if (!artist) {
+    console.error("No artist found for this product");
+    return;
+  }
 
-    if (!artist) {
-      console.error("No artist found for this product");
-      return;
-    }
-
-    return artist;
+  return artist;
 }
 
 
 
 async function fetchArtisanProduct(artistId) {
-const res1 = await fetch(`https://atelier-0adu.onrender.com/products/artistId/${artistId}`);
-const data1 = await res1.json();
-console.log("Products for artist:", data1);
+  let products = []; // initialize as an empty array
 
-    let products = []; // initialize as an empty array
+  try {
+    const res  = await fetch(`https://atelier-0adu.onrender.com/products/artistId/${artistId}`);
+    const text = await res.text();
 
-    const res = await fetch(`https://atelier-0adu.onrender.com/products/artistId/${artistId}`);
-    const data = await res.json();
+    try {
+      const data = JSON.parse(text);
 
-    // assuming the API returns an array of products
-    if (Array.isArray(data)) {
+      // assuming the API returns an array of products
+      if (Array.isArray(data)) {
         products = data;
-    } else if (Array.isArray(data.products)) {
+      } else if (Array.isArray(data.products)) {
         products = data.products;
+      }
+    } catch (e) {
+      console.warn("Products for artist are not valid JSON:", text);
+      products = [];
     }
+  } catch (err) {
+    console.error("fetchArtisanProduct error:", err);
+    products = [];
+  }
 
-    return products; 
+  return products;
 }
 
-async function fetchArtisanCollection(artistId){
+async function fetchArtisanCollection(artistId) {
 
-    const restemp = await fetch(`https://atelier-0adu.onrender.com/collections/artist/${artistId}`);
-const datatemp = await restemp.json();
-console.log("collection for artist:", datatemp);
+  let collections = []; // initialize as an empty array
 
-     let collections = []; // initialize as an empty array
+  try {
+    const res  = await fetch(`https://atelier-0adu.onrender.com/collections/artist/${artistId}`);
+    const text = await res.text();
 
-    const res = await fetch(`https://atelier-0adu.onrender.com/collections/artist/${artistId}`);
-    const data = await res.json();
-    collections = data;
-    return collections ;
+    try {
+      const data = JSON.parse(text);
+
+      if (Array.isArray(data)) {
+        collections = data;
+      } else if (Array.isArray(data.collections)) {
+        collections = data.collections;
+      }
+    } catch (e) {
+      console.warn("Collections for artist are not valid JSON:", text);
+      collections = [];
+    }
+  } catch (err) {
+    console.error("fetchArtisanCollection error:", err);
+    collections = [];
+  }
+
+  return collections;
 }
 
 
@@ -122,12 +142,14 @@ function displayArtisanInfo(artist) {
     document.querySelector(".link a").href =
       artist.website || "#";
 }
+
 function shuffleArray(array) {
     return array
         .map(value => ({ value, sort: Math.random() }))
         .sort((a, b) => a.sort - b.sort)
         .map(({ value }) => value);
 }
+
 // === Display products ===
 async function displayProducts(products) {
 
@@ -349,7 +371,7 @@ card.addEventListener('click', () => {
 
 function setupCategorySwitching(artisanProducts, artisanCollections) {
     const navLinks = document.querySelectorAll(".navigation a");
-    const indicator = document.getElementById("indicator");
+    const indicator = document.getElementById('indicator');
     
 
     navLinks.forEach(link => {
@@ -424,4 +446,3 @@ function createCollectionSkeletonCard() {
     
     return skeletonCard;
 }
-

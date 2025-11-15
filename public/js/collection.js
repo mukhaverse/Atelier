@@ -133,8 +133,8 @@ async function setupCollectionWishlistHeart() {
       const result = await wishlistApi(
         `/users/${userId}/wishlist/collections/toggle`,
         {
-          method: "PUT",
-          body: { collection: collectionSlug },
+        method: "PUT",
+        body: { collection: collectionSlug },
         }
       );
 
@@ -203,29 +203,30 @@ async function loadCollection(collectionParam) {
 
     if (avatarSrc) $avatar.src = avatarSrc;
 
-    //The is working all good just fix the artistID
     // ===== Add click listeners to navigate to artisan profile =====
-    
-function navigateToArtisanProfile(artistId) {
-  if (!artistId) return;
-  window.location.href = `profile.html?id=${encodeURIComponent(artistId)}`;
-}
+    const primaryProductId =
+      (Array.isArray(products) && (products[0]?._id || products[0]?.id)) ||
+      null;
 
-if ($avatar) {
-  $avatar.style.cursor = "pointer";
-  $avatar.addEventListener("click", () => navigateToArtisanProfile(artist._id));
-}
+    function navigateToArtisanProfile(productId) {
+      if (!productId) return;
+      window.location.href = `profile.html?productId=${encodeURIComponent(productId)}`;
+    }
 
-if ($meta.textContent) {
-  $meta.style.cursor = "pointer";
-  $meta.addEventListener("click", () => navigateToArtisanProfile(artist._id));
-}
+    if ($avatar) {
+      $avatar.style.cursor = "pointer";
+      $avatar.addEventListener("click", () => navigateToArtisanProfile(primaryProductId));
+    }
 
-if ($handle) {
-  $handle.style.cursor = "pointer";
-  $handle.addEventListener("click", () => navigateToArtisanProfile(artist._id));
-}
+    if ($meta.textContent) {
+      $meta.style.cursor = "pointer";
+      $meta.addEventListener("click", () => navigateToArtisanProfile(primaryProductId));
+    }
 
+    if ($handle) {
+      $handle.style.cursor = "pointer";
+      $handle.addEventListener("click", () => navigateToArtisanProfile(primaryProductId));
+    }
 
     // Products
     if (!products.length) {
