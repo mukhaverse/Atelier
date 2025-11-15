@@ -154,7 +154,7 @@ if (loginForm) {
                 
                 alert("Login successful!");
                 setTimeout(() => { 
-                    window.location.href = '/index.html'; 
+                    window.location.href = '../index.html'; 
                 }, 100); 
 
             } else {

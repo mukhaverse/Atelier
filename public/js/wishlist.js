@@ -344,7 +344,7 @@ document.addEventListener("click", (e) => {
   if (isLoginButton) {
     e.preventDefault();
     try { sessionStorage.setItem("post_login_redirect", location.href); } catch {}
-    location.href = "./login.html";
+    location.href = "./Login.html";
   }
 });
 
