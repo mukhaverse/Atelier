@@ -226,7 +226,6 @@ async function loadWishlistCollections() {
     </article>
   </a>
 `;
-
       })
     );
 
@@ -246,7 +245,6 @@ async function loadWishlistCollections() {
 }
 
 /* GLOBAL CLICK HANDLERS (PRODUCT CARDS) */
-/* GLOBAL CLICK HANDLERS (PRODUCT CARDS) */
 document.addEventListener("click", async (e) => {
   const userId = localStorage.getItem("userId");
 
@@ -255,7 +253,7 @@ document.addEventListener("click", async (e) => {
   const cartBtn = e.target.closest(".cart_icon");
   const link    = e.target.closest(".image_link");
 
-  //wishlist toggle button
+  //wishlist toggle button (PRODUCTS ONLY)
   if (favBtn) {
     e.preventDefault();
     e.stopPropagation();
@@ -277,14 +275,10 @@ document.addEventListener("click", async (e) => {
     favBtn.dataset.busy = "1";
 
     try {
-      const collection =
-        productMap[id] && Array.isArray(productMap[id].collections)
-          ? productMap[id].collections[0]
-          : productMap[id]?.collections || null;
-
+      // 🔥 هنا التعديل: ما نرسل collection أبداً، فقط productId
       const result = await api(`/users/${userId}/wishlist/products/toggle`, {
         method: "PUT",
-        body: { productId: id, collection },
+        body: { productId: id },
       });
 
       if (result?.toggled === "removed") {
@@ -316,7 +310,7 @@ document.addEventListener("click", async (e) => {
     return;
   }
 
- //add to cart button
+  //add to cart button
   if (cartBtn) {
     e.preventDefault();
     e.stopPropagation();
