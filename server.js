@@ -553,9 +553,9 @@ app.post("/commission", async (req, res) => {
           context: { username },
           attachments: [
         {
-          filename: 'Logo_w.svg',
-          path: __dirname + '/views/Logo_w.svg',
-          cid: 'logo@atelier'
+          filename: 'Email_icon.svg',
+          path: __dirname + '/views/Group6.svg',
+          cid: 'mail@atelier'
         }
       ]
     })} catch (error) {
