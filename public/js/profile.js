@@ -218,7 +218,7 @@ function createProductsCard(product) {
         
         if (productId) {
 
-            window.location.href = `./public/product.html?id=${encodeURIComponent(productId)}`;
+            window.location.href = `./product.html?id=${encodeURIComponent(productId)}`;
         } else {
             console.error('No product ID found for suggested item:', product);
         }
@@ -370,7 +370,7 @@ function createCollectionCard(collection, allProducts) {
 card.addEventListener('click', () => {
     const collectionName = collection.collection;
     if (collectionName) {
-        window.location.href = `./public/collection.html?name=${encodeURIComponent(collectionName)}`;
+        window.location.href = `./collection.html?name=${encodeURIComponent(collectionName)}`;
     }
 });
 
