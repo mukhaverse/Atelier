@@ -535,7 +535,7 @@ app.post("/commission", async (req, res) => {
             attachments: [
               {
                 filename: 'Email_icon.svg',
-                path: __dirname + '/views/Group 6 (3).svg',
+                path: __dirname + './views/Group 6 (3).svg',
                 cid: 'mail@atelier'
               }
             ]
@@ -554,7 +554,7 @@ app.post("/commission", async (req, res) => {
           attachments: [
         {
           filename: 'Logo_w.svg',
-            path: __dirname + '/views/Logo_w.svg',
+          path: __dirname + './views/Logo_w.svg',
           cid: 'logo@atelier'
         }
       ]
