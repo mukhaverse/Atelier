@@ -563,6 +563,31 @@ app.post("/commission", async (req, res) => {
     }
 
 
+    
+/*
+    try {
+      await sendEmail({
+      to: userEmail, 
+      subject: "Your Commission Has Been Sent",
+      template: 'userView',
+      context: { username },
+      attachments: [
+      {
+        filename: 'Logo_w.png',
+        path: __dirname + '/views/Logo_w.png',
+        cid: 'logoCid',  
+      }
+    ]
+  });
+}   catch (error) {
+    console.error("Email error:", error);
+}
+
+
+*/
+
+
+
     res.status(201).json({
       message: "Commission request received successfully! ",
       requestData: newCommission
