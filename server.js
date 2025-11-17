@@ -504,30 +504,30 @@ app.post("/commission", async (req, res) => {
       artistEmail,
       userEmail,
       username
+       
     } = req.body;
 
     const newCommission ={
       type,
-      dimensions,
-      attachment,
-      description,
-      phoneNumber,
-      country,
-      city,
-      isGift,
-      artistname,
-      artistEmail,
-      userEmail,
-      username,
-      dateSubmitted: new Date()
+     dimensions,
+     attachment,
+     description,
+     phoneNumber,
+     country,
+     city,
+     isGift,
+     artistname,
+     artistEmail,
+     userEmail,
+     dateSubmitted: new Date()
     }
 
     console.log('New commission requested: ', newCommission)
+    
 
     console.log("tesssst daaataa:", {
              artistname,
-             username,
-             details
+             description
           });
 
 
@@ -541,7 +541,7 @@ app.post("/commission", async (req, res) => {
             context: { 
                     artistname: artistname, 
                     username: username,
-                    details: details 
+                    details: description 
                   },
             attachments: [
               {
@@ -563,7 +563,7 @@ app.post("/commission", async (req, res) => {
           template: 'userView',
           context: { 
             username: username,
-           artistname: artistname 
+             artistname: artistname 
            },
           attachments: [
         {

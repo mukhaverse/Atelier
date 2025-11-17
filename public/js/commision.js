@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     giftMessage: "",
 
     artistEmail: "",
-    artistName: "",
+    artistname: "",
 
     userEmail: "",
     username: ""
@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
      //save info
       formState.artistEmail = artist.email || "";
       formState.artistName  = artist.username || artist.name || "";
+      formState.artistname  = formState.artistName;
 
   
       const nameP = document.querySelector(".artist-name");
@@ -308,6 +309,7 @@ const rmErr  = el => el && el.classList.remove("input-error");
           city:         formState.city,
           isGift:       formState.isGift,
 
+          artistname:   formState.artistname, 
           artistEmail:  formState.artistEmail,
           userEmail:    formState.userEmail,
           username:     formState.username
