@@ -528,7 +528,7 @@ app.post("/commission", async (req, res) => {
         try {
 
           await sendEmail({
-            to: artistEmail,
+            to: "remasalsulami962@gmai.com",
             subject: "New Commission Request",
             template: 'artisanView',
             context: { artistname: artistname },
