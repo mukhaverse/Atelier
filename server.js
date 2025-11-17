@@ -547,7 +547,7 @@ app.post("/commission", async (req, res) => {
     //  user email
       try {
         await sendEmail({
-          to: userEmail,
+          to: username ,
           subject: "Your Commission Has Been Sent", 
           template: 'userView',
           context: { username },
