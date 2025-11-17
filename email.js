@@ -21,7 +21,7 @@ const hbsOptions = {
   extName: '.hbs',
 };
 
-transporter.use('compile', hbs(hbsOptions));
+transporter.use('compile', hbs(hbsOptions)); 
 
 async function sendEmail({ to, subject, template, context, attachments }) {
   const mailOptions = {
@@ -44,3 +44,8 @@ async function sendEmail({ to, subject, template, context, attachments }) {
 }
 
 module.exports = { sendEmail };
+
+
+
+
+

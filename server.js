@@ -524,14 +524,25 @@ app.post("/commission", async (req, res) => {
 
     console.log('New commission requested: ', newCommission)
 
+    console.log("tesssst daaataa:", {
+             artistname,
+             username,
+             details
+          });
+
+
     // artist email 
         try {
 
           await sendEmail({
-            to: "shomok.a12@gmail.com",
+            to: "remasalsulami962@gmail.com",
             subject: "New Commission Request",
             template: 'artisanView',
-            context: { artistname: artistname },
+            context: { 
+                    artistname: artistname, 
+                    username: username,
+                    details: details 
+                  },
             attachments: [
               {
                 filename: 'Email_icon.svg',
@@ -550,7 +561,10 @@ app.post("/commission", async (req, res) => {
           to: username ,
           subject: "Your Commission Has Been Sent", 
           template: 'userView',
-          context: { username },
+          context: { 
+            username: username,
+           artistname: artistname 
+           },
           attachments: [
         {
           filename: 'Email_icon.svg',
