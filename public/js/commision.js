@@ -44,7 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
      //save info
       formState.artistEmail = artist.email || "";
-      formState.artistName  = artist.username || artist.name || "";
+      let cleanName = (artist.username || artist.name || "").replace(/^@/, "");
+      formState.artistName  =cleanName
       formState.artistname  = formState.artistName;
 
   
