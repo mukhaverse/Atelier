@@ -286,4 +286,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       heart.dataset.busy = "0";
     }
   });
+  //  AR BUTTON CLICK
+  const arButton = document.querySelector(".ar_button");
+
+  if (arButton) {
+    arButton.addEventListener("click", () => {
+      const imgEl = document.querySelector(".product_image img");
+      if (!imgEl || !imgEl.src) {
+        console.error("No product image found for AR.");
+        return;
+      }
+
+      const productImage = imgEl.src;
+      window.open(`AR.html?img=${encodeURIComponent(productImage)}`, "_blank");
+    });
+  }
 });
+

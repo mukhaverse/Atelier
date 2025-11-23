@@ -435,7 +435,7 @@ app.put("/users/:userId/wishlist/collections/toggle", async (req, res) => {
     } else {
       //if not found → add bookmark
       list.push({
-        product: null,        // bookmark فقط
+        product: null,
         collection,
         dateAdded: new Date(),
       });
@@ -461,7 +461,6 @@ app.put("/users/:userId/wishlist/collections/toggle", async (req, res) => {
 
 app.post("/product", async (req, res) => {
   try {
-    // هنا نمرر كل الـ body مباشرة إلى الـ model
     const newProduct = new product(req.body);
 
     await newProduct.save();
