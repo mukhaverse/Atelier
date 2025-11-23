@@ -41,6 +41,16 @@ function renderProduct(p) {
   const medium   = pick(p.medium, p.material, p.category);
   const desc     = pick(p.description, p.details, "");
 
+  // ===== AR BUTTON VISIBILITY BY CATEGORY =====
+  const arButton = document.querySelector(".ar_button");
+  if (arButton) {
+    if (p.category === "painting") {
+      arButton.style.display = "flex";
+    } else {
+      arButton.style.display = "none";
+    }
+  }
+
   // Resolve artist info
   const { name: artistName, username, avatar } = extractArtist(p);
 
@@ -73,18 +83,16 @@ function renderProduct(p) {
   if ($user)   $user.textContent = username;
   if ($avatar && avatar) $avatar.src = avatar;
 
-  // ===== هنا التعديل الخاص بالتنقل للبروفايل =====
   const artistObj = p.artist || p.artistData || {};
-  const artistId  = artistObj._id || artistObj.id;  // باقي موجود لو احتجتيه بعدين
+  const artistId  = artistObj._id || artistObj.id;
 
-  // نستخدم الـ productId عشان profile.js يشتغل على /products/id/:productId
   const productId = p._id || p.id;
 
   if (!productId) {
     console.warn("No product ID found for this product:", p);
   } else {
     function navigateToArtisanProfile(id) {
-      // نرسل productId في الكويري
+
       window.location.href = `profile.html?productId=${encodeURIComponent(id)}`;
     }
 

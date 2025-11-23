@@ -176,7 +176,6 @@ main.product_page {
 }
 
 /* AR BUTTON */
-/* AR BUTTON */
 .product_image {
   position: relative;
   align-self: start;
@@ -190,7 +189,7 @@ main.product_page {
   bottom: 20px;
   left: 20px;
 
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   gap: 0;
