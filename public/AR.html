@@ -30,5 +30,20 @@
 
       <a-entity camera></a-entity>
     </a-scene>
+
+     <script>
+     
+      const urlParams = new URLSearchParams(window.location.search);
+      const imageUrl = urlParams.get('img');
+      
+      if (imageUrl) {
+        
+        document.getElementById('ar-image').setAttribute('src', imageUrl);
+      }
+
+    </script>
+    
   </body>
+  
+
 </html>
