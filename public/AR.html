@@ -32,19 +32,31 @@
     </a-scene>
 
      <script>
-     
-      const urlParams = new URLSearchParams(window.location.search);
-      const imageUrl = urlParams.get('img');
-      
-      if (imageUrl) {
         
-        document.getElementById('ar-image').setAttribute('src', imageUrl);
+      function getGoogleDriveDirectUrl(url) {
+        if (url.includes('drive.google.com')) {
+          const match = url.match(/[?&]id=([^&]+)/);
+          if (match) {
+            const fileId = match[1];
+            
+            return `https://lh3.googleusercontent.com/d/${fileId}`;
+          }
+        }
+        return url;
       }
 
-      //LOOK HEREE!!!!!!!!!
-
-      // put this inside onclick 
-      //  window.open(`AR.html.html?img=${encodeURIComponent(productImage)}`, '_blank'); 
+      window.addEventListener('load', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        let imageUrl = urlParams.get('img');
+        
+        if (imageUrl) {
+          imageUrl = getGoogleDriveDirectUrl(imageUrl);
+          console.log('Loading AR image:', imageUrl);
+          
+          const arImage = document.getElementById('ar-image');
+          arImage.setAttribute('src', imageUrl);
+        }
+      });
 
     </script>
     
