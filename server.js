@@ -768,7 +768,40 @@ app.post("/cart/add", async (req, res) => {
   }
 });
 
+app.delete("/cart/remove", async (req, res) => {
+  const { userId, productId } = req.body;
 
+  if (!userId || !productId) {
+    return res.status(400).json({ message: "Missing userId or productId" });
+  }
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const originalLength = user.cart.length;
+    
+    user.cart = user.cart.filter(item => item.product.toString() !== productId);
+
+    if (user.cart.length === originalLength) {
+        return res.status(404).json({ message: "Product not found in cart" });
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Item removed successfully",
+      cart: user.cart
+    });
+
+  } catch (error) {
+    console.error("Error in /cart/remove:", error);
+    res.status(500).json({ message: "Error removing item from cart" });
+  }
+});
 
 app.listen(3000, () =>{
     console.log("I'm listening in the port 3000")
