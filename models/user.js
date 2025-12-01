@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
    type: Date,
  default: Date.now
 }
-}]
+}],
 cart: [{
     product: {
         type: mongoose.Schema.Types.ObjectId,

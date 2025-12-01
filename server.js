@@ -1,15 +1,18 @@
 
  const mongoose = require("mongoose");
- const product = require("./models/product");
- const artist = require("./models/artist");
- const User = require('./models/user');
+ const express = require("express")
  const bcrypt = require('bcrypt'); 
  const cors = require('cors');
  const jwt = require('jsonwebtoken');
+
+ const product = require("./models/product");
+ const artist = require("./models/artist");
+ const User = require('./models/user');
+ const Commission = require('./models/commission'); 
+
 const JWT_SECRET = 'AA.201424'; 
 const auth = require('./middleware/auth');
 
-const Commission = require('./models/commission'); 
 
  mongoose
    .connect("mongodb+srv://ghaida:GS.201424@cluster.cakgapc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster")
@@ -21,7 +24,6 @@ const Commission = require('./models/commission');
    });
  
 
-const express = require("express")
 
 const app = express()
 
@@ -724,6 +726,48 @@ app.get("/user/:userId", async (req,res) =>{
     res.status(500).send("Error while fetching user info")
   }
 }) 
+
+app.post("/cart/add", async (req, res) => {
+  const { userId, productId, quantity } = req.body;
+
+  if (!userId || !productId) {
+    return res.status(400).json({ message: "Missing required fields: userId and productId are required" });
+  }
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const qty = quantity && quantity > 0 ? quantity : 1;
+
+    const itemIndex = user.cart.findIndex(item => item.product.toString() === productId);
+
+    if (itemIndex > -1) {
+      user.cart[itemIndex].quantity += qty;
+    } else {
+      user.cart.push({
+        product: productId,
+        quantity: qty,
+        dateAdded: new Date()
+      });
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Cart updated successfully",
+      cart: user.cart
+    });
+
+  } catch (error) {
+    console.error("Error in /cart/add:", error);
+    res.status(500).json({ message: "Error adding to cart" });
+  }
+});
+
 
 
 app.listen(3000, () =>{
