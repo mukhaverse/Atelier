@@ -1,0 +1,108 @@
+body{
+    background-color: #0d0d0d;
+    color:white;
+    font-family: 'Inter',sans-serif;
+   padding-top: 80px;;
+}
+h1{
+    font-size: 24px;
+    font-family:'playfair display';
+    font-weight: 400;
+    padding-left: 80px;
+    margin-top: 0px;
+    padding-bottom: 4px;
+
+}
+h2{
+    font-size: 20px;
+    font-family:'playfair display';
+    font-weight: 400;
+    text-align: center;
+    padding-bottom: 32px;
+}
+p{
+    font-size: 14px;
+    color: #9F9F9F;
+}
+
+.back_icon {
+  position: fixed;
+  top: 20px;
+  left: 10px;
+}
+
+.back_icon img {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.back_icon img:hover {
+  transform: scale(1.1);
+}
+
+ .container {
+    display: flex;
+    /* Optional: Controls spacing and alignment */
+    gap: 20px; /* Adds space between the Cart and Summery */
+    justify-content: center; /* Centers the content horizontally */
+    align-items: flex-start; /* Aligns items to the top (default is stretch) */
+}
+
+/* Optional: To make them take up space or control their width */
+.Cart {
+    flex: 3; /* Cart takes up more space (e.g., 2/3 of the available space) */
+    border-right: 1px solid #9F9F9F;
+}
+
+.line{
+    width: 1px;
+    height: 440px;
+    background-color:#9F9F9F;
+
+}
+
+/* ensure Summery centers its child */
+.Summery {
+  flex: 2;
+  justify-content: center; /* centers .Subprices horizontally */
+  align-items: center;     /* optional: aligns vertically in Summery */
+}
+
+
+.Subprices,
+.overallTotal {
+  display: grid;
+  grid-template-columns: 1fr auto;  /* left grows, right stays tight to price */
+  gap: -4px 32px;                   /* adjust gap as you like */
+  align-items: center;
+  padding-left: 64px;               /* same starting point */
+  padding-right: 64px;
+}
+.overallTotal{
+    padding-top: 24px;
+    padding-bottom: 16px;
+}
+
+.checkout-button{
+margin-left: 64px;
+padding:8px 124px;
+border-radius:10px;
+border:1px solid #4b4b52;
+background:#202024;
+color:#eee;
+cursor:pointer;
+transition:.2s;
+font-size: 16px;
+}
+
+
+.checkout-button{
+border:2px solid #8b7dff
+}
+
+.checkout-button:hover{
+background:#8b7dff;
+color:#111
+}

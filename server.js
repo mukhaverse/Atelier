@@ -803,6 +803,90 @@ app.delete("/cart/remove", async (req, res) => {
   }
 });
 
+app.get('/cart/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        // Selected only the specific fields you requested from the Product model
+        const user = await User.findById(userId).populate({
+            path: 'cart.product',
+            select: 'name images price dimensions artist' ,
+            populate: {
+                path: 'artist', // The field in the Product model that holds the Artist ID
+                model: 'Artist', // Explicitly stating the model name
+                select: 'name'   // We only need the artist's name
+            }
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Initialize variables for calculations
+        let Total = 0;
+        const groupsObj = {};
+
+        // 2. Iterate over cart items to group them and calculate totals
+        user.cart.forEach(cartItem => {
+            // Safety check: skip if the product was deleted from DB but exists in cart
+            if (!cartItem.product) return; 
+
+            const product = cartItem.product;
+            
+            // Calculate line item total (Ignoring quantity as requested)
+            const lineTotal = product.price;
+            Total += lineTotal;
+
+            // Structure the item data for the frontend
+            const itemData = {
+                productId: product._id,
+                name: product.name,
+                picture: product.picture,
+                price: product.price,
+                dimensions: product.dimensions,
+                lineTotal: lineTotal
+            };
+
+            // Grouping Logic:
+            // If this artist doesn't exist in our groups object yet, create an array
+            const artistName = product.artist || 'Unknown Artist';
+            
+            if (!groupsObj[artistName]) {
+                groupsObj[artistName] = [];
+            }
+
+            // Push the item into that artist's array
+            groupsObj[artistName].push(itemData);
+        });
+
+        // 3. Convert the groups object into an array for easier mapping in React/Frontend
+        // This creates the structure: [{ artist: "Name", items: [...] }, ...]
+        const groupedCart = Object.keys(groupsObj).map(artist => ({
+            artist: artist,
+            items: groupsObj[artist]
+        }));
+
+        // 4. Calculate Tax and Final Total
+        const TAX_RATE = 0.15; // 15%
+        const taxAmount = subtotal * TAX_RATE;
+        const shipping = 25;        
+
+        // 5. Send the response
+        res.status(200).json({
+            cartData: groupedCart,
+            summary: {
+                shipping: parseFloat(shipping.toFixed(2)),
+                tax: parseFloat(taxAmount.toFixed(2)),
+                total: parseFloat(Total.toFixed(2))
+            }
+        });
+
+    } catch (error) {
+        console.error('Error fetching cart:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+});
+
 app.listen(3000, () =>{
     console.log("I'm listening in the port 3000")
 })

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Shopping CArt</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/cart.css">
+</head>
+<body  >
+<!-- Header with back button -->
+    <header class="page_header">
+        <a href="#" class="back_icon" onclick="history.back()">
+            <img src="assets/back_icon.svg" alt="back" width="22" height="22">
+        </a>
+    </header>
+    <h1>Shopping Cart</h1>
+    <div class="container">
+        <section class ="Cart">
+        </section>
+
+         <div class="line"></div>
+
+        <section class ="Summery">
+        <h2>Cart Summery</h2>
+        <div class="Subprices">
+            <p>Shipping fee(3 to 5 business days)</p>
+            <p class ="shipping">00.00sr</p>
+            <p>TAX</p>
+            <p class="tax">00.00sr</p>
+            <p>Subtotal</p>
+            <p class="Subtotal">00.00sr</p>
+        </div>
+        <div class="overallTotal">
+            <h3>Total</h3>
+            <h3 class="total">00.00sr</h3>
+        </div>
+        <button type="button" value="checkout" class="checkout-button">Proceed to Checkout</button>
+
+    </section>
+    </div>
+    
+ <script src="js/cart.js"></script>
+</body>
+</html>
