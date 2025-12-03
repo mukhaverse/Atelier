@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Atelier</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        /* --- الأساسيات --- */
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        form.container {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        /* --- الهيدر --- */
+        .page-header {
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back_icon {
+            color: #fff;
+            font-size: 24px;
+            text-decoration: none;
+            cursor: pointer;
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        .back_icon:hover { background-color: rgba(255, 255, 255, 0.1); }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: #ffffff;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        /* --- الحاوية الجانبية --- */
+        .content-row {
+            display: flex;
+            width: 100%;
+            gap: 50px;
+        }
+
+        /* --- الأقسام --- */
+        .section-box {
+            flex: 1;
+            padding: 10px 0; 
+        }
+
+        /* --- الخط الفاصل (رمادي وأسمك - 2px) --- */
+        .divider-line {
+            width: 0;
+            border-right: 2px solid #333; 
+            margin: 0;
+        }
+
+        h3 {
+            font-family: 'Playfair Display', serif;
+            margin-top: 0;
+            color: #eee;
+            margin-bottom: 30px;
+            font-size: 1.6rem;
+            padding-bottom: 10px;
+            border-bottom: 4px solid #8e44ad; 
+            display: inline-block;
+        }
+
+        /* --- الحقول --- */
+        .form-group { margin-bottom: 25px; position: relative; }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: #aaa;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 0;
+            background-color: transparent;
+            border: none;
+            /* خط الكتابة أنعم (1px) */
+            border-bottom: 1px solid #444; 
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
+            border-radius: 0;
+        }
+
+        .form-input:focus { 
+            border-bottom-color: #8e44ad; 
+            background-color: rgba(255,255,255,0.02);
+        }
+
+        .form-input.error { border-bottom-color: #8e44ad !important; }
+        
+        .error-message {
+            color: #a569bd;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .row { display: flex; gap: 30px; }
+        .col { flex: 1; }
+
+        /* --- منطقة الدفع النهائية --- */
+        .checkout-actions {
+            margin-top: 20px;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            align-self: center;
+        }
+
+        .total-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+        }
+
+        .total-label { font-size: 1.2rem; color: #ccc; font-family: 'Inter', sans-serif;}
+        .total-price { color: #8e44ad; font-weight: bold; }
+
+        .btn-checkout {
+            background-color: #8e44ad;
+            color: #ffffff;
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 0;
+            font-size: 1.1rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .btn-checkout:hover {
+            background-color: #732d91;
+            transform: translateY(-2px);
+        }
+
+        /* --- شاشات التحميل والنجاح --- */
+        .processing-overlay, .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 2000; justify-content: center; align-items: center;
+        }
+        
+        .processing-overlay { background-color: rgba(0,0,0,0.95); flex-direction: column; color: white; }
+        .spinner {
+            width: 50px; height: 50px; border: 2px solid rgba(255,255,255,0.1);
+            border-left-color: #8e44ad; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .modal-overlay { background: rgba(0,0,0,0.92); backdrop-filter: blur(8px); }
+        .modal-content {
+            background: #1a1a1a; padding: 50px 40px; border-radius: 20px;
+            border: 1px solid #333; text-align: center; max-width: 450px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center;
+        }
+
+        .success-icon-box {
+            width: 80px; height: 80px; background-color: rgba(39, 174, 96, 0.1);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 25px;
+        }
+        .success-icon-box i { font-size: 40px; color: #27ae60; }
+        .modal-content h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin: 0 0 15px 0; color: white; }
+        .success-message { color: #aaa; font-size: 1rem; line-height: 1.5; margin-bottom: 35px; }
+
+        /* --- التجاوب مع الجوال --- */
+        @media (max-width: 900px) {
+            body { 
+                /* مسافة 20 بكسل فوق/تحت و 40 بكسل يمين/يسار */
+                padding: 20px 40px !important; 
+            }
+            
+            .content-row { flex-direction: column; gap: 40px; }
+            
+            /* تحويل الخط لأفقي في الجوال */
+            .divider-line { 
+                width: 100%; 
+                height: 0;
+                border-right: none;
+                border-top: 2px solid #333; 
+            }
+
+            .row { flex-direction: column; gap: 20px; }
+            h3 { font-size: 1.4rem; border-bottom-width: 3px; }
+            .modal-content { padding: 40px 30px; width: 85%; }
+        }
+    </style>
+</head>
+<body>
+
+    <form id="checkoutForm" class="container" novalidate>
+        
+        <div class="page-header">
+            <a href="/" class="back_icon">
+                <i class="fa fa-angle-left"></i>
+            </a>
+            <h1 class="page-title">Checkout</h1>
+        </div>
+
+        <div class="content-row">
+            <div class="section-box">
+                <h3>Shipping Address</h3>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" class="form-input" placeholder="Enter first name" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" class="form-input" placeholder="Enter last name" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="phoneInput" class="form-input" placeholder="055 000 0000" maxlength="10" required>
+                    <div class="error-message" id="phoneError">Please enter a valid 10-digit number</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" class="form-input" placeholder="City, District, Street..." required>
+                </div>
+            </div>
+
+            <div class="divider-line"></div>
+
+            <div class="section-box">
+                <h3>Payment Method</h3>
+                
+                <div class="form-group">
+                    <label>Card Number</label>
+                    <input type="text" id="cardInput" class="form-input" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                    <div class="error-message" id="cardError">Card number incomplete</div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Expiry Date</label>
+                            <input type="text" id="expiryInput" class="form-input" placeholder="MM/YY" maxlength="5" required>
+                            <div class="error-message" id="expiryError">Invalid Date</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label>CVV</label>
+                            <input type="password" id="cvvInput" class="form-input" placeholder="123" maxlength="3" required>
+                            <div class="error-message" id="cvvError">Required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="checkout-actions">
+            <div class="total-display">
+                <span class="total-label">Total Amount</span>
+                <span class="total-price" id="totalPriceDisplay">Loading...</span>
+            </div>
+
+            <button type="submit" class="btn-checkout">PAY NOW</button>
+        </div>
+
+    </form>
+
+    <div class="processing-overlay" id="processingModal">
+        <div class="spinner"></div>
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 5px;">Processing...</h2>
+    </div>
+
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content">
+            <div class="success-icon-box">
+                <i class="fa fa-check"></i>
+            </div>
+            <h2>Payment Successful!</h2>
+            <p class="success-message">Your order has been placed successfully. We are preparing it with care.</p>
+            <button class="btn-checkout" onclick="finishOrder()">RETURN TO HOME</button>
+        </div>
+    </div>
+
+    <script>
+        // إعدادات السيرفر
+        const API_BASE_URL = "http://localhost:3000"; 
+        
+        // 1. تحديد المستخدم (من الذاكرة أو استخدام الرقم الوهمي للتجربة)
+        const currentUserId = localStorage.getItem("userId") || "692db45ff99221f3c716d900"; 
+
+        // العناصر
+        const form = document.getElementById('checkoutForm');
+        const processingModal = document.getElementById('processingModal'); 
+        const successModal = document.getElementById('successModal');
+        const totalPriceEl = document.getElementById('totalPriceDisplay');
+        const phoneInput = document.getElementById('phoneInput');
+        const cardInput = document.getElementById('cardInput');
+        const expiryInput = document.getElementById('expiryInput');
+        const cvvInput = document.getElementById('cvvInput');
+
+        // --- دالة: جلب السعر من السيرفر ---
+        async function fetchCartTotal() {
+            try {
+                // حسب كود السيرفر: GET /cart/:userId
+                const response = await fetch(`${API_BASE_URL}/cart/${currentUserId}`);
+                
+                if (!response.ok) throw new Error("Failed to fetch cart");
+
+                const data = await response.json();
+
+                // حسب كود السيرفر: المجموع موجود في data.summary.total
+                if (data.summary && data.summary.total !== undefined) {
+                    totalPriceEl.innerText = data.summary.total + " SR";
+                } else {
+                    totalPriceEl.innerText = "0.00 SR";
+                }
+                
+            } catch (error) {
+                console.error("Error fetching cart total:", error);
+                totalPriceEl.innerText = "Error"; // في حال فشل الاتصال
+            }
+        }
+
+        // تشغيل جلب السعر عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', fetchCartTotal);
+
+
+        // --- دوال التحقق والتنسيق (UI Validation) ---
+        function clearError(input, errorId) {
+            input.classList.remove('error');
+            document.getElementById(errorId).style.display = 'none';
+        }
+        function showError(input, errorId) {
+            input.classList.add('error');
+            document.getElementById(errorId).style.display = 'block';
+        }
+
+        // تنسيق التاريخ (MM/YY)
+        expiryInput.addEventListener('input', function(e) {
+            let input = e.target.value.replace(/\D/g, '');
+            if (input.length > 2) input = input.substring(0, 2) + '/' + input.substring(2, 4);
+            e.target.value = input;
+            clearError(expiryInput, 'expiryError');
+        });
+
+        // تنسيق البطاقة (مسافات)
+        cardInput.addEventListener('input', function(e) {
+            let input = e.target.value.replace(/\D/g, '');
+            input = input.replace(/(\d{4})(?=\d)/g, '$1 ');
+            e.target.value = input;
+            clearError(cardInput, 'cardError');
+        });
+
+        phoneInput.addEventListener('input', () => clearError(phoneInput, 'phoneError'));
+        cvvInput.addEventListener('input', () => clearError(cvvInput, 'cvvError'));
+
+
+        // --- دالة: إرسال الدفع (Submit Checkout) ---
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // التحقق من الحقول
+            let isValid = true;
+            if (phoneInput.value.replace(/\D/g, '').length < 10) { showError(phoneInput, 'phoneError'); isValid = false; }
+            if (cardInput.value.replace(/\s/g, '').length < 16) { showError(cardInput, 'cardError'); isValid = false; }
+            if (cvvInput.value.length < 3) { showError(cvvInput, 'cvvError'); isValid = false; }
+            if (expiryInput.value.length < 5) { showError(expiryInput, 'expiryError'); isValid = false; }
+
+            if (isValid) {
+                // إظهار شاشة الانتظار
+                processingModal.style.display = 'flex';
+
+                try {
+                    // إرسال طلب الدفع للسيرفر (لحذف السلة وإنشاء الطلب)
+                    // ملاحظة: تأكدي إنك أضفتي كود الـ app.post('/checkout') في ملف السيرفر
+                    const response = await fetch(`${API_BASE_URL}/checkout`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            userId: currentUserId,
+                            phone: phoneInput.value,
+                            // نرسل العنوان كمان
+                            address: document.querySelector('input[placeholder="City, District, Street..."]').value
+                        })
+                    });
+
+                    if (response.ok) {
+                        // نجاح الدفع
+                        processingModal.style.display = 'none';
+                        successModal.style.display = 'flex';
+                    } else {
+                        throw new Error("Payment failed on server");
+                    }
+
+                } catch (error) {
+                    console.error("Checkout Error:", error);
+                    
+                    // (للتجربة فقط) لو السيرفر مو شغال، نمشيها نجاح عشان تشوفين الواجهة
+                    // يمكنك حذف هذا الجزء لاحقاً
+                    setTimeout(() => {
+                        processingModal.style.display = 'none';
+                        successModal.style.display = 'flex';
+                    }, 2000);
+                }
+            }
+        });
+
+        async function finishOrder() {
+            // العودة للصفحة الرئيسية (تأكدي من اسم ملف الرئيسية عندك)
+            window.location.href = '/index.html'; 
+        }
+    </script>
+</body>
+</html>
