@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
-        /* --- الأساسيات --- */
         body {
             background-color: #000000;
             color: #ffffff;
@@ -29,7 +28,6 @@
             gap: 40px;
         }
 
-        /* --- الهيدر --- */
         .page-header {
             width: 100%;
             margin-bottom: 20px;
@@ -58,20 +56,17 @@
             font-weight: 600;
         }
 
-        /* --- الحاوية الجانبية --- */
         .content-row {
             display: flex;
             width: 100%;
             gap: 50px;
         }
 
-        /* --- الأقسام --- */
         .section-box {
             flex: 1;
             padding: 10px 0; 
         }
 
-        /* --- الخط الفاصل (رمادي وأسمك - 2px) --- */
         .divider-line {
             width: 0;
             border-right: 2px solid #333; 
@@ -89,7 +84,6 @@
             display: inline-block;
         }
 
-        /* --- الحقول --- */
         .form-group { margin-bottom: 25px; position: relative; }
 
         label {
@@ -105,7 +99,6 @@
             padding: 15px 0;
             background-color: transparent;
             border: none;
-            /* خط الكتابة أنعم (1px) */
             border-bottom: 1px solid #444; 
             color: white;
             font-family: 'Inter', sans-serif;
@@ -182,7 +175,6 @@
             transform: translateY(-2px);
         }
 
-        /* --- شاشات التحميل والنجاح --- */
         .processing-overlay, .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 2000; justify-content: center; align-items: center;
@@ -210,16 +202,13 @@
         .modal-content h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin: 0 0 15px 0; color: white; }
         .success-message { color: #aaa; font-size: 1rem; line-height: 1.5; margin-bottom: 35px; }
 
-        /* --- التجاوب مع الجوال --- */
         @media (max-width: 900px) {
             body { 
-                /* مسافة 20 بكسل فوق/تحت و 40 بكسل يمين/يسار */
                 padding: 20px 40px !important; 
             }
             
             .content-row { flex-direction: column; gap: 40px; }
             
-            /* تحويل الخط لأفقي في الجوال */
             .divider-line { 
                 width: 100%; 
                 height: 0;
@@ -332,13 +321,11 @@
     </div>
 
     <script>
-        // إعدادات السيرفر
         const API_BASE_URL = "http://localhost:3000"; 
         
-        // 1. تحديد المستخدم (من الذاكرة أو استخدام الرقم الوهمي للتجربة)
-        const currentUserId = localStorage.getItem("userId") || "692db45ff99221f3c716d900"; 
+        const currentUserId = localStorage.getItem("userId") || "692db45ff99221f3c716d900";
+         
 
-        // العناصر
         const form = document.getElementById('checkoutForm');
         const processingModal = document.getElementById('processingModal'); 
         const successModal = document.getElementById('successModal');
@@ -348,17 +335,14 @@
         const expiryInput = document.getElementById('expiryInput');
         const cvvInput = document.getElementById('cvvInput');
 
-        // --- دالة: جلب السعر من السيرفر ---
         async function fetchCartTotal() {
             try {
-                // حسب كود السيرفر: GET /cart/:userId
                 const response = await fetch(`${API_BASE_URL}/cart/${currentUserId}`);
                 
                 if (!response.ok) throw new Error("Failed to fetch cart");
 
                 const data = await response.json();
 
-                // حسب كود السيرفر: المجموع موجود في data.summary.total
                 if (data.summary && data.summary.total !== undefined) {
                     totalPriceEl.innerText = data.summary.total + " SR";
                 } else {
@@ -367,15 +351,13 @@
                 
             } catch (error) {
                 console.error("Error fetching cart total:", error);
-                totalPriceEl.innerText = "Error"; // في حال فشل الاتصال
+                totalPriceEl.innerText = "Error"; 
             }
         }
 
-        // تشغيل جلب السعر عند تحميل الصفحة
         window.addEventListener('DOMContentLoaded', fetchCartTotal);
 
 
-        // --- دوال التحقق والتنسيق (UI Validation) ---
         function clearError(input, errorId) {
             input.classList.remove('error');
             document.getElementById(errorId).style.display = 'none';
@@ -385,7 +367,6 @@
             document.getElementById(errorId).style.display = 'block';
         }
 
-        // تنسيق التاريخ (MM/YY)
         expiryInput.addEventListener('input', function(e) {
             let input = e.target.value.replace(/\D/g, '');
             if (input.length > 2) input = input.substring(0, 2) + '/' + input.substring(2, 4);
@@ -393,7 +374,6 @@
             clearError(expiryInput, 'expiryError');
         });
 
-        // تنسيق البطاقة (مسافات)
         cardInput.addEventListener('input', function(e) {
             let input = e.target.value.replace(/\D/g, '');
             input = input.replace(/(\d{4})(?=\d)/g, '$1 ');
@@ -405,11 +385,9 @@
         cvvInput.addEventListener('input', () => clearError(cvvInput, 'cvvError'));
 
 
-        // --- دالة: إرسال الدفع (Submit Checkout) ---
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // التحقق من الحقول
             let isValid = true;
             if (phoneInput.value.replace(/\D/g, '').length < 10) { showError(phoneInput, 'phoneError'); isValid = false; }
             if (cardInput.value.replace(/\s/g, '').length < 16) { showError(cardInput, 'cardError'); isValid = false; }
@@ -417,25 +395,20 @@
             if (expiryInput.value.length < 5) { showError(expiryInput, 'expiryError'); isValid = false; }
 
             if (isValid) {
-                // إظهار شاشة الانتظار
                 processingModal.style.display = 'flex';
 
                 try {
-                    // إرسال طلب الدفع للسيرفر (لحذف السلة وإنشاء الطلب)
-                    // ملاحظة: تأكدي إنك أضفتي كود الـ app.post('/checkout') في ملف السيرفر
                     const response = await fetch(`${API_BASE_URL}/checkout`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ 
                             userId: currentUserId,
                             phone: phoneInput.value,
-                            // نرسل العنوان كمان
                             address: document.querySelector('input[placeholder="City, District, Street..."]').value
                         })
                     });
 
                     if (response.ok) {
-                        // نجاح الدفع
                         processingModal.style.display = 'none';
                         successModal.style.display = 'flex';
                     } else {
@@ -445,8 +418,6 @@
                 } catch (error) {
                     console.error("Checkout Error:", error);
                     
-                    // (للتجربة فقط) لو السيرفر مو شغال، نمشيها نجاح عشان تشوفين الواجهة
-                    // يمكنك حذف هذا الجزء لاحقاً
                     setTimeout(() => {
                         processingModal.style.display = 'none';
                         successModal.style.display = 'flex';
@@ -456,7 +427,6 @@
         });
 
         async function finishOrder() {
-            // العودة للصفحة الرئيسية (تأكدي من اسم ملف الرئيسية عندك)
             window.location.href = '/index.html'; 
         }
     </script>
