@@ -1,28 +1,18 @@
+
 document.addEventListener("DOMContentLoaded", () => {
     const userId = localStorage.getItem("userId");
 
+    fetch(`https://atelier-0adu.onrender.com/cart/${userId}`)
+        .then(res => res.json())
+        .then(data => {
+            console.log("CART RESPONSE →", data);
+            renderCart(data);
+        })
+        .catch(err => console.error("Error loading cart:", err));
+
     console.log("🟦 CART ROUTE HIT with userId:", userId);
-
-    fetch(`tempcart.json`)
-  .then(res => res.json())
-  .then(data => {
-      console.log("CART RESPONSE →", data);
-
-      // Loop through artists
-      data.cartData.forEach(group => {
-          console.log("ARTIST:", group.artist);
-
-          // Loop through items
-          group.items.forEach(cartItem => {
-              console.log("PRODUCT:", cartItem);
-              console.log("ARTIST ID:", cartItem.artistId); // if present in tempcart.json
-          });
-      });
-
-      renderCart(data); // call your render function after inspection
-  })
-  .catch(err => console.error("Error loading cart:", err));
-
+    console.log("🟨 PRODUCT:", cartItem.product);
+    //console.log("🟥 artistId:", cartItem.product?.artistId);
 });
 
 
@@ -57,6 +47,7 @@ function renderCart(data) {
             const itemHTML = `
                 <div class="productDetails">
                     <div class="iconTrash">
+                        <button class="removeBtn" data-id="${item.productId}">
                              <img class="trash" src="assets/trash.svg" alt="trash icon" width="24" height="24">
 
                         </div>
@@ -83,12 +74,12 @@ function renderCart(data) {
 
     //  Render Summary Totals 
 
-    document.querySelector(".shipping").textContent = summary.shipping.toFixed(2) + "sr";
-    document.querySelector(".tax").textContent = summary.tax.toFixed(2) + "sr";
+    document.querySelector(".shipping").textContent = summary.shipping.toFixed(2) + " sr";
+    document.querySelector(".tax").textContent = summary.tax.toFixed(2) + " sr";
     
     
-    document.querySelector(".Subtotal").textContent = summary.subtotal.toFixed(2) + "sr"; 
-    document.querySelector(".total").textContent = summary.total.toFixed(2) + "sr";
+    document.querySelector(".Subtotal").textContent = summary.subtotal.toFixed(2) + " sr"; 
+    document.querySelector(".total").textContent = summary.total.toFixed(2) + " sr";
 
     // Re-attach event listeners to the new remove buttons
     attachRemoveEvents();

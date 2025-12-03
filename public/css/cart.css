@@ -140,6 +140,7 @@ color:#111
     width: 88px;
     height: 88px;
     padding-left: 28px;
+    object-fit: cover;
 }
 
 .details{
