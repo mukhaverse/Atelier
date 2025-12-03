@@ -803,89 +803,95 @@ app.delete("/cart/remove", async (req, res) => {
   }
 });
 
-app.get('/cart/:userId', async (req, res) => {
-    try {
-        const { userId } = req.params;
+/**
+ * GET /cart/:userId
+ * returns grouped cart items + summary
+ */
+app.get("/cart/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
 
-        // Selected only the specific fields you requested from the Product model
-        const user = await User.findById(userId).populate({
-            path: 'cart.product',
-            select: 'name images price dimensions artist' ,
-            populate: {
-                path: 'artist', // The field in the Product model that holds the Artist ID
-                model: 'Artist', // Explicitly stating the model name
-                select: 'name'   // We only need the artist's name
-            }
-        });
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Initialize variables for calculations
-        let Total = 0;
-        const groupsObj = {};
-
-        // 2. Iterate over cart items to group them and calculate totals
-        user.cart.forEach(cartItem => {
-            // Safety check: skip if the product was deleted from DB but exists in cart
-            if (!cartItem.product) return; 
-
-            const product = cartItem.product;
-            
-            // Calculate line item total (Ignoring quantity as requested)
-            const lineTotal = product.price;
-            Total += lineTotal;
-
-            // Structure the item data for the frontend
-            const itemData = {
-                productId: product._id,
-                name: product.name,
-                picture: product.picture,
-                price: product.price,
-                dimensions: product.dimensions,
-                lineTotal: lineTotal
-            };
-
-            // Grouping Logic:
-            // If this artist doesn't exist in our groups object yet, create an array
-            const artistName = product.artist || 'Unknown Artist';
-            
-            if (!groupsObj[artistName]) {
-                groupsObj[artistName] = [];
-            }
-
-            // Push the item into that artist's array
-            groupsObj[artistName].push(itemData);
-        });
-
-        // 3. Convert the groups object into an array for easier mapping in React/Frontend
-        // This creates the structure: [{ artist: "Name", items: [...] }, ...]
-        const groupedCart = Object.keys(groupsObj).map(artist => ({
-            artist: artist,
-            items: groupsObj[artist]
-        }));
-
-        // 4. Calculate Tax and Final Total
-        const TAX_RATE = 0.15; // 15%
-        const taxAmount = subtotal * TAX_RATE;
-        const shipping = 25;        
-
-        // 5. Send the response
-        res.status(200).json({
-            cartData: groupedCart,
-            summary: {
-                shipping: parseFloat(shipping.toFixed(2)),
-                tax: parseFloat(taxAmount.toFixed(2)),
-                total: parseFloat(Total.toFixed(2))
-            }
-        });
-
-    } catch (error) {
-        console.error('Error fetching cart:', error);
-        res.status(500).json({ message: 'Server error', error: error.message });
+    // Validate userId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid userId" });
     }
+
+    // Fetch only the cart array, lean() to avoid ref resolution
+    const user = await User.findById(userId, { cart: 1, _id: 0 }).lean();
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const cartItems = user.cart || [];
+    if (!cartItems.length) {
+      return res.status(200).json({
+        cartData: [],
+        summary: { shipping: 0, tax: 0, subtotal: 0, total: 0 }
+      });
+    }
+
+    // Fetch all product details in parallel using your existing product API
+    const API_PRODUCT_BY_ID = "https://atelier-0adu.onrender.com/products/id/";
+    const products = await Promise.all(
+      cartItems.map(async item => {
+        try {
+          const response = await fetch(`${API_PRODUCT_BY_ID}${item.product}`);
+          if (!response.ok) return null;
+          const data = await response.json();
+          return data?.product ?? data;
+        } catch {
+          return null;
+        }
+      })
+    );
+
+    // Filter out failed fetches
+    const validProducts = products.filter(Boolean);
+
+    // Group by artist
+    const groupsObj = {};
+    let subTotal = 0;
+
+    validProducts.forEach(p => {
+      const artistName = p.artist || "Unknown Artist";
+      if (!groupsObj[artistName]) groupsObj[artistName] = [];
+
+      const price = p.price || 0;
+      subTotal += price;
+
+      groupsObj[artistName].push({
+        productId: p._id,
+        name: p.name || "Unknown Product",
+        picture: (p.images && p.images[0]) || "assets/placeholder.png",
+        price: price,
+        dimensions: p.dimensions || "—"
+      });
+    });
+
+    const groupedCart = Object.keys(groupsObj).map(artist => ({
+      artist,
+      items: groupsObj[artist]
+    }));
+
+    // Calculate summary
+    const TAX_RATE = 0.15;
+    const shipping = 25;
+    const taxAmount = subTotal * TAX_RATE;
+    const total = subTotal + taxAmount + shipping;
+
+    res.status(200).json({
+      cartData: groupedCart,
+      summary: {
+        shipping: parseFloat(shipping.toFixed(2)),
+        tax: parseFloat(taxAmount.toFixed(2)),
+        subtotal: parseFloat(subTotal.toFixed(2)),
+        total: parseFloat(total.toFixed(2))
+      }
+    });
+  } catch (err) {
+    console.error("GET /cart/:userId error:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
 });
+
 
 app.listen(3000, () =>{
     console.log("I'm listening in the port 3000")

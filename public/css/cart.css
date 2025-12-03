@@ -2,13 +2,14 @@ body{
     background-color: #0d0d0d;
     color:white;
     font-family: 'Inter',sans-serif;
-   padding-top: 80px;;
+   padding: 80px;
+   padding-left: 120px;
 }
 h1{
     font-size: 24px;
     font-family:'playfair display';
     font-weight: 400;
-    padding-left: 80px;
+    padding-left: 0px;
     margin-top: 0px;
     padding-bottom: 4px;
 
@@ -53,7 +54,6 @@ p{
 /* Optional: To make them take up space or control their width */
 .Cart {
     flex: 3; /* Cart takes up more space (e.g., 2/3 of the available space) */
-    border-right: 1px solid #9F9F9F;
 }
 
 .line{
@@ -87,7 +87,7 @@ p{
 
 .checkout-button{
 margin-left: 64px;
-padding:8px 124px;
+padding:8px 88px;
 border-radius:10px;
 border:1px solid #4b4b52;
 background:#202024;
@@ -105,4 +105,54 @@ border:2px solid #8b7dff
 .checkout-button:hover{
 background:#8b7dff;
 color:#111
+}
+
+.card{
+    background-color: #1E1E1E;
+    width: 600px;
+    height: 324px;
+    border-radius: 0.5cm;
+}
+
+.artistName{
+    padding-left: 80px;
+    padding-top: 24px;
+    padding-bottom: 14px;
+    font-weight: 500;
+}
+
+.productDetails{
+    display: flex;
+}
+.iconTrash{
+    padding-left: 32px;
+    padding-top:26px
+    
+}
+.productImage{
+    width: 88px;
+    height: 88px;
+    padding-left: 28px;
+}
+
+.details{
+    margin:0;
+    padding-left: 32px;
+}
+.productName{
+    margin:0;
+    font-weight: 500;
+}
+.price{
+    margin: 0;
+    padding-left: 140px;
+    font-weight: 500;
+}
+
+.cardDividor{
+    width: 440px;
+    background-color: #9F9F9F;
+    height: 1px;
+    margin: 20px;
+    margin-left: 82px;
 }
