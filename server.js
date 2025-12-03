@@ -821,31 +821,33 @@ app.get('/cart/:userId', async (req, res) => {
         const groupsObj = {};
 
         for (const cartItem of user.cart) {
-            if (!cartItem.product) continue;
+    if (!cartItem.product) continue;
 
-            const product = cartItem.product;
+    const product = cartItem.product;
 
-            const lineTotal = product.price;
-            subTotal += lineTotal;
+    const lineTotal = product.price;
+    subTotal += lineTotal;
 
-            const itemData = {
-                productId: product._id,
-                name: product.name,
-                picture: product.images?.[0] || '',
-                price: product.price,
-                dimensions: product.dimensions,
-                lineTotal: lineTotal
-            };
+    const itemData = {
+        productId: product._id,
+        name: product.name,
+        picture: product.images?.[0] || '',
+        price: product.price,
+        dimensions: product.dimensions,
+        lineTotal
+    };
 
-            const artistDoc = await artist.findById(product.artistId);
-            const artistName = artistDoc?.name || "Unknown Artist";
+    // ✅ Use findOne with custom artistId
+    const artistDoc = await artist.findOne({ artistId: String(product.artistId) });
+    const artistName = artistDoc?.name || "Unknown Artist";
 
-            if (!groupsObj[artistName]) {
-                groupsObj[artistName] = [];
-            }
+    if (!groupsObj[artistName]) {
+        groupsObj[artistName] = [];
+    }
 
-            groupsObj[artistName].push(itemData);
-        }
+    groupsObj[artistName].push(itemData);
+}
+
 
         const groupedCart = Object.keys(groupsObj).map(artist => ({
             artist: artist,
