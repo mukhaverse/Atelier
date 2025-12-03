@@ -311,3 +311,109 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+
+// ================== CART MANAGEMENT (PRODUCT PAGE) ==================
+
+const API_CART_BASE = "https://atelier-0adu.onrender.com"; 
+const CART_ICON_OUTLINE = "assets/cart_icon.svg"; 
+const CART_ICON_FILLED = "assets/productTrash.svg"; 
+
+// The endpoints you will use
+const API_CART_ADD = `${API_CART_BASE}/cart/add`;
+const API_CART_REMOVE = `${API_CART_BASE}/cart/remove`;
+const API_CART_GET = `${API_CART_BASE}/cart/`; 
+
+function setCartIconState(cartBtn, isInCart) {
+    const imgEl = cartBtn.querySelector('img');
+    if (!imgEl) return;
+    imgEl.src = isInCart ? CART_ICON_FILLED : CART_ICON_OUTLINE;
+    cartBtn.setAttribute(
+        "aria-label",
+        isInCart ? "Remove from cart" : "Add to cart"
+    );
+}
+
+// Init Cart Toggle on DOM ready
+document.addEventListener("DOMContentLoaded", async () => {
+    const productId = new URLSearchParams(location.search).get("id");
+    const cartButton = document.querySelector(".add_to_cart");
+    
+    if (!cartButton || !productId) return;
+
+    let isInCart = false;
+    const userId = localStorage.getItem("userId");
+
+    // --- INITIAL STATE CHECK ---
+    try {
+        if (!userId) throw new Error("No user logged in.");
+        
+        // 1. Fetch the user's current cart data
+        const res = await fetch(`${API_CART_GET}${userId}`);
+        const data = await res.json();
+
+        // 2. Check if the product ID exists in the fetched cart data
+        isInCart = data.cartData?.some(group => 
+            group.items.some(item => String(item.productId) === String(productId))
+        );
+        
+        setCartIconState(cartButton, isInCart);
+    } catch (err) {
+        console.warn("Could not check initial cart status:", err.message);
+        setCartIconState(cartButton, false);
+    }
+
+    // --- TOGGLE ON CLICK ---
+    cartButton.addEventListener("click", async () => {
+        const currentUserId = localStorage.getItem("userId");
+        if (!currentUserId) {
+            alert("Please sign in to manage your cart.");
+            location.href = "login.html";
+            return;
+        }
+
+        if (cartButton.disabled) return;
+        cartButton.disabled = true;
+
+        try {
+            let apiURL = '';
+            let method = '';
+            let body = { userId: currentUserId, productId: productId };
+
+            if (isInCart) {
+                // Remove from cart
+                apiURL = API_CART_REMOVE;
+                method = "DELETE";
+            } else {
+                // Add to cart
+                apiURL = API_CART_ADD;
+                method = "POST";
+                body.quantity = 1; // Set quantity for POST
+            }
+
+            const res = await fetch(apiURL, {
+                method: method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body),
+            });
+
+            const data = await res.json();
+            if (!res.ok) {
+                throw new Error(data.message || `API failed with status: ${res.status}`);
+            }
+
+            // Update state and icon
+            isInCart = !isInCart;
+            setCartIconState(cartButton, isInCart);
+            // Optionally add a pulse effect like the wishlist
+            // wlPulse(cartButton); 
+            
+            alert(`Item ${isInCart ? 'added to' : 'removed from'} cart!`);
+
+        } catch (err) {
+            console.error("Cart toggle failed:", err);
+            alert(`Action failed: ${err.message}`);
+        } finally {
+            cartButton.disabled = false;
+        }
+    });
+});

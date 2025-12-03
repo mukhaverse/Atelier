@@ -96,7 +96,7 @@ function attachRemoveEvents() {
             const productId = btn.getAttribute("data-id");
             const userId = localStorage.getItem("userId");
 
-            fetch("/cart/remove", {
+            fetch("https://atelier-0adu.onrender.com/cart/remove", {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json"

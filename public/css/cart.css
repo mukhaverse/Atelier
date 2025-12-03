@@ -136,6 +136,27 @@ color:#111
     padding-top:26px
     
 }
+
+.removeBtn {
+    /* Makes the button background invisible */
+    background-color: transparent; 
+    
+    /* Removes the button border (usually a default gray border) */
+    border: none; 
+    
+    /* Ensure the icon image is the only visible element */
+    cursor: pointer; 
+    padding: 0; /* Remove default padding if necessary */
+    
+    /* If you want a slight effect on hover, you can add this: */
+    transition: opacity 0.2s ease;
+    opacity: 0.8; 
+}
+
+.removeBtn:hover {
+    opacity: 1; /* Fully opaque on hover */
+}
+
 .productImage{
     width: 88px;
     height: 88px;
@@ -151,6 +172,7 @@ color:#111
 .productName{
     margin:0;
     font-weight: 500;
+    width: 200px;
 }
 .price{
     margin: 0;
