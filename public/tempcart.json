@@ -1,0 +1,52 @@
+{
+  "cartData": [
+    {
+      "artist": "Layla Alharbi",
+      "items": [
+        {
+          "productId": "65b8364a0e987c2c5d1b32d1",
+          "name": "Desert Rose Canvas",
+          "picture": "assets/placeholder.jpg",
+          "price": 450.00,
+          "dimensions": "40x60 cm",
+          "lineTotal": 450.00
+        },
+        {
+          "productId": "65b8364a0e987c2c5d1b32d2",
+          "name": "Calligraphy Print 'Hope'",
+          "picture": "assets/placeholder.jpg",
+          "price": 120.00,
+          "dimensions": "A4",
+          "lineTotal": 120.00
+        },
+         {
+          "productId": "65b8364a0e987c2c5d1b32d2",
+          "name": "Calligraphy Print 'Hope'",
+          "picture": "assets/placeholder.jpg",
+          "price": 120.00,
+          "dimensions": "A4",
+          "lineTotal": 120.00
+        }
+      ]
+    },
+    {
+      "artist": "Sultan Alghanim",
+      "items": [
+        {
+          "productId": "65b8364a0e987c2c5d1b32d3",
+          "name": "Abstract Sculpture 'Flow'",
+          "picture": "assets/placeholder.jpg",
+          "price": 980.50,
+          "dimensions": "30x30x45 cm",
+          "lineTotal": 980.50
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "shipping": 25.00,
+    "tax": 232.58,
+    "subtotal": 1550.50,
+    "total": 1808.08
+  }
+}

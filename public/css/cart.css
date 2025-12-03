@@ -83,6 +83,13 @@ p{
 .overallTotal{
     padding-top: 24px;
     padding-bottom: 16px;
+    
+}
+.shipping,
+.tax,
+.Subtotal,
+.total{
+    text-align: end;
 }
 
 .checkout-button{
@@ -110,8 +117,8 @@ color:#111
 .card{
     background-color: #1E1E1E;
     width: 600px;
-    height: 324px;
     border-radius: 0.5cm;
+    padding-bottom: 20px;
 }
 
 .artistName{
@@ -138,6 +145,7 @@ color:#111
 .details{
     margin:0;
     padding-left: 32px;
+    
 }
 .productName{
     margin:0;
@@ -145,8 +153,10 @@ color:#111
 }
 .price{
     margin: 0;
-    padding-left: 140px;
     font-weight: 500;
+    margin-left: auto;
+    padding-right: 32px;
+    text-align: end;
 }
 
 .cardDividor{

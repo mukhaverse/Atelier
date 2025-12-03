@@ -1,76 +1,96 @@
 document.addEventListener("DOMContentLoaded", () => {
     const userId = localStorage.getItem("userId");
 
-fetch(`https://atelier-0adu.onrender.com/cart/${userId}`)
-    .then(res => res.json())
-    .then(data => {
-        console.log("CART RESPONSE →", data);
-        renderCart(data);
-    })
-    .catch(err => console.error("Error loading cart:", err));
-
     console.log("🟦 CART ROUTE HIT with userId:", userId);
-    console.log("🟨 PRODUCT:", cartItem.product);
-    //console.log("🟥 artistId:", cartItem.product?.artistId);
+
+    fetch(`tempcart.json`)
+  .then(res => res.json())
+  .then(data => {
+      console.log("CART RESPONSE →", data);
+
+      // Loop through artists
+      data.cartData.forEach(group => {
+          console.log("ARTIST:", group.artist);
+
+          // Loop through items
+          group.items.forEach(cartItem => {
+              console.log("PRODUCT:", cartItem);
+              console.log("ARTIST ID:", cartItem.artistId); // if present in tempcart.json
+          });
+      });
+
+      renderCart(data); // call your render function after inspection
+  })
+  .catch(err => console.error("Error loading cart:", err));
 
 });
+
 
 
 // Render whole cart
 function renderCart(data) {
     const container = document.querySelector(".cartContainer");
-    container.innerHTML = "";
+    // Clear the container before rendering new data
+    container.innerHTML = ""; 
 
     const grouped = data.cartData;
     const summary = data.summary;
 
+    //  Render Grouped Cart Items 
+    
     // Loop through each artist group
     grouped.forEach(group => {
         const artistName = group.artist;
         const items = group.items;
 
-        // Create a wrapper for the artist
-        const artistSection = document.createElement("div");
-        artistSection.classList.add("artistGroup");
+        // Create the wrapper for the entire artist group: <div class="card">
+        const artistCard = document.createElement("div");
+        artistCard.classList.add("card");
 
-        // Artist header
-        artistSection.innerHTML = `
-            <div class="artistHeader">
-                <h3>${artistName}</h3>
-            </div>
+        // Artist header: <h3 class="artistName">
+        artistCard.innerHTML = `
+            <h3 class="artistName">${artistName}</h3>
         `;
 
         // For each product under this artist
         items.forEach((item, index) => {
             const itemHTML = `
-                <div class="cartItem">
-                    <button class="removeBtn" data-id="${item.productId}">✕</button>
+                <div class="productDetails">
+                    <div class="iconTrash">
+                             <img class="trash" src="assets/trash.svg" alt="trash icon" width="24" height="24">
 
-                    <img src="${item.picture || "assets/placeholder.png"}" class="productImg" alt="${item.name}">
+                        </div>
+                    
+                    <img class="productImage" src="${item.picture || "assets/placeholder.jpg"}" alt="${item.name}">
 
                     <div class="details">
-                        <h4>${item.name}</h4>
-                        <p>${item.dimensions || "—"}</p>
+                        <h3 class="productName">${item.name}</h3>
+                        <p class="dim">${item.dimensions || "Dimensions N/A"}</p>
                     </div>
 
-                    <p class="price">${item.price.toFixed(2)} sr</p>
+                    <h3 class="price">${item.price.toFixed(2)} sr</h3>
                 </div>
-
-                ${index !== items.length - 1 ? "<hr>" : ""}
+                
+                ${index !== items.length - 1 ? '<div class="cardDividor"></div>' : ''}
             `;
 
-            artistSection.insertAdjacentHTML("beforeend", itemHTML);
+            artistCard.insertAdjacentHTML("beforeend", itemHTML);
         });
 
-        container.appendChild(artistSection);
+        // Append the completed card to the main cart container
+        container.appendChild(artistCard);
     });
 
-    // Render summary (right side)
+    //  Render Summary Totals 
+
     document.querySelector(".shipping").textContent = summary.shipping.toFixed(2) + "sr";
     document.querySelector(".tax").textContent = summary.tax.toFixed(2) + "sr";
-    document.querySelector(".Subtotal").textContent = summary.total.toFixed(2) + "sr";
+    
+    
+    document.querySelector(".Subtotal").textContent = summary.subtotal.toFixed(2) + "sr"; 
     document.querySelector(".total").textContent = summary.total.toFixed(2) + "sr";
 
+    // Re-attach event listeners to the new remove buttons
     attachRemoveEvents();
 }
 
