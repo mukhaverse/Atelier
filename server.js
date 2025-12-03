@@ -807,68 +807,56 @@ app.get('/cart/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
 
-        // Selected only the specific fields you requested from the Product model
         const user = await User.findById(userId).populate({
             path: 'cart.product',
-            model:'product',
-            select: 'name images price dimensions artist' ,
-            populate: {
-                path: 'artist', // The field in the Product model that holds the Artist ID
-                model: 'artist', // Explicitly stating the model name
-                select: 'name'   // We only need the artist's name
-            }
+            model: 'product',
+            select: 'name images price dimensions artistId'
         });
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Initialize variables for calculations
         let subTotal = 0;
         const groupsObj = {};
 
-        // 2. Iterate over cart items to group them and calculate totals
-        user.cart.forEach(cartItem => {
-            // Safety check: skip if the product was deleted from DB but exists in cart
-            if (!cartItem.product) return; 
+        for (const cartItem of user.cart) {
+            if (!cartItem.product) continue;
 
             const product = cartItem.product;
-            
-            // Calculate line item total (Ignoring quantity as requested)
+
             const lineTotal = product.price;
             subTotal += lineTotal;
 
             const itemData = {
-    productId: product._id,
-    name: product.name,
-    picture: product.images?.[0] || '', // use first image or empty string
-    price: product.price,
-    dimensions: product.dimensions,
-    lineTotal: lineTotal
-};
+                productId: product._id,
+                name: product.name,
+                picture: product.images?.[0] || '',
+                price: product.price,
+                dimensions: product.dimensions,
+                lineTotal: lineTotal
+            };
 
-const artistName = product.artist?.name || 'Unknown Artist';
+            const artistDoc = await artist.findById(product.artistId);
+            const artistName = artistDoc?.name || "Unknown Artist";
+
             if (!groupsObj[artistName]) {
                 groupsObj[artistName] = [];
             }
 
-            // Push the item into that artist's array
             groupsObj[artistName].push(itemData);
-        });
+        }
 
-        // 3. Convert the groups object into an array for easier mapping in React/Frontend
-        // This creates the structure: [{ artist: "Name", items: [...] }, ...]
         const groupedCart = Object.keys(groupsObj).map(artist => ({
             artist: artist,
             items: groupsObj[artist]
         }));
 
-        // 4. Calculate Tax and Final Total
-        const TAX_RATE = 0.15; // 15%
+        const TAX_RATE = 0.15;
         const taxAmount = subTotal * TAX_RATE;
-        const shipping = 25;        
-        const total = shipping +subTotal;
-        // 5. Send the response
+        const shipping = 25;
+        const total = shipping + subTotal + taxAmount;
+
         res.status(200).json({
             cartData: groupedCart,
             summary: {
@@ -880,10 +868,11 @@ const artistName = product.artist?.name || 'Unknown Artist';
         });
 
     } catch (error) {
-        console.error('Error fetching cart:', error);
+        console.error(' FULL ERROR:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 });
+
 
 app.listen(3000, () =>{
     console.log("I'm listening in the port 3000")

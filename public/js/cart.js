@@ -9,6 +9,9 @@ fetch(`https://atelier-0adu.onrender.com/cart/${userId}`)
     })
     .catch(err => console.error("Error loading cart:", err));
 
+    console.log("🟦 CART ROUTE HIT with userId:", userId);
+    console.log("🟨 PRODUCT:", cartItem.product);
+    //console.log("🟥 artistId:", cartItem.product?.artistId);
 
 });
 
