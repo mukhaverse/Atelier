@@ -71,7 +71,11 @@ function renderCart(data) {
 
                         </div>
                     
-                    <img class="productImage" src="${item.picture || "assets/placeholder.jpg"}" alt="${item.name}">
+                    <img 
+                    class="productImage navigable"  // 
+                    data-product-id="${item.productId}" // 
+                    src="${item.picture || "assets/placeholder.jpg"}" 
+                    alt="${item.name}">
 
                     <div class="details">
                         <h3 class="productName">${item.name}</h3>
@@ -83,14 +87,20 @@ function renderCart(data) {
                 
                 ${index !== items.length - 1 ? '<div class="cardDividor"></div>' : ''}
             `;
+            
+            
 
             artistCard.insertAdjacentHTML("beforeend", itemHTML);
+            
         });
 
         // Append the completed card to the main cart container
         container.appendChild(artistCard);
+        
     });
 
+    attachRemoveEvents();
+    attachImageClickEvents();
     //  Render Summary Totals 
 
     document.querySelector(".shipping").textContent = summary.shipping.toFixed(2) + " sr";
@@ -151,3 +161,23 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+// Add this new function definition to your <script> block
+function attachImageClickEvents() {
+    const images = document.querySelectorAll(".productImage.navigable");
+
+    images.forEach(img => {
+        // Optional: Add a pointer cursor in CSS for this element: .productImage.navigable { cursor: pointer; }
+        
+        img.addEventListener("click", () => {
+            const productId = img.getAttribute("data-product-id");
+            
+            if (productId) {
+                // Navigate to the product page using the extracted ID
+                window.location.href = `product.html?id=${encodeURIComponent(productId)}`;
+            } else {
+                console.error('Missing product ID for image navigation.');
+            }
+        });
+    });
+}

@@ -409,7 +409,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (err) {
             console.error("Cart toggle failed:", err);
-            alert(`Action failed: ${err.message}`);
+            alert(`Please sign in to manage your cart.`);
         } finally {
             cartButton.disabled = false;
         }
