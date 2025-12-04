@@ -876,6 +876,34 @@ app.get('/cart/:userId', async (req, res) => {
 });
 
 
+app.post("/checkout", async (req, res) => {
+  const { userId } = req.body;
+
+  if (!userId) {
+    return res.status(400).json({ message: "UserId is required" });
+  }
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.cart = []; 
+    
+    await user.save();
+
+    res.status(200).json({ message: "Checkout successful and cart cleared!" });
+    console.log(`Cart cleared for user: ${userId}`);
+
+  } catch (error) {
+    console.error("Error during checkout:", error);
+    res.status(500).json({ message: "Server error during checkout" });
+  }
+});
+
+
 app.listen(3000, () =>{
     console.log("I'm listening in the port 3000")
 })
