@@ -240,13 +240,15 @@
                     <div class="col">
                         <div class="form-group">
                             <label>First Name</label>
-                            <input type="text" class="form-input" placeholder="Enter first name" required>
+                            <input type="text" id="firstNameInput" class="form-input" placeholder="Enter first name" required>
+                            <div class="error-message" id="firstNameError">Required</div>
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-group">
                             <label>Last Name</label>
-                            <input type="text" class="form-input" placeholder="Enter last name" required>
+                            <input type="text" id="lastNameInput" class="form-input" placeholder="Enter last name" required>
+                            <div class="error-message" id="lastNameError">Required</div>
                         </div>
                     </div>
                 </div>
@@ -259,7 +261,8 @@
 
                 <div class="form-group">
                     <label>Address</label>
-                    <input type="text" class="form-input" placeholder="City, District, Street..." required>
+                    <input type="text" id="addressInput" class="form-input" placeholder="City, District, Street..." required>
+                    <div class="error-message" id="addressError">Required</div>
                 </div>
             </div>
 
@@ -324,16 +327,21 @@
         const API_BASE_URL = "https://atelier-0adu.onrender.com"; 
         const API_CART_CLEAR = `https://atelier-0adu.onrender.com/cart/clear`;
         const currentUserId = localStorage.getItem("userId") || "692db45ff99221f3c716d900";
-         
+          
 
         const form = document.getElementById('checkoutForm');
         const processingModal = document.getElementById('processingModal'); 
         const successModal = document.getElementById('successModal');
         const totalPriceEl = document.getElementById('totalPriceDisplay');
+        
         const phoneInput = document.getElementById('phoneInput');
         const cardInput = document.getElementById('cardInput');
         const expiryInput = document.getElementById('expiryInput');
         const cvvInput = document.getElementById('cvvInput');
+
+        const firstNameInput = document.getElementById('firstNameInput');
+        const lastNameInput = document.getElementById('lastNameInput');
+        const addressInput = document.getElementById('addressInput');
 
         async function fetchCartTotal() {
             try {
@@ -383,16 +391,21 @@
 
         phoneInput.addEventListener('input', () => clearError(phoneInput, 'phoneError'));
         cvvInput.addEventListener('input', () => clearError(cvvInput, 'cvvError'));
+        
+        firstNameInput.addEventListener('input', () => clearError(firstNameInput, 'firstNameError'));
+        lastNameInput.addEventListener('input', () => clearError(lastNameInput, 'lastNameError'));
+        addressInput.addEventListener('input', () => clearError(addressInput, 'addressError'));
 
 
-        // ... (Keep all your existing code above this line) ...
-
-// Corrected form submit listener
 form.addEventListener('submit', async function(e) {
     e.preventDefault();
     
     let isValid = true;
-    // 1. Client-Side Validation
+
+    if (firstNameInput.value.trim() === '') { showError(firstNameInput, 'firstNameError'); isValid = false; }
+    if (lastNameInput.value.trim() === '') { showError(lastNameInput, 'lastNameError'); isValid = false; }
+    if (addressInput.value.trim() === '') { showError(addressInput, 'addressError'); isValid = false; }
+
     if (phoneInput.value.replace(/\D/g, '').length < 10) { showError(phoneInput, 'phoneError'); isValid = false; }
     if (cardInput.value.replace(/\s/g, '').length < 16) { showError(cardInput, 'cardError'); isValid = false; }
     if (cvvInput.value.length < 3) { showError(cvvInput, 'cvvError'); isValid = false; }
@@ -402,27 +415,22 @@ form.addEventListener('submit', async function(e) {
         processingModal.style.display = 'flex';
 
         try {
-            // 2. CLEAR THE CART IN THE DATABASE
             const clearResponse = await fetch(API_CART_CLEAR, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId: currentUserId })
             });
             
-            // 3. Check if the cart clear was successful
             if (clearResponse.ok) {
-                // Success display
                 processingModal.style.display = 'none';
                 successModal.style.display = 'flex';
             } else {
-                // If the clear operation itself failed
                 throw new Error("Failed to clear cart on server.");
             }
 
         } catch (error) {
             console.error("Cart Clear Error:", error);
             
-            // Error handling: Show processing modal briefly and then alert failure
             setTimeout(() => {
                 processingModal.style.display = 'none';
                 alert("The cart could not be cleared. Please check your user ID and server status."); 
