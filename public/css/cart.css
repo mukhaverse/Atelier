@@ -93,7 +93,9 @@ p{
 }
 
 .checkout-button{
-margin-left: 64px;
+    display: block;
+margin-left: auto;
+margin-right: auto;
 padding:8px 88px;
 border-radius:10px;
 border:1px solid #4b4b52;
@@ -116,9 +118,10 @@ color:#111
 
 .card{
     background-color: #1E1E1E;
-    width: 600px;
+    width: auto;
     border-radius: 0.5cm;
     padding-bottom: 20px;
+    margin-right: 20px;
 }
 
 .artistName{
@@ -188,4 +191,166 @@ color:#111
     height: 1px;
     margin: 20px;
     margin-left: 82px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 1200px) {
+    .Cart{
+    width: 500px;
+    }
+    .Subprices,
+    .overallTotal {
+    
+    padding-left: 32px;               /* same starting point */
+    padding-right: 28px;
+    }
+    
+
+    .checkout-button {
+        margin-left: 15px; /* Align with the new summary padding */
+        padding: 10px 0; /* Give it vertical padding */
+        width: calc(100% - 30px); /* Make it full width minus the margins */
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .cardDividor {
+        width: auto; /* Allow line to stretch with card */
+        margin-left: 20px; /* Reduce left margin */
+        margin-right: 20px; /* Add right margin */
+    }
+}
+
+ /* Existing Global Styles... */
+
+/* --- Mobile Breakpoint (768px or less) --- */
+@media (max-width: 1000px) {
+    /* 1. Remove the side-by-side layout */
+    .container {
+        flex-direction: column; /* Stack Cart and Summary vertically */
+        align-items: center;    /* Center the stacked elements */
+        padding: 0 10px;        /* Reduce overall container padding */
+        gap: 0;
+    }
+    
+    /* 2. Remove the vertical divider */
+    .line {
+        display: none;
+    }
+    
+    /* 3. Reset body padding for better mobile space */
+    body {
+        padding: 20px;
+        padding-top: 80px; /* Keep header space */
+    }
+
+    /* 4. Make Cart and Summery take full width */
+    .Cart,
+    .Summery {
+        flex: none; /* Ignore flex ratios */
+        width: 100%; /* Take full width */
+        max-width: 480px; /* Cap width for very large mobile-sized viewports */
+        margin-bottom: 20px;
+    }
+    
+    /* 5. Adjust Card margins/paddings */
+    .card {
+        margin-right: 0; /* No external right margin */
+        width: 100%;
+    }
+    
+    /* 6. Adjust Artist Header for smaller screen */
+    .artistName {
+        padding-left: 20px; /* Reduced padding */
+        padding-right: 20px;
+        font-size: 18px;
+    }
+    
+    /* 7. General header/text alignment */
+    h1 {
+        text-align: center; /* Center "Shopping Cart" title */
+        padding-left: 0;
+    }
+    
+    /* 8. Fix the back icon positioning */
+    .back_icon {
+        top: 20px;
+        left: 20px;
+    }
+    .cardDividor {
+        width: auto; /* Allow line to stretch with card */
+        margin-left: 20px; /* Reduce left margin */
+        margin-right: 20px; /* Add right margin */
+    }
+    .checkout-button {
+        margin-left: 15px; /* Align with the new summary padding */
+        padding: 10px 0; /* Give it vertical padding */
+        width: calc(100% - 30px); /* Make it full width minus the margins */
+        text-align: center;
+        margin-bottom: 20px;
+    }
+}
+
+
+/* --- Smaller Mobile Breakpoint (480px or less) --- */
+@media (max-width: 500px) {
+    /* Adjustments for tight spacing on small screens */
+
+    /* 1. Product Details Layout (most important for matching the image) */
+    .productDetails {
+        /* Reduce overall horizontal padding */
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    /* 2. Trash Icon Positioning */
+    .iconTrash {
+        padding-left: 10px; /* Reduced padding */
+        padding-top: 20px;
+    }
+
+    /* 3. Image Sizing and Padding */
+    .productImage {
+        width: 60px;  /* Smaller image size */
+        height: 60px;
+        padding-left: 10px; /* Reduced padding */
+    }
+
+    /* 4. Details Section (Product Name/Description) */
+    .details {
+        padding-left: 15px; /* Reduced padding */
+    }
+    .productName {
+        width: 160px; /* Give the name a set width to prevent overflow */
+        font-size: 16px;
+    }
+    .price {
+        /* Ensure price is still flush right, but reduce its padding */
+        width: 80px;
+        font-size: 14px;
+    }
+
+    /* 5. Divider Line */
+    .cardDividor {
+        width: auto; /* Allow line to stretch with card */
+        margin-left: 20px; /* Reduce left margin */
+        margin-right: 20px; /* Add right margin */
+    }
+
+    /* 6. Summary Grid Layout */
+    .Subprices,
+    .overallTotal {
+        /* Remove padding to make the content flush with the card edge */
+        padding-left: 15px;
+        padding-right: 15px;
+        gap: 0 15px; /* Tighter column gap */
+    }
+
+    /* 7. Checkout Button */
+    .checkout-button {
+        margin-left: 15px; /* Align with the new summary padding */
+        padding: 10px 0; /* Give it vertical padding */
+        width: calc(100% - 30px); /* Make it full width minus the margins */
+        text-align: center;
+        margin-bottom: 20px;
+    }
 }

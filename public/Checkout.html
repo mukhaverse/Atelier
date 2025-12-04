@@ -152,7 +152,7 @@
         }
 
         .total-label { font-size: 1.2rem; color: #ccc; font-family: 'Inter', sans-serif;}
-        .total-price { color: #8e44ad; font-weight: bold; }
+        .total-price { color: #8e44ad; font-weight: 600;font-family: 'Inter', sans-serif; font-size: 24px; }
 
         .btn-checkout {
             background-color: #8e44ad;
@@ -227,9 +227,9 @@
     <form id="checkoutForm" class="container" novalidate>
         
         <div class="page-header">
-            <a href="/" class="back_icon">
-                <i class="fa fa-angle-left"></i>
-            </a>
+          <a href="#" class="back_icon" onclick="history.back()">
+            <img src="assets/back_icon.svg" alt="back" width="22" height="22">
+        </a>
             <h1 class="page-title">Checkout</h1>
         </div>
 
@@ -321,8 +321,8 @@
     </div>
 
     <script>
-        const API_BASE_URL = "http://localhost:3000"; 
-        
+        const API_BASE_URL = "https://atelier-0adu.onrender.com"; 
+        const API_CART_CLEAR = `https://atelier-0adu.onrender.com/cart/clear`;
         const currentUserId = localStorage.getItem("userId") || "692db45ff99221f3c716d900";
          
 
@@ -385,46 +385,51 @@
         cvvInput.addEventListener('input', () => clearError(cvvInput, 'cvvError'));
 
 
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
+        // ... (Keep all your existing code above this line) ...
+
+// Corrected form submit listener
+form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    let isValid = true;
+    // 1. Client-Side Validation
+    if (phoneInput.value.replace(/\D/g, '').length < 10) { showError(phoneInput, 'phoneError'); isValid = false; }
+    if (cardInput.value.replace(/\s/g, '').length < 16) { showError(cardInput, 'cardError'); isValid = false; }
+    if (cvvInput.value.length < 3) { showError(cvvInput, 'cvvError'); isValid = false; }
+    if (expiryInput.value.length < 5) { showError(expiryInput, 'expiryError'); isValid = false; }
+
+    if (isValid) {
+        processingModal.style.display = 'flex';
+
+        try {
+            // 2. CLEAR THE CART IN THE DATABASE
+            const clearResponse = await fetch(API_CART_CLEAR, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: currentUserId })
+            });
             
-            let isValid = true;
-            if (phoneInput.value.replace(/\D/g, '').length < 10) { showError(phoneInput, 'phoneError'); isValid = false; }
-            if (cardInput.value.replace(/\s/g, '').length < 16) { showError(cardInput, 'cardError'); isValid = false; }
-            if (cvvInput.value.length < 3) { showError(cvvInput, 'cvvError'); isValid = false; }
-            if (expiryInput.value.length < 5) { showError(expiryInput, 'expiryError'); isValid = false; }
-
-            if (isValid) {
-                processingModal.style.display = 'flex';
-
-                try {
-                    const response = await fetch(`${API_BASE_URL}/checkout`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-                            userId: currentUserId,
-                            phone: phoneInput.value,
-                            address: document.querySelector('input[placeholder="City, District, Street..."]').value
-                        })
-                    });
-
-                    if (response.ok) {
-                        processingModal.style.display = 'none';
-                        successModal.style.display = 'flex';
-                    } else {
-                        throw new Error("Payment failed on server");
-                    }
-
-                } catch (error) {
-                    console.error("Checkout Error:", error);
-                    
-                    setTimeout(() => {
-                        processingModal.style.display = 'none';
-                        successModal.style.display = 'flex';
-                    }, 2000);
-                }
+            // 3. Check if the cart clear was successful
+            if (clearResponse.ok) {
+                // Success display
+                processingModal.style.display = 'none';
+                successModal.style.display = 'flex';
+            } else {
+                // If the clear operation itself failed
+                throw new Error("Failed to clear cart on server.");
             }
-        });
+
+        } catch (error) {
+            console.error("Cart Clear Error:", error);
+            
+            // Error handling: Show processing modal briefly and then alert failure
+            setTimeout(() => {
+                processingModal.style.display = 'none';
+                alert("The cart could not be cleared. Please check your user ID and server status."); 
+            }, 2000);
+        }
+    }
+});
 
         async function finishOrder() {
             window.location.href = '/index.html'; 

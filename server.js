@@ -837,7 +837,7 @@ app.get('/cart/:userId', async (req, res) => {
         lineTotal
     };
 
-    // ✅ Use findOne with custom artistId
+    //  Use findOne with custom artistId
     const artistDoc = await artist.findOne({ artistId: String(product.artistId) });
     const artistName = artistDoc?.name || "Unknown Artist";
 
@@ -890,7 +890,7 @@ app.delete("/cart/clear", async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
         
-        // ➡️ Key Action: Clear the entire cart array
+        // Key Action: Clear the entire cart array
         user.cart = [];
         
         await user.save();

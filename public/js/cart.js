@@ -26,6 +26,25 @@ function renderCart(data) {
     const grouped = data.cartData;
     const summary = data.summary;
 
+    if (!grouped || grouped.length === 0 || !grouped.some(group => group.items.length > 0)) {
+        // Create an element to show the "Cart Empty" message
+        const emptyMessage = document.createElement("div");
+        emptyMessage.classList.add("empty-cart-message");
+        emptyMessage.innerHTML = `
+            <div style="text-align: center; padding: 100px; color: #ffffffff;">
+                        <img class="WhiteCart" src="assets/White_cart.svg" alt="Cart icon" width="44" height="44">
+
+                <h2>Your Cart is Empty</h2>
+               
+            </div>
+        `;
+        container.appendChild(emptyMessage);
+        
+        
+        // Exit the function since there's nothing else to render
+        return; 
+    }
+
     //  Render Grouped Cart Items 
     
     // Loop through each artist group
@@ -113,4 +132,22 @@ function attachRemoveEvents() {
     });
 }
 
-
+document.addEventListener("DOMContentLoaded", () => {
+    const checkoutButton = document.querySelector(".checkout-button");
+    
+    if (checkoutButton) {
+        checkoutButton.addEventListener("click", () => {
+            const userId = localStorage.getItem("userId");
+            
+            if (!userId) {
+                // If user is not logged in, prompt and redirect to login
+                alert("Please log in to proceed to checkout.");
+                window.location.href = "login.html";
+            } else {
+                // If logged in, redirect to checkout.html
+                // It's often helpful to pass the userId in the URL for the checkout page
+                window.location.href = `Checkout.html?user=${userId}`;
+            }
+        });
+    }
+});
