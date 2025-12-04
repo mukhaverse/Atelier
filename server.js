@@ -837,7 +837,7 @@ app.get('/cart/:userId', async (req, res) => {
         lineTotal
     };
 
-    // ✅ Use findOne with custom artistId
+    //  Use findOne with custom artistId
     const artistDoc = await artist.findOne({ artistId: String(product.artistId) });
     const artistName = artistDoc?.name || "Unknown Artist";
 
@@ -872,6 +872,37 @@ app.get('/cart/:userId', async (req, res) => {
     } catch (error) {
         console.error(' FULL ERROR:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
+    }
+});
+
+//clear cart upon placing an order
+app.delete("/cart/clear", async (req, res) => {
+    const { userId } = req.body;
+
+    if (!userId) {
+        return res.status(400).json({ message: "Missing userId" });
+    }
+
+    try {
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        
+        // Key Action: Clear the entire cart array
+        user.cart = [];
+        
+        await user.save();
+
+        res.status(200).json({
+            message: "Cart cleared successfully.",
+            cart: user.cart
+        });
+
+    } catch (error) {
+        console.error("Error in /cart/clear:", error);
+        res.status(500).json({ message: "Error clearing cart" });
     }
 });
 

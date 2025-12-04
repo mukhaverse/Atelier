@@ -404,14 +404,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             // Update state and icon
             isInCart = !isInCart;
             setCartIconState(cartButton, isInCart);
-            // Optionally add a pulse effect like the wishlist
-            // wlPulse(cartButton); 
             
-            alert(`Item ${isInCart ? 'added to' : 'removed from'} cart!`);
+            
 
         } catch (err) {
             console.error("Cart toggle failed:", err);
-            alert(`Action failed: ${err.message}`);
+            alert(`Please sign in to manage your cart.`);
         } finally {
             cartButton.disabled = false;
         }
