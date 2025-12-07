@@ -82,7 +82,7 @@ function renderCart(data) {
                         <p class="dim">${item.dimensions || "Dimensions N/A"}</p>
                     </div>
 
-                    <h3 class="price">${item.price.toFixed(2)} sr</h3>
+                    <h3 class="price">${item.price.toFixed(2)}sr</h3>
                 </div>
                 
                 ${index !== items.length - 1 ? '<div class="cardDividor"></div>' : ''}

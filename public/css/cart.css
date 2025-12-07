@@ -291,8 +291,7 @@ color:#111
 }
 
 
-/* --- Smaller Mobile Breakpoint (480px or less) --- */
-@media (max-width: 500px) {
+@media (max-width: 530px) {
     /* Adjustments for tight spacing on small screens */
 
     /* 1. Product Details Layout (most important for matching the image) */
@@ -320,12 +319,68 @@ color:#111
         padding-left: 15px; /* Reduced padding */
     }
     .productName {
-        width: 160px; /* Give the name a set width to prevent overflow */
+        width: 80px; /* Give the name a set width to prevent overflow */
         font-size: 16px;
     }
     .price {
         /* Ensure price is still flush right, but reduce its padding */
-        width: 80px;
+        width: 200px;
+        font-size: 14px;
+        margin-right: 16px;
+    }
+
+    /* 5. Divider Line */
+    .cardDividor {
+        width: auto; /* Allow line to stretch with card */
+        margin-left: 20px; /* Reduce left margin */
+        margin-right: 20px; /* Add right margin */
+    }
+
+    /* 6. Summary Grid Layout */
+    .Subprices,
+    .overallTotal {
+        /* Remove padding to make the content flush with the card edge */
+        padding-left: 15px;
+        padding-right: 15px;
+        gap: 0 15px; /* Tighter column gap */
+    }
+
+    /* 7. Checkout Button */
+    .checkout-button {
+        margin-left: 15px; /* Align with the new summary padding */
+        padding: 10px 0; /* Give it vertical padding */
+        width: calc(100% - 30px); /* Make it full width minus the margins */
+        text-align: center;
+        margin-bottom: 20px;
+    }
+}
+
+/* --- Smaller Mobile Breakpoint (480px or less) --- */
+@media (max-width: 450px) {
+   
+     .productDetails {
+        /* Reduce overall horizontal padding */
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    /* 3. Image Sizing and Padding */
+    .productImage {
+        width: 60px;  /* Smaller image size */
+        height: 60px;
+        padding-left: 10px; /* Reduced padding */
+    }
+
+    /* 4. Details Section (Product Name/Description) */
+    .details {
+        padding-left: 4px; /* Reduced padding */
+    }
+    .productName {
+        width: 100px; /* Give the name a set width to prevent overflow */
+        font-size: 16px;
+    }
+    .price {
+        /* Ensure price is still flush right, but reduce its padding */
+        width: 10px;
         font-size: 14px;
     }
 
