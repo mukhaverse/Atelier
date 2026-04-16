@@ -317,6 +317,10 @@ app.get("/users/:userId/wishlist/products", async (req, res) => {
 /**
  * adds/removes a product from the wishlist
  */
+
+
+
+            //  ####### TESSST CAAASESS (INPUT SPACE M) ########  
 app.put("/users/:userId/wishlist/products/toggle", async (req, res) => {
   try {
     const { userId }   = req.params;
@@ -366,6 +370,10 @@ app.put("/users/:userId/wishlist/products/toggle", async (req, res) => {
     return res.status(500).json({ message: "Error toggling product wishlist" });
   }
 });
+
+
+
+
 
 /**
  * retrieves wishlist collections with counts
@@ -623,7 +631,7 @@ app.post("/commission", async (req, res) => {
   }
 })
 
-
+       //####### TESSSTT CASSSESS (SYNTAX M) ########
 app.post('/api/register', async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -653,6 +661,8 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
+
+      //####### TESSSTT CASSSESS (SYNTAX M) ########
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body; 
 
@@ -727,6 +737,9 @@ app.get("/user/:userId", async (req,res) =>{
   }
 }) 
 
+
+
+    //    ####### TESSSTT CASSSSESS (GRAPH M) ##########
 app.post("/cart/add", async (req, res) => {
   const { userId, productId, quantity } = req.body;
 
@@ -768,6 +781,8 @@ app.post("/cart/add", async (req, res) => {
   }
 });
 
+
+
 app.delete("/cart/remove", async (req, res) => {
   const { userId, productId } = req.body;
 
@@ -803,6 +818,10 @@ app.delete("/cart/remove", async (req, res) => {
   }
 });
 
+
+
+  //  ################ TESSST CASSSESS  (LOGIC M)##########
+  //    ####### TESSSTT CASSSSESS (GRAPH M) ##########
 app.get('/cart/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
@@ -820,7 +839,9 @@ app.get('/cart/:userId', async (req, res) => {
         let subTotal = 0;
         const groupsObj = {};
 
+        //LLLOOOOPPP
         for (const cartItem of user.cart) {
+          //CONDITIONNN
     if (!cartItem.product) continue;
 
     const product = cartItem.product;
@@ -874,6 +895,11 @@ app.get('/cart/:userId', async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 });
+
+
+
+
+
 
 //clear cart upon placing an order
 app.delete("/cart/clear", async (req, res) => {

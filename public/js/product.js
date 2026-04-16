@@ -222,6 +222,7 @@ function setHeartState(heartImgEl, isInWishlist) {
 }
 
 // (optional) keep local badge in sync
+
 function updateWishlistBadgeLocally(productId, isInWishlist) {
   try {
     let wl = JSON.parse(localStorage.getItem("wishlist") || "[]");
@@ -351,11 +352,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         const res = await fetch(`${API_CART_GET}${userId}`);
         const data = await res.json();
 
-        // 2. Check if the product ID exists in the fetched cart data
+          // 2. Check if the product ID exists in the fetched cart data
         isInCart = data.cartData?.some(group => 
             group.items.some(item => String(item.productId) === String(productId))
         );
         
+
+
         setCartIconState(cartButton, isInCart);
     } catch (err) {
         console.warn("Could not check initial cart status:", err.message);
