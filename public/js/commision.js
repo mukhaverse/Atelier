@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-
-
   //stats
   const formState = {
     type: "",
