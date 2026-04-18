@@ -81,39 +81,72 @@ describe("edge coverage", () => {
 
 describe("prime coverage",() =>{
 
+  
+  //  const userId = "anyiddd";
   //TC1
-it("user doesn't exist",async() => {
-  const user=
- expect(res.status).toBe(404);
- expect(data.message).toBe("user not found");
-});
+    const res = await fetch(`${basURL}/cart/${userId}`);
+    const data = await res.json();
+
+    expect(res.status).toBe(404);
+    expect(data.message).toBe("User not found");
 
 
-//TC2
-it("user exist but empty cart", async() =>{
+  //TC2
+  it("user exist but empty cart", async () => {
+    const userId = "mongodb----id";
 
-});
+    const res = await fetch(`${basURL}/cart/${userId}`);
+    const data = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(data.cartData).toEqual([]);
+  });
 
 
 
 //TC3
-it("exist item but null product", async() =>{
+it("exist item but null product", async () => {
+    const userId = "mongodb----id";
 
-});
+    const res = await fetch(`${basURL}/cart/${userId}`);
+    const data = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(Array.isArray(data.cartData)).toBe(true);
+  });
+
 
 
 
 //TC4
-it("craet new group for artist", async() =>{
+ it("craet new group for artist", async () => {
+    const userId = "mongodb----id";
 
-});
+    const res = await fetch(`${basURL}/cart/${userId}`);
+    const data = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(data.cartData.length).toBeGreaterThan(0);
+  });
+
 
 
 
 //TC5
-it("add item to existing artist group", async() =>{
+it("add item to existing artist group", async () => {
+    const userId = "mongodb----id";
 
-});
+    const res = await fetch(`${basURL}/cart/${userId}`);
+    const data = await res.json();
+
+    expect(res.status).toBe(200);
+
+    const groupWithManyItems = data.cartData.find(
+      (group) => group.items && group.items.length > 1
+    );
+
+    expect(groupWithManyItems).toBeDefined();
+  });
 
 
 
