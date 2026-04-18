@@ -965,3 +965,7 @@ app.listen(3000, () =>{
     console.log("I'm listening in the port 3000")
 })
 
+
+  // ALLOW US TO TEST THE API WITHOUT OPINING BROWSER
+module.exports = app;
+
