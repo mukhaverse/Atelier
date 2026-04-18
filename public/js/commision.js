@@ -357,11 +357,8 @@ overlay?.addEventListener("click", (e) => {
 });
 }
 
-export function validate(data) {
-  return Boolean(
-    data.phone &&
-    data.country &&
-    data.city &&
-    (!data.gift || data.message)
-  );
+export function hasInvalidFields(fields) {
+  const invalid = fields.filter(el => !el.value || !el.value.trim());
+  return invalid.length > 0;
+
 }
