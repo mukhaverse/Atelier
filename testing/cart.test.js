@@ -6,16 +6,17 @@ import app from "../server.js";
 
 
 //  ### just need to fix the MONGODB ISSUE ###
+const basURL = "http://localhost:3000";
+ const userId = "anyiddd";
 
-describe("GET /cart/:userId -edge coverage", () => {
-  const basURL = "http://localhost:3000";
+describe("edge coverage", () => {
+  
 
 
-  it("C1 user does not exist", async () => {
+  it("C1 user doesn't exist", async () => {
 
-    const userId = "anyiddd";
 
-    const res = await fetch(`${baseUrl}/cart/${userId}`);
+    const res = await fetch(`${basURL}/cart/${userId}`);
     const data = await res.json();
 
     expect(res.status).toBe(404);
@@ -23,11 +24,11 @@ describe("GET /cart/:userId -edge coverage", () => {
   });
 
 
-  it("C2  user with empty cart", async () => {
+  it("user exist but empty cart", async () => {
     
     const userId = "mongodb----id";
 
-    const res = await fetch(`${baseUrl}/cart/${userId}`);
+    const res = await fetch(`${basURL}/cart/${userId}`);
     const data = await res.json();
 
     expect(res.status).toBe(200);
@@ -35,10 +36,10 @@ describe("GET /cart/:userId -edge coverage", () => {
   });
 
 
-  it("C3 skip item if product is missing", async () => {
+  it("exist item but null product", async () => {
     const userId = "mongodb----id";
 
-    const res = await fetch(`${baseUrl}/cart/${userId}`);
+    const res = await fetch(`${basURL}/cart/${userId}`);
     const data = await res.json();
 
     expect(res.status).toBe(200);
@@ -46,10 +47,10 @@ describe("GET /cart/:userId -edge coverage", () => {
   });
 
 
-  it("C4 create a new group when artist group doesn't exist", async () => {
+  it("craet new group for artist", async () => {
     const userId = "mongodb----id";
 
-    const res = await fetch(`${baseUrl}/cart/${userId}`);
+    const res = await fetch(`${basURL}/cart/${userId}`);
     const data = await res.json();
 
     expect(res.status).toBe(200);
@@ -57,10 +58,11 @@ describe("GET /cart/:userId -edge coverage", () => {
   });
 
 
-  it("C5 add item to existing artist group", async () => {
+  // EDDDITTTE LATER 
+  it("add item to existing artist group", async () => {
     const userId = "mongodb----id";
 
-    const res = await fetch(`${baseUrl}/cart/${userId}`);
+    const res = await fetch(`${basURL}/cart/${userId}`);
     const data = await res.json();
 
     expect(res.status).toBe(200);
@@ -77,53 +79,42 @@ describe("GET /cart/:userId -edge coverage", () => {
 
 
 
+describe("prime coverage",() =>{
+
+  //TC1
+it("user doesn't exist",async() => {
+  const user=
+ expect(res.status).toBe(404);
+ expect(data.message).toBe("user not found");
+});
+
+
+//TC2
+it("user exist but empty cart", async() =>{
+
+});
 
 
 
+//TC3
+it("exist item but null product", async() =>{
+
+});
 
 
 
+//TC4
+it("craet new group for artist", async() =>{
+
+});
 
 
 
+//TC5
+it("add item to existing artist group", async() =>{
+
+});
 
 
 
-
-
-
-
-// TEST CASES FOR EDGE COV
-describe("GET /cart/:userId", () => {
-
-  it("should return 404 if user not found", async () => {
-
-    const userId = "507f1f77bcf86cd799439011"
-
-    const res = await fetch(`http://localhost:3000/cart/${userId}`)
-    const data = await res.json()
-
-    expect(res.status).toBe(500)
-    expect(data.message).toBe("User not found")
-
-  })
-
-  //SECO T
-  //TH T
-  //FOU T
-  //FIV T
-
-})
-
-
-//TESR CASES FOR PRIME COV
-describe("GET /cart/:userId", () => {
-
-  
-  //FIRS T
-  //SECO T
-  //TH T
-  //FOU T
-  //FIV T
-
-})
+});
