@@ -21,6 +21,7 @@
     "nodemailer-express-handlebars": "^6.1.2"
   },
   "devDependencies": {
+    "supertest": "^7.2.2",
     "vitest": "^4.1.4"
   }
 }
