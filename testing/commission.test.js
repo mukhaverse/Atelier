@@ -1,81 +1,75 @@
 import { describe, it, expect } from "vitest";
-import { validate } from "../public/js/commision.js";
-
-
-describe("Commission Validation", () => {
-
-  const base = {
-    phone: "123",
-    country: "SA",
-    city: "Jeddah",
-    gift: false,
-    message: ""
-  }
+import { hasInvalidFields  } from "../public/js/commision.js";
 
 
 
-  it("C1 empty phone", () => {
+describe("order summary validation ", () => {
+
+  const baseFields = [
+    { value: "123" },
+    { value: "SA" },
+    { value: "Jeddah" }
+  ]
 
 
-  expect(validate(base)).toBe(true)
+  it("C1 determines predicate outcome ", () => {
+    expect(hasInvalidFields(baseFields)).toBe(false);
 
 
-  const test = { ...base, phone: "" }
+    const test = [
+      { value: "" },
+      { value: "SA" },
+      { value: "Jeddah" }
+    ]
 
-  expect(validate(test)).toBe(false)
-
-  })
-
-
-
-  it("C2 empty country", () =>{
-
-    expect(validate(base)).toBe(true)
-
-    const test = { ...base, country: ""}
-
-    expect(validate(test)).toBe(false)
+    expect(hasInvalidFields(test)).toBe(true)
 
   })
 
-
-
-
-it("C3 empty city ", () => {
-
-  expect(validate(base)).toBe(true)
-
-  const test = { ...base, city: "" }
-
-  expect(validate(test)).toBe(false)
-});
-
-
-
-it("C4 empty gift ", () => {
-
- 
-  expect(validate({ ...base, gift: false })).toBe(true)
 
   
-  expect(validate({ ...base, gift: true })).toBe(false)
 
-})
+  it("C2 determines predicate outcome ", () => {
 
+    expect(hasInvalidFields(baseFields)).toBe(false)
 
-it("C5 empty message ", () => {
+    const test = [
+      { value: "123" },
+      { value: "" },
+      { value: "Jeddah" }
+    ]
 
-  const giftBase = { ...base, gift: true, message: "msg" }
-
-
-  expect(validate(giftBase)).toBe(true)
-
-
-  expect(validate({ ...giftBase, message: "" })).toBe(false)
-
-})
+    expect(hasInvalidFields(test)).toBe(true);
+  })
 
 
+  
+
+  it("C3 determines predicate outcome ", () => {
+
+    expect(hasInvalidFields(baseFields)).toBe(false)
+
+    const test = [
+      { value: "123" },
+      { value: "SA" },
+      { value: "" }
+    ]
+
+    expect(hasInvalidFields(test)).toBe(true)
+  })
+
+
+  it("Multiple invalid fields still result in predicate being true", () => {
+
+    const test = [
+      { value: "" },
+      { value: "" },
+      { value: "Jeddah" }
+    ]
+
+    expect(hasInvalidFields(test)).toBe(true)
+
+  })
 
 
 
