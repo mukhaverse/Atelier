@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-     "test": "vitest run"
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "",
@@ -19,8 +19,8 @@
     "mongoose": "^8.20.1",
     "nodemailer": "^7.0.10",
     "nodemailer-express-handlebars": "^6.1.2"
-    
+  },
+  "devDependencies": {
+    "vitest": "^4.1.4"
   }
-  
 }
-
