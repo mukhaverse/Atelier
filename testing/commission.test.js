@@ -43,11 +43,11 @@ describe("Commission Validation", () => {
 
 it("C3 empty city ", () => {
 
-  expect(validate(base)).toBe(true);
+  expect(validate(base)).toBe(true)
 
-  const test = { ...base, city: "" };
+  const test = { ...base, city: "" }
 
-  expect(validate(test)).toBe(false);
+  expect(validate(test)).toBe(false)
 });
 
 
@@ -68,7 +68,7 @@ it("C5 empty message ", () => {
   const giftBase = { ...base, gift: true, message: "msg" }
 
 
-  expect(validate(giftBase)).toBe(true);
+  expect(validate(giftBase)).toBe(true)
 
 
   expect(validate({ ...giftBase, message: "" })).toBe(false)
