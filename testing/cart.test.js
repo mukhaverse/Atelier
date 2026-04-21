@@ -1,153 +1,88 @@
 import { describe, it, expect } from "vitest";
-import request from "supertest";
-import app from "../server.js";
+import mockCartData from "./cartTest.json";
+import { getCartLogic } from "./cartLogic.js";
 
+async function findArtistById(artistId) {
+  const artists = {
+    a1: { name: "Artist One" }
+  };
 
+  return artists[artistId] || null;
+}
 
+describe("Edge Coverage", () => {
+  it("TC1 user doesn't exist", async () => {
+    const result = await getCartLogic(mockCartData.userNotFound, findArtistById);
 
-//  ### just need to fix the MONGODB ISSUE ###
-const basURL = "http://localhost:3000";
- const userId = "anyiddd";
-
-describe("edge coverage", () => {
-  
-
-
-  it("C1 user doesn't exist", async () => {
-
-
-    const res = await fetch(`${basURL}/cart/${userId}`);
-    const data = await res.json();
-
-    expect(res.status).toBe(404);
-    expect(data.message).toBe("user not found");
+    expect(result.status).toBe(404);
+    expect(result.body.message).toBe("User not found");
   });
 
+  it("TC2 user exists but empty cart", async () => {
+    const result = await getCartLogic(mockCartData.emptyCartUser, findArtistById);
 
-  it("user exist but empty cart", async () => {
-    
-    const userId = "mongodb----id";
-
-    const res = await fetch(`${basURL}/cart/${userId}`);
-    const data = await res.json();
-
-    expect(res.status).toBe(200);
-    expect(data.cartData).toEqual([]);
+    expect(result.status).toBe(200);
+    expect(result.body.cartData).toEqual([]);
+    expect(result.body.summary.subtotal).toBe(0);
   });
 
+  it("TC3 item exists but product is null", async () => {
+    const result = await getCartLogic(mockCartData.nullProductUser, findArtistById);
 
-  it("exist item but null product", async () => {
-    const userId = "mongodb----id";
-
-    const res = await fetch(`${basURL}/cart/${userId}`);
-    const data = await res.json();
-
-    expect(res.status).toBe(200);
-    expect(Array.isArray(data.cartData)).toBe(true);
+    expect(result.status).toBe(200);
+    expect(result.body.cartData).toEqual([]);
   });
 
+  it("TC4 create new group for artist", async () => {
+    const result = await getCartLogic(mockCartData.newGroupUser, findArtistById);
 
-  it("craet new group for artist", async () => {
-    const userId = "mongodb----id";
-
-    const res = await fetch(`${basURL}/cart/${userId}`);
-    const data = await res.json();
-
-    expect(res.status).toBe(200);
-    expect(data.cartData.length).toBeGreaterThan(0);
+    expect(result.status).toBe(200);
+    expect(result.body.cartData.length).toBeGreaterThan(0);
+    expect(result.body.cartData[0].artist).toBe("Artist One");
   });
 
+  it("TC5 add item to existing artist group", async () => {
+    const result = await getCartLogic(mockCartData.existingGroupUser, findArtistById);
 
-  // EDDDITTTE LATER 
-  it("add item to existing artist group", async () => {
-    const userId = "mongodb----id";
-
-    const res = await fetch(`${basURL}/cart/${userId}`);
-    const data = await res.json();
-
-    expect(res.status).toBe(200);
-
-    const groupWithManyItems = data.cartData.find(
-      (group) => group.items && group.items.length > 1
-    );
-
-    expect(groupWithManyItems).toBeDefined();
-
+    expect(result.status).toBe(200);
+    expect(result.body.cartData[0].items.length).toBeGreaterThan(1);
   });
 });
 
+describe("Prime Path Coverage", () => {
+  it("TC1 user doesn't exist", async () => {
+    const result = await getCartLogic(mockCartData.userNotFound, findArtistById);
 
-
-
-describe("prime coverage",() =>{
-
-  
-  //  const userId = "anyiddd";
-  //TC1
-    const res = await fetch(`${basURL}/cart/${userId}`);
-    const data = await res.json();
-
-    expect(res.status).toBe(404);
-    expect(data.message).toBe("User not found");
-
-
-  //TC2
-  it("user exist but empty cart", async () => {
-    const userId = "mongodb----id";
-
-    const res = await fetch(`${basURL}/cart/${userId}`);
-    const data = await res.json();
-
-    expect(res.status).toBe(200);
-    expect(data.cartData).toEqual([]);
+    expect(result.status).toBe(404);
+    expect(result.body.message).toBe("User not found");
   });
 
+  it("TC2 user exists but empty cart", async () => {
+    const result = await getCartLogic(mockCartData.emptyCartUser, findArtistById);
 
-
-//TC3
-it("exist item but null product", async () => {
-    const userId = "mongodb----id";
-
-    const res = await fetch(`${basURL}/cart/${userId}`);
-    const data = await res.json();
-
-    expect(res.status).toBe(200);
-    expect(Array.isArray(data.cartData)).toBe(true);
+    expect(result.status).toBe(200);
+    expect(result.body.cartData).toEqual([]);
   });
 
+  it("TC3 item exists but product is null", async () => {
+    const result = await getCartLogic(mockCartData.nullProductUser, findArtistById);
 
-
-
-//TC4
- it("craet new group for artist", async () => {
-    const userId = "mongodb----id";
-
-    const res = await fetch(`${basURL}/cart/${userId}`);
-    const data = await res.json();
-
-    expect(res.status).toBe(200);
-    expect(data.cartData.length).toBeGreaterThan(0);
+    expect(result.status).toBe(200);
+    expect(result.body.cartData).toEqual([]);
   });
 
+  it("TC4 create new group for artist", async () => {
+    const result = await getCartLogic(mockCartData.newGroupUser, findArtistById);
 
-
-
-//TC5
-it("add item to existing artist group", async () => {
-    const userId = "mongodb----id";
-
-    const res = await fetch(`${basURL}/cart/${userId}`);
-    const data = await res.json();
-
-    expect(res.status).toBe(200);
-
-    const groupWithManyItems = data.cartData.find(
-      (group) => group.items && group.items.length > 1
-    );
-
-    expect(groupWithManyItems).toBeDefined();
+    expect(result.status).toBe(200);
+    expect(result.body.cartData[0].artist).toBe("Artist One");
   });
 
+  it("TC5 add item to existing artist group", async () => {
+    const result = await getCartLogic(mockCartData.existingGroupUser, findArtistById);
 
-
+    expect(result.status).toBe(200);
+    expect(result.body.cartData[0].items.length).toBeGreaterThan(1);
+    expect(result.body.summary.subtotal).toBeGreaterThan(0);
+  });
 });
