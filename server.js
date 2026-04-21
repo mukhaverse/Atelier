@@ -973,6 +973,10 @@ app.post("/checkout", async (req, res) => {
   }
 });
 
+
+
+
+//FOR TEESSST
 if (process.env.NODE_ENV !== "test") {
   app.listen(3000, () =>{
     console.log("I'm listening in the port 3000")
