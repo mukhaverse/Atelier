@@ -34,6 +34,8 @@ describe("Clause Coverage", () => {
 
 });
 
+
+
 describe("ACC P1", () => {
   it("TC1 C1 active: phone is null", () => {
     expect(validatePersonLogic(null, "Saudi", "Jeddah")).toBe(false);
@@ -51,6 +53,7 @@ describe("ACC P1", () => {
     expect(validatePersonLogic("1234567890", "Saudi", "Jeddah")).toBe(true);
   });
 });
+
 
 
 describe("ACC P2", () => {
@@ -72,6 +75,7 @@ describe("ACC P2", () => {
 });
 
 
+
 describe("ACC P3", () => {
   it("TC1 city is null", () => {
     expect(validatePersonLogic("1234567890", "Saudi", null)).toBe(false);
@@ -89,6 +93,8 @@ describe("ACC P3", () => {
     expect(validatePersonLogic("1234567890", "Saudi", "Jeddah")).toBe(true);
   });
 });
+
+
 
 
 describe("ACC P4", () => {
