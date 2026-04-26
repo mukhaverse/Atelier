@@ -14,14 +14,27 @@ const JWT_SECRET = 'AA.201424';
 const auth = require('./middleware/auth');
 
 
- mongoose
-   .connect("mongodb+srv://ghaida:GS.201424@cluster.cakgapc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster")
-   .then(() => {
-     console.log(" connected successfully");
-   })
-   .catch((error) => {
-     console.log(" error with connecting to the DB", error);
-   });
+//  mongoose
+//    .connect("mongodb+srv://ghaida:GS.201424@cluster.cakgapc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster")
+//    .then(() => {
+//      console.log(" connected successfully");
+//    })
+//    .catch((error) => {
+//      console.log(" error with connecting to the DB", error);
+//    });
+
+
+//TO TEST..
+if (process.env.NODE_ENV !== "test") {
+  mongoose
+    .connect("...")
+    .then(() => {
+      console.log("connected successfully");
+    })
+    .catch((error) => {
+      console.log("error with connecting to the DB", error);
+    });
+}
  
 
 
@@ -961,10 +974,14 @@ app.post("/checkout", async (req, res) => {
 });
 
 
-app.listen(3000, () =>{
-    console.log("I'm listening in the port 3000")
-})
 
+
+//FOR TEESSST
+if (process.env.NODE_ENV !== "test") {
+  app.listen(3000, () =>{
+    console.log("I'm listening in the port 3000")
+  })
+}
 
   // ALLOW US TO TEST THE API WITHOUT OPINING BROWSER
 module.exports = app;

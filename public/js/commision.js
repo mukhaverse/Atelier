@@ -223,16 +223,47 @@ const phone = document.getElementById("phone");
 const coun  = document.getElementById("coun");
 const cit   = document.getElementById("cit");
 
+// const validatePerson = () => {
+//   let ok = true;
+//   [phone, coun, cit].forEach(rmErr);
+//   if (!phone || !phone.value.trim()) { addErr(phone); ok = false; }
+//   if (!coun  || !coun.value.trim())  { addErr(coun);  ok = false; }
+//   if (!cit   || !cit.value.trim())   { addErr(cit);   ok = false; }
+//   if (ok && phone && !/^\+?\d[\d\s\-]{9,}$/.test(phone.value.trim())) {
+//     addErr(phone);
+//     ok = false;
+//   }
+//   return ok;
+// };
+
+
+
+
+// #### FOR TESTT ####
 const validatePerson = () => {
-  let ok = true;
   [phone, coun, cit].forEach(rmErr);
-  if (!phone || !phone.value.trim()) { addErr(phone); ok = false; }
-  if (!coun  || !coun.value.trim())  { addErr(coun);  ok = false; }
-  if (!cit   || !cit.value.trim())   { addErr(cit);   ok = false; }
-  if (ok && phone && !/^\+?\d[\d\s\-]{9,}$/.test(phone.value.trim())) {
+
+  const ok = validatePersonLogic(
+    phone?.value || "",
+    coun?.value || "",
+    cit?.value || ""
+  );
+
+  if (!phone || !phone.value.trim()) addErr(phone);
+  if (!coun || !coun.value.trim()) addErr(coun);
+  if (!cit || !cit.value.trim()) addErr(cit);
+
+  if (
+    ok === false &&
+    phone &&
+    phone.value.trim() &&
+    coun?.value?.trim() &&
+    cit?.value?.trim() &&
+    !/^\+?\d[\d\s\-]{9,}$/.test(phone.value.trim())
+  ) {
     addErr(phone);
-    ok = false;
   }
+
   return ok;
 };
 
@@ -361,4 +392,20 @@ export function hasInvalidFields(fields) {
   const invalid = fields.filter(el => !el.value || !el.value.trim());
   return invalid.length > 0;
 
+}
+
+
+// #### FOR TESTT ####
+export function validatePersonLogic(phone, country, city) {
+  let ok = true;
+
+  if (!phone || !phone.trim()) ok = false;
+  if (!country || !country.trim()) ok = false;
+  if (!city || !city.trim()) ok = false;
+
+  if (ok && !/^\+?\d[\d\s\-]{9,}$/.test(phone.trim())) {
+    ok = false;
+  }
+
+  return ok;
 }

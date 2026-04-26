@@ -1,0 +1,53 @@
+{
+  "userNotFound": null,
+
+  "emptyCartUser": {
+    "cart": []
+  },
+
+  "nullProductUser": {
+    "cart": [
+      { "product": null }
+    ]
+  },
+
+  "newGroupUser": {
+    "cart": [
+      {
+        "product": {
+          "_id": "p1",
+          "name": "Painting 1",
+          "images": ["img1.jpg"],
+          "price": 100,
+          "dimensions": "20x30",
+          "artistId": "a1"
+        }
+      }
+    ]
+  },
+
+  "existingGroupUser": {
+    "cart": [
+      {
+        "product": {
+          "_id": "p1",
+          "name": "Painting 1",
+          "images": ["img1.jpg"],
+          "price": 100,
+          "dimensions": "20x30",
+          "artistId": "a1"
+        }
+      },
+      {
+        "product": {
+          "_id": "p2",
+          "name": "Painting 2",
+          "images": ["img2.jpg"],
+          "price": 150,
+          "dimensions": "30x40",
+          "artistId": "a1"
+        }
+      }
+    ]
+  }
+}
