@@ -7,7 +7,7 @@ describe("Edge Coverage", () => {
     const result = addToCartLogic(null, "507f1f77bcf86cd799439021", 1, {
       cart: []
     });
-
+    console.log("ACTUAL:", result);
     expect(result.status).toBe(400);
     expect(result.body.message).toBe("Missing required fields: userId and productId are required");
   });
@@ -19,7 +19,7 @@ describe("Edge Coverage", () => {
       1,
       null
     );
-
+    console.log("ACTUAL:", result);
     expect(result.status).toBe(404);
     expect(result.body.message).toBe("User not found");
   });
@@ -40,7 +40,7 @@ describe("Edge Coverage", () => {
       2,
       user
     );
-
+    console.log("ACTUAL:", result);
     expect(result.status).toBe(200);
     expect(result.body.message).toBe("Cart updated successfully");
     expect(result.body.cart[0].quantity).toBe(3);
@@ -57,7 +57,7 @@ describe("Edge Coverage", () => {
       1,
       user
     );
-
+    console.log("ACTUAL:", result);
     expect(result.status).toBe(200);
     expect(result.body.message).toBe("Cart updated successfully");
     expect(result.body.cart.length).toBe(1);
@@ -72,7 +72,7 @@ describe("Prime Path Coverage", () => {
     const result = addToCartLogic(null, "507f1f77bcf86cd799439021", 1, {
       cart: []
     });
-
+    console.log("ACTUAL:", result);
     expect(result.status).toBe(400);
     expect(result.body.message).toBe("Missing required fields: userId and productId are required");
   });
@@ -84,7 +84,7 @@ describe("Prime Path Coverage", () => {
       1,
       null
     );
-
+    console.log("ACTUAL:", result);
     expect(result.status).toBe(404);
     expect(result.body.message).toBe("User not found");
   });
@@ -105,7 +105,7 @@ describe("Prime Path Coverage", () => {
       2,
       user
     );
-
+    console.log("ACTUAL:", result);
     expect(result.status).toBe(200);
     expect(result.body.cart[0].quantity).toBe(3);
   });
@@ -121,7 +121,7 @@ describe("Prime Path Coverage", () => {
       1,
       user
     );
-
+    console.log("ACTUAL:", result);
     expect(result.status).toBe(200);
     expect(result.body.cart[0].product).toBe("507f1f77bcf86cd799439022");
     expect(result.body.cart[0].quantity).toBe(1);

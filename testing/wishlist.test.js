@@ -7,7 +7,7 @@ describe("input space ecc", () => {
       ["507f1f77bcf86cd799439021"],
       "507f1f77bcf86cd799439021"
     );
-
+    console.log("ACTUAL:", result);
     expect(result.toggled).toBe("removed");
   });
 
@@ -16,6 +16,7 @@ describe("input space ecc", () => {
       [],
       "507f1f77bcf86cd799439022"
     );
+    console.log("ACTUAL:", result);
 
     expect(result.toggled).toBe("added");
   });
@@ -25,7 +26,7 @@ describe("input space ecc", () => {
       " ",
       "507f1f77bcf86cd799439021"
     );
-
+    console.log("ACTUAL:", result);
     expect(result).toBe(true);
   });
 
@@ -34,7 +35,7 @@ describe("input space ecc", () => {
       "507f1f77bcf86cd799439011",
       "ll@"
     );
-
+    console.log("ACTUAL:", result);
     expect(result).toBe(true);
   });
 
@@ -44,14 +45,14 @@ describe("input space ecc", () => {
 describe("input space pairwise", () => {
 
   it("TC1 user not found", () => {
-    const user = null;
-
-    expect(user).toBe(null);
+  const user = null;
+  console.log("ACTUAL:", user);
+  expect(user === null).toBe(true);
   });
 
   it("TC2 product not found", () => {
     const productExists = false;
-
+    console.log("ACTUAL:", productExists);
     expect(productExists).toBe(false);
   });
 
@@ -60,7 +61,7 @@ describe("input space pairwise", () => {
       " ",
       "507f1f77bcf86cd799439021"
     );
-
+    console.log("ACTUAL:", result);
     expect(result).toBe(true);
   });
 
@@ -69,7 +70,7 @@ describe("input space pairwise", () => {
       "507f1f77bcf86cd799439011",
       "ll@"
     );
-
+    console.log("ACTUAL:", result);
     expect(result).toBe(true);
   });
 
@@ -79,11 +80,19 @@ describe("input space pairwise", () => {
 describe("logic with ACC", () => {
 
   it("C1 determines predicate outcome", () => {
-    expect(validateWishlistIds(
+    console.log("ACTUAL:", validateWishlistIds(
       "507f1f77bcf86cd799439011",
       "507f1f77bcf86cd799439021"
+    ));
+    expect(validateWishlistIds(
+      "507f1f77bcf86cd799439011",
+      "507f1f77bcf86cd799439021" 
     )).toBe(false);
 
+    console.log("ACTUAL:", validateWishlistIds(
+      " ",
+      "507f1f77bcf86cd799439021"
+    ));
     expect(validateWishlistIds(
       " ",
       "507f1f77bcf86cd799439021"
@@ -91,16 +100,22 @@ describe("logic with ACC", () => {
   });
 
   it("C2 determines predicate outcome", () => {
-    expect(validateWishlistIds(
-      "507f1f77bcf86cd799439011",
-      "507f1f77bcf86cd799439021"
-    )).toBe(false);
+  const validCase = validateWishlistIds(
+    "507f1f77bcf86cd799439011",
+    "507f1f77bcf86cd799439021"
+  );
 
-    expect(validateWishlistIds(
-      "507f1f77bcf86cd799439011",
-      "@@@"
-    )).toBe(true);
-  });
+  console.log("ACTUAL:", validCase);
+  expect(validCase).toBe(false);
+
+  const invalidCase = validateWishlistIds(
+    "507f1f77bcf86cd799439011",
+    "ll@"
+  );
+
+  console.log("ACTUAL:", invalidCase);
+  expect(invalidCase).toBe(true);
+});
 
 });
 
@@ -108,6 +123,10 @@ describe("logic with ACC", () => {
 describe("Clause Coverage", () => {
 
   it("TC1 both inputs valid", () => {
+    console.log("ACTUAL:", validateWishlistIds(
+      "507f1f77bcf86cd799439011",
+      "507f1f77bcf86cd799439021"
+    ));
     expect(validateWishlistIds(
       "507f1f77bcf86cd799439011",
       "507f1f77bcf86cd799439021"
@@ -115,6 +134,10 @@ describe("Clause Coverage", () => {
   });
 
   it("TC2 both inputs invalid", () => {
+    console.log("ACTUAL:", validateWishlistIds(
+      " ",
+      "@@@"
+    ));
     expect(validateWishlistIds(
       " ",
       "@@@"
@@ -122,6 +145,10 @@ describe("Clause Coverage", () => {
   });
 
   it("TC3 userId invalid and productId valid", () => {
+    console.log("ACTUAL:", validateWishlistIds(
+      " ",
+      "507f1f77bcf86cd799439021"
+    ));
     expect(validateWishlistIds(
       " ",
       "507f1f77bcf86cd799439021"
@@ -129,6 +156,10 @@ describe("Clause Coverage", () => {
   });
 
   it("TC4 userId valid and productId invalid", () => {
+    console.log("ACTUAL:", validateWishlistIds(
+      "507f1f77bcf86cd799439011",
+      "@@@"
+    ));
     expect(validateWishlistIds(
       "507f1f77bcf86cd799439011",
       "@@@"
