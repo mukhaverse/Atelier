@@ -223,18 +223,18 @@ const phone = document.getElementById("phone");
 const coun  = document.getElementById("coun");
 const cit   = document.getElementById("cit");
 
-// const validatePerson = () => {
-//   let ok = true;
-//   [phone, coun, cit].forEach(rmErr);
-//   if (!phone || !phone.value.trim()) { addErr(phone); ok = false; }
-//   if (!coun  || !coun.value.trim())  { addErr(coun);  ok = false; }
-//   if (!cit   || !cit.value.trim())   { addErr(cit);   ok = false; }
-//   if (ok && phone && !/^\+?\d[\d\s\-]{9,}$/.test(phone.value.trim())) {
-//     addErr(phone);
-//     ok = false;
-//   }
-//   return ok;
-// };
+const validatePerson = () => {
+  let ok = true;
+  [phone, coun, cit].forEach(rmErr);
+  if (!phone || !phone.value.trim()) { addErr(phone); ok = false; }
+  if (!coun  || !coun.value.trim())  { addErr(coun);  ok = false; }
+  if (!cit   || !cit.value.trim())   { addErr(cit);   ok = false; }
+  if (ok && phone && !/^\+?\d[\d\s\-]{9,}$/.test(phone.value.trim())) {
+     addErr(phone);
+     ok = false;
+   }
+   return ok;
+ };
 
 
 
