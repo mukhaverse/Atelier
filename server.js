@@ -674,8 +674,8 @@ app.post("/contact", async (req, res) => {
       },
       attachments: [
         {
-          filename: 'Email_icon.svg',
-          path: __dirname + '/views/Group6.svg',
+          filename: 'Medixa_Logo.svg',
+          path: __dirname + '/views/medixa.svg',
           cid: 'mail@atelier'
         }
       ]
