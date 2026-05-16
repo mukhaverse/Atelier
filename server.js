@@ -644,6 +644,53 @@ app.post("/commission", async (req, res) => {
   }
 })
 
+// MIDEXA Contact form endpoint
+app.post("/contact", async (req, res) => {
+  try {
+    const {
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      language,
+      gender,
+      contactDate,
+      message
+    } = req.body;
+
+    await sendEmail({
+      to: "mmaarrwwaa1425@gmail.com",
+      subject: "New Contact Message",
+      template: "contactView",
+      context: {
+        firstName,
+        lastName,
+        phoneNumber,
+        email,
+        language,
+        gender,
+        contactDate,
+        message
+      },
+      attachments: [
+        {
+          filename: 'Medixa_Logo.svg',
+          path: __dirname + '/views/medixa.svg',
+          cid: 'mail@atelier'
+        }
+      ]
+    });
+
+    res.status(201).json({ message: "Contact message sent successfully!" });
+
+  } catch (error) {
+    console.error("Contact email error:", error);
+    res.status(500).json({ message: "Error sending contact message" });
+  }
+});
+
+
+
        //####### TESSSTT CASSSESS (SYNTAX M) ########
 app.post('/api/register', async (req, res) => {
   const { username, email, password } = req.body;
