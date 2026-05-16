@@ -105,4 +105,13 @@ describe("ACC P4", () => {
   it("TC2 valid phone format", () => {
     expect(validatePersonLogic("1234567890", "Saudi", "Jeddah")).toBe(true);
   });
+  it("TC3 C7 = false", () => {
+  
+  expect(validatePersonLogic("1234567890", "   ", "Jeddah")).toBe(false);
+});
+
+it("TC4 C8 = false", () => {
+  
+  expect(validatePersonLogic(null, "Saudi", "Jeddah")).toBe(false);
+});
 });
