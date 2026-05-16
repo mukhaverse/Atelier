@@ -1,12 +1,12 @@
 {
   "products": {
-    "A1": [
+    "507f1f77bcf86cd799439011": [
       { "name": "Painting 1" },
       { "name": "Painting 2" }
     ],
-    "A2": []
+    "Ajh34f3n6i6nfndjcididnidn2": []
   },
   "artists": {
-    "A1": { "name": "Artist One" }
+    "507f1f77bcf86cd799439011": { "name": "Artist One" }
   }
 }
